@@ -1,1 +1,6 @@
-
+ticker,name,sector,country
+AAPL.US,Apple,Technology,US
+MSFT.US,Microsoft,Technology,US
+NVDA.US,Nvidia,Technology,US
+AMZN.US,Amazon,Consumer,US
+GOOGL.US,Alphabet,Technology,US
