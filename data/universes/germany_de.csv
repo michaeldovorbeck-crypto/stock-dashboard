@@ -1,1 +1,6 @@
-
+ticker,name,sector,country
+SAP.DE,SAP,Technology,DE
+SIE.DE,Siemens,Industrials,DE
+ALV.DE,Allianz,Financials,DE
+BAS.DE,BASF,Materials,DE
+BMW.DE,BMW,Consumer,DE
