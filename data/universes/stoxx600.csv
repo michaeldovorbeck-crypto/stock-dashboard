@@ -1,1 +1,6 @@
-
+ticker,name,sector,country
+ASML.AS,ASML,Technology,NL
+NESN.SW,Nestlé,Consumer,CH
+NOVN.SW,Novartis,Healthcare,CH
+ROG.SW,Roche,Healthcare,CH
+MC.PA,LVMH,Consumer,FR
