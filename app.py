@@ -1,11 +1,11 @@
-import streamlit as st
-import pandas as pd
-import plotly.graph_objects as go
+import math
+from datetime import timedelta
+from io import StringIO
 
-from src.data_sources import fetch_daily_ohlcv_stooq, load_universe_csv
-from src.indicators import compute_signals, trade_label
-from src.portfolio import parse_portfolio_csv, weight_by_value
-from src.ui_text_da import help_text
+import numpy as np
+import pandas as pd
+import requests
+import streamlit as st
 
 st.set_page_config(page_title="Gratis Aktie Dashboard", layout="wide")
 
