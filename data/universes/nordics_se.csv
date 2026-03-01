@@ -1,1 +1,6 @@
-
+ticker,name,sector,country
+ERIC-B.ST,Ericsson,Technology,SE
+VOLV-B.ST,Volvo,Industrials,SE
+SAAB-B.ST,Saab,Defense,SE
+ABB.ST,ABB,Industrials,SE
+ATCO-A.ST,Atlas Copco,Industrials,SE
