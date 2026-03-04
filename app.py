@@ -1,8 +1,7 @@
 import math
-from datetime import datetime, timedelta
+from datetime import datetime
 from io import StringIO
-from email.utils import parsedate_to_datetime
-import xml.etree.ElementTree as ET
+import os
 
 import numpy as np
 import pandas as pd
@@ -10,9 +9,9 @@ import requests
 import streamlit as st
 
 
-# =============================
+# -----------------------------
 # App config
-# =============================
+# -----------------------------
 st.set_page_config(
     page_title="Stock Dashboard (gratis)",
     layout="wide",
@@ -20,13 +19,15 @@ st.set_page_config(
 )
 
 APP_TITLE = "📊 Stock Dashboard (EU + US + Tema-radar) — gratis"
-DATA_DIR = "data/universes"
+DATA_DIR = "data/universes"  # repo path
 DEFAULT_TOPN = 10
 
+SIGNAL_LOG_PATH = "data/signal_log.csv"  # bruges til "læring" (simpel log)
 
-# =============================
-# Utilities
-# =============================
+
+# -----------------------------
+# Helpers: CSV + tickers + data
+# -----------------------------
 def _safe_read_csv_text(text: str) -> pd.DataFrame:
     try:
         return pd.read_csv(StringIO(text))
@@ -36,33 +37,39 @@ def _safe_read_csv_text(text: str) -> pd.DataFrame:
 
 def _normalize_cols(df: pd.DataFrame) -> pd.DataFrame:
     df = df.copy()
-    df.columns = [str(c).strip().lower() for c in df.columns]
+    df.columns = [c.strip().lower() for c in df.columns]
     return df
 
 
 def _ensure_universe_schema(df: pd.DataFrame) -> pd.DataFrame:
     """
-    Universe CSV kan indeholde:
-      - ticker (påkrævet)
-      - name, sector, country (valgfri)
+    Universe CSV forventes at kunne indeholde:
+    - ticker (påkrævet)
+    - name (valgfri)
+    - sector (valgfri)
+    - country (valgfri)
     """
     if df is None or df.empty:
         return pd.DataFrame(columns=["ticker", "name", "sector", "country"])
 
     df = _normalize_cols(df)
 
-    # aliaser
     colmap = {}
     for c in df.columns:
-        if c in ("symbol", "sym", "code"):
+        if c in ("symbol", "sym", "code", "ticker_symbol", "ric"):
             colmap[c] = "ticker"
-        if c in ("company", "companyname", "instrument", "security"):
+        if c in ("company", "companyname", "security", "instrument", "name"):
             colmap[c] = "name"
+        if c in ("gics sector", "sector_name", "industry", "gics_sector"):
+            colmap[c] = "sector"
+        if c in ("country_code", "market", "region"):
+            colmap[c] = "country"
+
     if colmap:
         df = df.rename(columns=colmap)
 
     if "ticker" not in df.columns:
-        # gæt første kolonne
+        # prøv at gætte første kolonne som ticker
         df = df.rename(columns={df.columns[0]: "ticker"})
 
     for col in ("name", "sector", "country"):
@@ -76,24 +83,40 @@ def _ensure_universe_schema(df: pd.DataFrame) -> pd.DataFrame:
 
 def _stooq_symbol(symbol: str, market_hint: str = "") -> str:
     """
-    Stooq bruger suffix fx:
-      - AAPL.US
-      - NOVO-B.CO
-      - SAP.DE
-    Hvis ingen '.' og market_hint='US' => tilføj .US
+    Stooq bruger ofte suffix som:
+      - AAPL.US (USA)
+      - SAP.DE (Tyskland)
+      - NOVO-B.CO (DK)
+      - SAAB-B.ST (SE)
+
+    Hvis symbol allerede indeholder '.', returneres det som det er.
+    Ellers tilføjes suffix ud fra market_hint (US/DE/DK/SE/FI/NO/FR/UK).
     """
     s = (symbol or "").strip()
     if not s:
         return s
     if "." in s:
         return s
-    if market_hint.upper() == "US":
-        return f"{s}.US"
+
+    mh = (market_hint or "").upper().strip()
+    suffix_map = {
+        "US": ".US",
+        "DE": ".DE",
+        "DK": ".CO",
+        "SE": ".ST",
+        "FI": ".HE",
+        "NO": ".OL",
+        "FR": ".PA",
+        "UK": ".L",
+    }
+    if mh in suffix_map:
+        return f"{s}{suffix_map[mh]}"
+
     return s
 
 
 @st.cache_data(ttl=6 * 60 * 60, show_spinner=False)
-def fetch_daily_ohlc_stooq(symbol: str, years: int = 10, market_hint: str = "") -> pd.DataFrame:
+def fetch_daily_ohlc_stooq(symbol: str, years: int = 5, market_hint: str = "") -> pd.DataFrame:
     """
     Gratis daglige OHLCV fra Stooq:
       https://stooq.com/q/d/l/?s={sym}&i=d
@@ -106,7 +129,7 @@ def fetch_daily_ohlc_stooq(symbol: str, years: int = 10, market_hint: str = "") 
     url = f"https://stooq.com/q/d/l/?s={sym}&i=d"
     try:
         r = requests.get(url, timeout=20)
-        if r.status_code != 200 or not r.text.strip():
+        if r.status_code != 200:
             return pd.DataFrame()
         df = _safe_read_csv_text(r.text)
     except Exception:
@@ -127,170 +150,44 @@ def fetch_daily_ohlc_stooq(symbol: str, years: int = 10, market_hint: str = "") 
     return df.reset_index(drop=True)
 
 
-def google_news_link(query: str) -> str:
-    q = requests.utils.quote(query)
-    return f"https://news.google.com/search?q={q}&hl=da&gl=DK&ceid=DK%3Ada"
-
-
-# =============================
-# Auto-Universe Builder (gratis)
-# =============================
-def _is_file_probably_empty(df: pd.DataFrame) -> bool:
-    return df is None or df.empty or df.shape[0] < 1 or df.shape[1] < 1
-
-
-@st.cache_data(ttl=24 * 60 * 60, show_spinner=False)
-def _build_sp500_from_wikipedia() -> pd.DataFrame:
+def slice_period(df: pd.DataFrame, period: str) -> pd.DataFrame:
     """
-    Bygger S&P500 fra Wikipedia (gratis).
-    Output: ticker (Stooq-format), name, sector, country
+    period: 1D/1W/1M/3M/6M/YTD/3Y/5Y/10Y/MAX
     """
-    url = "https://en.wikipedia.org/wiki/List_of_S%26P_500_companies"
-    try:
-        tables = pd.read_html(url)
-    except Exception:
-        return pd.DataFrame(columns=["ticker", "name", "sector", "country"])
+    if df is None or df.empty:
+        return df
+    d = df.copy()
+    d["Date"] = pd.to_datetime(d["Date"], errors="coerce")
+    d = d.dropna(subset=["Date"]).sort_values("Date")
 
-    # typisk er første tabel constituents
-    t = tables[0].copy()
-    t.columns = [str(c).strip() for c in t.columns]
+    last = d["Date"].max()
+    if period == "MAX":
+        return d
 
-    # kolonnenavne kan variere lidt – vi tager det robuste
-    sym_col = None
-    name_col = None
-    sector_col = None
-    for c in t.columns:
-        lc = c.lower()
-        if "symbol" in lc:
-            sym_col = c
-        if "security" in lc:
-            name_col = c
-        if "gics sector" in lc:
-            sector_col = c
+    if period == "1D":
+        cutoff = last - pd.Timedelta(days=2)
+    elif period == "1W":
+        cutoff = last - pd.Timedelta(days=7)
+    elif period == "1M":
+        cutoff = last - pd.Timedelta(days=30)
+    elif period == "3M":
+        cutoff = last - pd.Timedelta(days=90)
+    elif period == "6M":
+        cutoff = last - pd.Timedelta(days=180)
+    elif period == "YTD":
+        cutoff = pd.Timestamp(year=last.year, month=1, day=1)
+    elif period == "3Y":
+        cutoff = last - pd.Timedelta(days=int(365.25 * 3))
+    elif period == "5Y":
+        cutoff = last - pd.Timedelta(days=int(365.25 * 5))
+    elif period == "10Y":
+        cutoff = last - pd.Timedelta(days=int(365.25 * 10))
+    else:
+        cutoff = last - pd.Timedelta(days=365)
 
-    if sym_col is None:
-        return pd.DataFrame(columns=["ticker", "name", "sector", "country"])
-
-    out = pd.DataFrame()
-    out["ticker"] = t[sym_col].astype(str).str.strip()
-    out["ticker"] = out["ticker"].str.replace(".", "-", regex=False)  # BRK.B -> BRK-B
-    out["ticker"] = out["ticker"] + ".US"  # Stooq format
-    out["name"] = t[name_col].astype(str).str.strip() if name_col else ""
-    out["sector"] = t[sector_col].astype(str).str.strip() if sector_col else ""
-    out["country"] = "US"
-    out = _ensure_universe_schema(out)
-    return out
+    return d[d["Date"] >= cutoff].reset_index(drop=True)
 
 
-@st.cache_data(ttl=24 * 60 * 60, show_spinner=False)
-def _build_germany_dax_from_wikipedia() -> pd.DataFrame:
-    """
-    Gratis – bygger typisk DAX-liste fra Wikipedia.
-    (Giver dig et fungerende 'Germany' univers uden tom fil)
-    """
-    url = "https://en.wikipedia.org/wiki/DAX"
-    try:
-        tables = pd.read_html(url)
-    except Exception:
-        return pd.DataFrame(columns=["ticker", "name", "sector", "country"])
-
-    # Find en tabel der har 'Ticker symbol' eller lignende
-    best = None
-    for tb in tables:
-        cols = [str(c).lower() for c in tb.columns]
-        if any("ticker" in c and "symbol" in c for c in cols) or any("ticker" in c for c in cols):
-            best = tb
-            break
-
-    if best is None:
-        # fallback: prøv første tabel
-        best = tables[0]
-
-    t = best.copy()
-    t.columns = [str(c).strip() for c in t.columns]
-    # gæt kolonner
-    sym_col = None
-    name_col = None
-    sector_col = None
-    for c in t.columns:
-        lc = c.lower()
-        if "ticker" in lc and sym_col is None:
-            sym_col = c
-        if "company" in lc or "name" in lc:
-            name_col = c
-        if "industry" in lc or "sector" in lc:
-            sector_col = c
-
-    if sym_col is None:
-        # prøv første kolonne
-        sym_col = t.columns[0]
-
-    out = pd.DataFrame()
-    out["ticker"] = t[sym_col].astype(str).str.strip()
-    # DAX tickers på Wikipedia kan være "SAP" -> for Stooq skal vi have SAP.DE
-    out["ticker"] = out["ticker"].apply(lambda x: x if "." in x else f"{x}.DE")
-    out["name"] = t[name_col].astype(str).str.strip() if name_col else ""
-    out["sector"] = t[sector_col].astype(str).str.strip() if sector_col else ""
-    out["country"] = "DE"
-    out = _ensure_universe_schema(out)
-    return out
-
-
-def ensure_universe_files() -> dict:
-    """
-    Sørger for at univers-filer ikke er tomme.
-    - S&P500 og Germany kan auto-bygges
-    - Andre kan du stadig vedligeholde manuelt (eller udvide builder senere)
-    Returnerer status-messages.
-    """
-    import os
-
-    os.makedirs(DATA_DIR, exist_ok=True)
-
-    status = {}
-
-    targets = {
-        "sp500.csv": ("S&P 500 (US)", _build_sp500_from_wikipedia),
-        "germany_de.csv": ("Germany (DE)", _build_germany_dax_from_wikipedia),
-    }
-
-    for fname, (label, builder) in targets.items():
-        path = f"{DATA_DIR}/{fname}"
-        needs = True
-        try:
-            if os.path.exists(path) and os.path.getsize(path) > 10:
-                df = pd.read_csv(path)
-                needs = _is_file_probably_empty(df)
-        except Exception:
-            needs = True
-
-        if needs:
-            dfb = builder()
-            if dfb is None or dfb.empty:
-                status[label] = "Kunne ikke auto-bygge (netværk/format)."
-            else:
-                dfb.to_csv(path, index=False)
-                status[label] = f"Auto-bygget: {len(dfb)} tickers."
-        else:
-            status[label] = "OK (fil findes)."
-
-    return status
-
-
-def load_universe_csv(path: str) -> tuple[pd.DataFrame, str]:
-    try:
-        df = pd.read_csv(path)
-        df = _ensure_universe_schema(df)
-        if df.empty:
-            return df, f"Universe-filen er tom: {path}"
-        return df, ""
-    except Exception as e:
-        return pd.DataFrame(columns=["ticker", "name", "sector", "country"]), f"Kunne ikke læse {path}: {e}"
-
-
-# =============================
-# Indicators / signals
-# =============================
 def _rsi(close: pd.Series, period: int = 14) -> float:
     close = close.dropna()
     if len(close) < period + 5:
@@ -310,9 +207,6 @@ def _pct_change(a: float, b: float) -> float:
 
 
 def compute_signals(df: pd.DataFrame) -> dict:
-    """
-    Robust signal dict (trend, RSI, momentum, vol, drawdown)
-    """
     if df is None or df.empty or "Close" not in df.columns:
         return {}
 
@@ -354,6 +248,14 @@ def compute_signals(df: pd.DataFrame) -> dict:
     if (not np.isnan(dd) and dd < -25):
         risk = "Meget høj"
 
+    action = "HOLD / AFVENT"
+    buy_zone = trend_up and (not np.isnan(rsi14)) and (35 <= rsi14 <= 60) and (not np.isnan(mom20)) and (mom20 >= 0)
+    sell_zone = (not trend_up and (not np.isnan(rsi14)) and (rsi14 < 40)) or (risk in ("Meget høj",))
+    if sell_zone:
+        action = "SÆLG / UNDGÅ"
+    elif buy_zone:
+        action = "KØB / KIG NÆRMERE"
+
     why = []
     if trend_up:
         why.append("Trend op (MA50>MA200)")
@@ -361,20 +263,6 @@ def compute_signals(df: pd.DataFrame) -> dict:
         why.append(f"RSI {rsi14:.0f}")
     if not np.isnan(mom20):
         why.append(f"Momentum 20d {mom20:.1f}%")
-    if not np.isnan(dd):
-        why.append(f"DD 3m {dd:.1f}%")
-    if not np.isnan(vol20):
-        why.append(f"Vol20 {vol20:.2f}%")
-
-    buy_zone = trend_up and (not np.isnan(rsi14)) and (35 <= rsi14 <= 60) and (not np.isnan(mom20)) and (mom20 >= 0)
-    sell_zone = (not trend_up and (not np.isnan(rsi14)) and (rsi14 < 40)) or (risk in ("Meget høj",))
-
-    if sell_zone:
-        action = "SÆLG / UNDGÅ"
-    elif buy_zone:
-        action = "KØB / KIG NÆRMERE"
-    else:
-        action = "HOLD / AFVENT"
 
     return {
         "last": last,
@@ -390,311 +278,174 @@ def compute_signals(df: pd.DataFrame) -> dict:
     }
 
 
-# =============================
-# Learning log (simpelt, gratis, uden DB)
-# =============================
-def _init_learning():
-    if "learning_log" not in st.session_state:
-        st.session_state["learning_log"] = []  # list of dicts
-
-
-def log_signal_event(ticker: str, name: str, signal: dict):
-    _init_learning()
-    if not signal:
-        return
-    st.session_state["learning_log"].append(
-        {
-            "timestamp": datetime.utcnow().isoformat(timespec="seconds"),
-            "ticker": ticker,
-            "name": name or "",
-            "action": signal.get("action", ""),
-            "score": signal.get("score", np.nan),
-            "last": signal.get("last", np.nan),
-            "why": signal.get("why", ""),
-        }
-    )
-
-
-def evaluate_learning(df_prices: pd.DataFrame, log_row: dict) -> dict:
-    """
-    Evaluerer "ramte vi" ved at se efterfølgende afkast siden log-tidspunkt (hvis muligt).
-    Dette er en simpel feedback-løkke – ikke ML.
-    """
-    if df_prices is None or df_prices.empty:
-        return {}
-
-    try:
-        t0 = pd.to_datetime(log_row["timestamp"], errors="coerce")
-    except Exception:
-        return {}
-
-    if pd.isna(t0):
-        return {}
-
-    p = df_prices.copy()
-    p["Date"] = pd.to_datetime(p["Date"], errors="coerce")
-    p = p.dropna(subset=["Date"]).sort_values("Date")
-    p = p[p["Date"] >= t0]
-    if p.empty:
-        return {}
-
-    last0 = float(log_row.get("last", np.nan))
-    last_now = float(p["Close"].iloc[-1])
-    if np.isnan(last0) or last0 == 0:
-        return {}
-
-    ret = (last_now / last0 - 1.0) * 100.0
-    return {"return_since_%": round(ret, 2), "last_now": round(last_now, 2)}
-
-
-# =============================
-# Tema/forecast helpers (Stooq + Google News RSS)
-# =============================
-def _to_series_close(df: pd.DataFrame) -> pd.Series:
-    if df is None or df.empty or "Date" not in df.columns or "Close" not in df.columns:
-        return pd.Series(dtype=float)
-    s = df.copy()
-    s["Date"] = pd.to_datetime(s["Date"], errors="coerce")
-    s = s.dropna(subset=["Date"]).sort_values("Date")
-    s = s.set_index("Date")["Close"].astype(float)
-    return s.dropna()
-
-
-def _last_n_months_return(close: pd.Series, months: int) -> float:
-    if close is None or close.empty:
-        return np.nan
-    n = int(months * 21)
-    if len(close) < n + 5:
-        return np.nan
-    last = float(close.iloc[-1])
-    past = float(close.iloc[-(n + 1)])
-    if past == 0:
-        return np.nan
-    return (last / past - 1.0) * 100.0
-
-
-def _rel_strength(asset_close: pd.Series, bench_close: pd.Series, months: int) -> float:
-    ra = _last_n_months_return(asset_close, months)
-    rb = _last_n_months_return(bench_close, months)
-    if np.isnan(ra) or np.isnan(rb):
-        return np.nan
-    return ra - rb
-
-
-def _trend_regime(close: pd.Series) -> str:
-    if close is None or close.empty or len(close) < 220:
-        return "—"
-    ma50 = close.rolling(50).mean().iloc[-1]
-    ma200 = close.rolling(200).mean().iloc[-1]
-    if np.isnan(ma50) or np.isnan(ma200):
-        return "—"
-    if ma50 > ma200:
-        return "Up"
-    if ma50 < ma200:
-        return "Down"
-    return "Sideways"
-
-
-def _vol20(close: pd.Series) -> float:
-    if close is None or close.empty or len(close) < 40:
-        return np.nan
-    ret = close.pct_change().dropna()
-    if len(ret) < 25:
-        return np.nan
-    return float(ret.rolling(20).std().iloc[-1] * 100.0)
-
-
-def _dd3m(close: pd.Series) -> float:
-    if close is None or close.empty or len(close) < 80:
-        return np.nan
-    w = 63
-    last = float(close.iloc[-1])
-    peak = float(close.iloc[-w:].max())
-    if peak == 0:
-        return np.nan
-    return (last / peak - 1.0) * 100.0
-
-
-def _momentum_score(rs1, rs3, rs6, rs12, trend: str, vol: float, dd: float) -> float:
-    score = 0.0
-    for v, w in [(rs1, 1.0), (rs3, 1.5), (rs6, 2.0), (rs12, 2.5)]:
-        if not np.isnan(v):
-            score += w * (v / 5.0)
-
-    if trend == "Up":
-        score += 1.5
-    elif trend == "Down":
-        score -= 1.0
-
-    if not np.isnan(vol):
-        score -= max(0.0, (vol - 2.5) / 2.0)
-
-    if not np.isnan(dd):
-        score += min(1.0, max(-2.0, (dd + 10.0) / 10.0))
-
-    return float(round(score, 4))
-
-
-def _google_news_rss_url(query: str) -> str:
+def google_news_link(query: str) -> str:
     q = requests.utils.quote(query)
-    return f"https://news.google.com/rss/search?q={q}&hl=da&gl=DK&ceid=DK:da"
+    return f"https://news.google.com/search?q={q}&hl=da&gl=DK&ceid=DK%3Ada"
 
 
-def _parse_google_news_rss(query: str, days: int = 7, max_items: int = 30) -> tuple[int, float, list[str]]:
-    """
-    Returnerer:
-      - count (sidste X dage)
-      - tone (-1..+1) simpel
-      - titles (op til 5)
-    """
-    url = _google_news_rss_url(query)
+def load_universe_csv(path: str) -> tuple[pd.DataFrame, str]:
     try:
-        r = requests.get(url, timeout=15)
-        if r.status_code != 200 or not r.text.strip():
-            return 0, 0.0, []
-    except Exception:
-        return 0, 0.0, []
+        if not os.path.exists(path):
+            return pd.DataFrame(columns=["ticker", "name", "sector", "country"]), f"Filen findes ikke: {path}"
 
-    try:
-        root = ET.fromstring(r.text)
-    except Exception:
-        return 0, 0.0, []
+        # hvis filen er tom (0 bytes)
+        if os.path.getsize(path) == 0:
+            return pd.DataFrame(columns=["ticker", "name", "sector", "country"]), f"Filen er tom: {path}"
 
-    pos_words = {
-        "beats", "surges", "rises", "up", "record", "strong", "growth", "profit", "upgrade",
-        "stiger", "opjust", "opjusterer", "rekord", "stærk", "vækst", "overskud", "opgradering"
+        df = pd.read_csv(path)
+        df = _ensure_universe_schema(df)
+        if df.empty:
+            return df, f"Universet er tomt efter indlæsning: {path} (mangler data eller 'ticker')"
+        return df, ""
+    except Exception as e:
+        return pd.DataFrame(columns=["ticker", "name", "sector", "country"]), f"Kunne ikke læse {path}: {e}"
+
+
+# -----------------------------
+# Universe builder (Wikipedia) - gratis stort univers (index-baseret)
+# Kræver: lxml i requirements.txt
+# -----------------------------
+@st.cache_data(ttl=24 * 60 * 60, show_spinner=False)
+def build_universe_from_wikipedia(kind: str) -> pd.DataFrame:
+    """
+    kind: SP500, NASDAQ100, DAX, CAC40
+    Return: ticker,name,sector,country (sector kan være tom afhængigt af tabel)
+    """
+    if kind == "SP500":
+        url = "https://en.wikipedia.org/wiki/List_of_S%26P_500_companies"
+        market_hint = "US"
+        tbl = pd.read_html(url, attrs={"id": "constituents"})[0]
+        # columns: Symbol, Security, GICS Sector ...
+        df = pd.DataFrame({
+            "ticker": tbl["Symbol"].astype(str).str.strip().map(lambda x: _stooq_symbol(x, "US")),
+            "name": tbl["Security"].astype(str),
+            "sector": tbl.get("GICS Sector", "").astype(str) if "GICS Sector" in tbl.columns else "",
+            "country": "US",
+        })
+        return _ensure_universe_schema(df)
+
+    if kind == "NASDAQ100":
+        url = "https://en.wikipedia.org/wiki/Nasdaq-100"
+        tbl = pd.read_html(url)[0]  # "Current components"
+        df = pd.DataFrame({
+            "ticker": tbl["Ticker"].astype(str).str.strip().map(lambda x: _stooq_symbol(x, "US")),
+            "name": tbl["Company"].astype(str),
+            "sector": "",
+            "country": "US",
+        })
+        return _ensure_universe_schema(df)
+
+    if kind == "DAX":
+        url = "https://en.wikipedia.org/wiki/DAX"
+        tbl = pd.read_html(url)[0]
+        # Nogle gange hedder ticker-kolonnen bare "Ticker"
+        ticker_col = "Ticker" if "Ticker" in tbl.columns else tbl.columns[0]
+        name_col = "Company" if "Company" in tbl.columns else tbl.columns[2]
+        df = pd.DataFrame({
+            "ticker": tbl[ticker_col].astype(str).str.strip().map(lambda x: _stooq_symbol(x, "DE")),
+            "name": tbl[name_col].astype(str),
+            "sector": "",
+            "country": "DE",
+        })
+        # Ryd op: Wikipedia kan give tomme ticker-felter pga. logo-kolonner
+        df["ticker"] = df["ticker"].astype(str).str.replace(r"\s+", "", regex=True)
+        df = df[df["ticker"].str.len() > 3]
+        return _ensure_universe_schema(df)
+
+    if kind == "CAC40":
+        url = "https://en.wikipedia.org/wiki/CAC_40"
+        tbls = pd.read_html(url)
+        # første tabel plejer at være components
+        tbl = tbls[0]
+        # typisk kolonner: "Ticker" / "Company" eller "Symbol"
+        tcol = "Ticker" if "Ticker" in tbl.columns else ("Symbol" if "Symbol" in tbl.columns else tbl.columns[0])
+        ncol = "Company" if "Company" in tbl.columns else ("Name" if "Name" in tbl.columns else tbl.columns[1])
+        df = pd.DataFrame({
+            "ticker": tbl[tcol].astype(str).str.strip().map(lambda x: _stooq_symbol(x, "FR")),
+            "name": tbl[ncol].astype(str),
+            "sector": "",
+            "country": "FR",
+        })
+        df = df[df["ticker"].astype(str).str.len() > 3]
+        return _ensure_universe_schema(df)
+
+    return pd.DataFrame(columns=["ticker", "name", "sector", "country"])
+
+
+def append_signal_log(ticker: str, signal: str, score: float, rsi: float, mom20: float, last: float):
+    """
+    Skriv en simpel log til CSV, så vi kan måle "ramte vi rigtigt?"
+    (På Streamlit Cloud er filsystemet ikke en sikker database, men loggen er nyttig i Codespaces.
+     Senere kan vi flytte log til GitHub (commit) eller en lille DB.)
+    """
+    os.makedirs("data", exist_ok=True)
+    row = {
+        "ts": datetime.utcnow().isoformat(),
+        "ticker": ticker,
+        "signal": signal,
+        "score": score,
+        "rsi": rsi,
+        "mom20": mom20,
+        "last": last,
     }
-    neg_words = {
-        "misses", "falls", "down", "warning", "weak", "decline", "lawsuit", "downgrade",
-        "falder", "nedjust", "nedjusterer", "advarsel", "svag", "fald", "retssag", "nedgradering"
-    }
-
-    cutoff = datetime.utcnow() - timedelta(days=days)
-    count = 0
-    tone = 0.0
-    titles = []
-
-    for item in root.findall(".//item")[:max_items]:
-        title_el = item.find("title")
-        pub_el = item.find("pubDate")
-        if title_el is None or pub_el is None:
-            continue
-        title = (title_el.text or "").strip()
-        pub = (pub_el.text or "").strip()
-
+    df = pd.DataFrame([row])
+    if os.path.exists(SIGNAL_LOG_PATH) and os.path.getsize(SIGNAL_LOG_PATH) > 0:
         try:
-            dt = parsedate_to_datetime(pub)
-            if dt.tzinfo is not None:
-                dt = dt.astimezone(tz=None).replace(tzinfo=None)
+            old = pd.read_csv(SIGNAL_LOG_PATH)
+            out = pd.concat([old, df], ignore_index=True)
         except Exception:
-            continue
-
-        if dt < cutoff:
-            continue
-
-        count += 1
-        t = title.lower()
-        p = sum(1 for w in pos_words if w in t)
-        n = sum(1 for w in neg_words if w in t)
-        if p + n > 0:
-            tone += (p - n) / (p + n)
-
-        if len(titles) < 5:
-            titles.append(title)
-
-    if count == 0:
-        return 0, 0.0, []
-    tone_score = float(max(-1.0, min(1.0, tone / max(1, count))))
-    return count, tone_score, titles
+            out = df
+    else:
+        out = df
+    out.to_csv(SIGNAL_LOG_PATH, index=False)
 
 
-# =============================
-# Timeframes for chart
-# =============================
-def slice_timeframe(df: pd.DataFrame, tf: str) -> pd.DataFrame:
-    if df is None or df.empty:
-        return df
-    d = df.copy()
-    d["Date"] = pd.to_datetime(d["Date"], errors="coerce")
-    d = d.dropna(subset=["Date"]).sort_values("Date")
-    last = d["Date"].max()
-
-    if tf == "Dag":
-        return d.tail(60)
-    if tf == "Uge":
-        w = d.set_index("Date")[["Close"]].resample("W").last().dropna().reset_index()
-        return w.tail(104)
-    if tf == "Måned":
-        m = d.set_index("Date")[["Close"]].resample("M").last().dropna().reset_index()
-        return m.tail(120)
-    if tf == "3M":
-        cutoff = last - pd.Timedelta(days=92)
-        return d[d["Date"] >= cutoff]
-    if tf == "6M":
-        cutoff = last - pd.Timedelta(days=183)
-        return d[d["Date"] >= cutoff]
-    if tf == "I år":
-        cutoff = pd.Timestamp(year=last.year, month=1, day=1)
-        return d[d["Date"] >= cutoff]
-    if tf == "3 år":
-        cutoff = last - pd.Timedelta(days=int(365.25 * 3))
-        return d[d["Date"] >= cutoff]
-    if tf == "5 år":
-        cutoff = last - pd.Timedelta(days=int(365.25 * 5))
-        return d[d["Date"] >= cutoff]
-    if tf == "10 år":
-        cutoff = last - pd.Timedelta(days=int(365.25 * 10))
-        return d[d["Date"] >= cutoff]
-    if tf == "MAX":
-        return d
-    return d
-
-
-# =============================
-# Sidebar + universes
-# =============================
+# -----------------------------
+# Sidebar
+# -----------------------------
 st.title(APP_TITLE)
 
 with st.sidebar:
     st.header("⚙️ Indstillinger")
     top_n = st.slider("Top N (screening)", 5, 50, DEFAULT_TOPN, 1)
-    years = st.slider("Historik (år)", 1, 15, 10, 1)
-    max_screen = st.slider("Max tickers pr. screening", 20, 400, 150, 10)
-
-    st.divider()
-    if st.button("🔁 Auto-byg universer (S&P500 + Germany)", type="primary"):
-        with st.spinner("Bygger/retter universer..."):
-            status = ensure_universe_files()
-        st.success("Færdig.")
-        for k, v in status.items():
-            st.write(f"- {k}: {v}")
+    years = st.slider("Historik (år)", 1, 10, 5, 1)
+    max_screen = st.slider("Max tickers pr. screening (for hastighed)", 20, 300, 120, 10)
 
     st.divider()
     st.subheader("📌 Hjælp (dansk)")
     st.markdown(
         """
-**Faner**
-- **Søg & analyse**: vælg aktie/ETF + timeframe + signal + nyhedsflow.
-- **Screening**: top kandidater ud fra trend/RSI/momentum.
-- **Portefølje**: dynamisk portefølje i app + signal-vurdering løbende.
-- **Tema/forecast**: momentum-proxy via ETF’er + nyhedsheat.
+**Hvad ser du?**
+- **Søg/valg papir**: vælg aktie/ETF og se pris + perioder + signal + nyheder.
+- **Screening**: scorer tickers ud fra trend (MA50/MA200), RSI og momentum.
+- **Portefølje**: upload CSV med beholdninger for % fordeling + løbende signal.
+- **Tema/forecast**: idé-radar (momentum-proxy).
+- **Universe builder**: byg store universer gratis (index-lister) og download CSV.
 
-**Signal**
-- **KØB / KIG NÆRMERE**: trend op + RSI ok + momentum ikke negativt.
+**Signal-forklaring**
+- **KØB / KIG NÆRMERE**: trend op + RSI i rimelig zone + momentum ikke negativt.
 - **HOLD / AFVENT**: blandet billede.
-- **SÆLG / UNDGÅ**: svag trend / høj risiko.
-
-Ikke finansiel rådgivning.
+- **SÆLG / UNDGÅ**: svag trend/høj risiko.
         """
     )
 
 
+# -----------------------------
+# Tabs
+# -----------------------------
+tab_search, tab_screener, tab_portfolio, tab_themes, tab_builder = st.tabs(
+    ["🔎 Søg / vælg papir", "🏁 Screening (Top N)", "💼 Portefølje", "🧭 Tema/forecast", "🧰 Universe builder"]
+)
+
+# -----------------------------
+# Universes
+# -----------------------------
 UNIVERSE_FILES = {
     "S&P 500 (US)": f"{DATA_DIR}/sp500.csv",
-    "Germany (DE)": f"{DATA_DIR}/germany_de.csv",
     "STOXX Europe 600": f"{DATA_DIR}/stoxx600.csv",
     "Nordics (DK)": f"{DATA_DIR}/nordics_dk.csv",
     "Nordics (SE)": f"{DATA_DIR}/nordics_se.csv",
+    "Germany (DE)": f"{DATA_DIR}/germany_de.csv",
 }
 
 
@@ -702,160 +453,161 @@ def get_universe(name: str) -> pd.DataFrame:
     path = UNIVERSE_FILES.get(name, "")
     df, err = load_universe_csv(path)
     if err:
-        # Hvis det er et af de auto-byggelige universer, prøv auto-build én gang
-        if "S&P" in name or "Germany" in name:
-            ensure_universe_files()
-            df, err = load_universe_csv(path)
-
-    if err:
         st.error(f"Kunne ikke indlæse univers: {err}")
     return df
 
 
-# =============================
-# Tabs
-# =============================
-tab_search, tab_screener, tab_portfolio, tab_themes = st.tabs(
-    ["🔎 Søg & analyse", "🏁 Screening (Top N)", "💼 Portefølje", "🧭 Tema/forecast"]
-)
+def market_hint_from_universe(universe_name: str) -> str:
+    if "S&P" in universe_name:
+        return "US"
+    if "Germany" in universe_name:
+        return "DE"
+    if "Nordics (DK)" in universe_name:
+        return "DK"
+    if "Nordics (SE)" in universe_name:
+        return "SE"
+    return ""
 
 
-# =============================
-# TAB: Search & analyse
-# =============================
+# -----------------------------
+# TAB: Search / chart
+# -----------------------------
 with tab_search:
-    st.subheader("🔎 Søg & analyse")
+    st.subheader("🔎 Søg / vælg papir")
+
     c1, c2 = st.columns([1, 2])
 
     with c1:
         universe_name = st.selectbox("Vælg univers", list(UNIVERSE_FILES.keys()), index=0)
         uni = get_universe(universe_name)
 
-        mode = st.radio("Vælg metode", ["Fra univers-liste", "Manuel ticker"], horizontal=True)
+        if uni.empty:
+            st.warning("Universet er tomt. Udfyld CSV i data/universes (ticker,name,sector,country).")
+            st.stop()
 
-        timeframe = st.selectbox(
-            "Visning (dagskurser/uge/måned/...)",
-            ["Dag", "Uge", "Måned", "3M", "6M", "I år", "3 år", "5 år", "10 år", "MAX"],
+        uni = uni.copy()
+        uni["display"] = uni.apply(
+            lambda r: f"{r['ticker']} — {r['name']}" if str(r.get("name", "")).strip() else f"{r['ticker']}",
+            axis=1,
+        )
+
+        query = st.text_input("Søg navn eller ticker", "")
+        view = uni
+        if query.strip():
+            q = query.strip().lower()
+            view = view[
+                view["ticker"].str.lower().str.contains(q, na=False)
+                | view["name"].astype(str).str.lower().str.contains(q, na=False)
+            ]
+
+        if view.empty:
+            st.info("Ingen match. Prøv en anden søgning.")
+            st.stop()
+
+        selection = st.selectbox("Vælg papir", view["display"].tolist(), index=0)
+
+        rows = view[view["display"] == selection]
+        if rows.empty:
+            st.warning("Ingen valg i listen endnu. Prøv igen eller skift univers.")
+            st.stop()
+
+        sel = rows.iloc[0]
+        ticker = str(sel["ticker"]).strip()
+        name = str(sel.get("name", "")).strip()
+        sector = str(sel.get("sector", "")).strip()
+
+        market_hint = market_hint_from_universe(universe_name)
+
+        st.caption(f"Valgt: **{ticker}** {('— ' + name) if name else ''}")
+        if sector:
+            st.caption(f"Sektor: {sector}")
+
+        period = st.selectbox(
+            "Vis periode",
+            ["1D", "1W", "1M", "3M", "6M", "YTD", "3Y", "5Y", "10Y", "MAX"],
             index=3,
         )
 
-        market_hint = "US" if "S&P" in universe_name else ""
-
-        if mode == "Manuel ticker":
-            ticker = st.text_input("Indtast ticker (Stooq-format anbefales)", "AAPL.US")
-            name = ""
-        else:
-            if uni.empty:
-                st.warning("Universet er tomt. Tryk i sidebar: 'Auto-byg universer' eller brug 'Manuel ticker'.")
-                st.stop()
-
-            u = uni.copy()
-            u["display"] = u.apply(
-                lambda r: f"{r['ticker']} — {r['name']}" if str(r.get("name", "")).strip() else f"{r['ticker']}",
-                axis=1,
-            )
-
-            query = st.text_input("Søg navn eller ticker", "")
-            view = u
-            if query.strip():
-                q = query.strip().lower()
-                view = view[
-                    view["ticker"].str.lower().str.contains(q, na=False)
-                    | view["name"].astype(str).str.lower().str.contains(q, na=False)
-                ]
-
-            if view.empty:
-                st.info("Ingen match. Prøv en anden søgning.")
-                st.stop()
-
-            selection = st.selectbox("Vælg papir", view["display"].tolist(), index=0)
-
-            rows = view[view["display"] == selection]
-            if rows.empty:
-                st.warning("Ingen valg i listen endnu. Prøv igen eller skift univers.")
-                st.stop()
-
-            sel = rows.iloc[0]
-            ticker = str(sel["ticker"]).strip()
-            name = str(sel.get("name", "")).strip()
-
-        st.caption(f"Valgt: **{ticker}** {('— ' + name) if name else ''}")
-
     with c2:
-        df = fetch_daily_ohlc_stooq(ticker, years=years, market_hint=market_hint)
+        df = fetch_daily_ohlc_stooq(ticker, years=max(2, years), market_hint=market_hint)
         if df.empty:
             st.error(
-                "Kunne ikke hente dagskurser fra Stooq.\n\n"
-                "Tip: Brug tickers som Stooq forstår (fx AAPL.US, NOVO-B.CO, SAP.DE)."
+                "Kunne ikke hente dagskurser for denne ticker via Stooq.\n\n"
+                "Tip: Brug tickers som Stooq forstår (fx AAPL.US, SAP.DE, NOVO-B.CO)."
             )
             st.stop()
 
-        sig = compute_signals(df)
-        log_signal_event(ticker, name, sig)
+        # periode-slice
+        dfp = slice_period(df, period)
 
         last = float(df["Close"].iloc[-1])
         prev = float(df["Close"].iloc[-2]) if len(df) >= 2 else last
         chg = (last / prev - 1) * 100 if prev else 0
 
+        sig = compute_signals(df)
+        if sig:
+            append_signal_log(ticker, sig.get("action", ""), sig.get("score", np.nan), sig.get("rsi", np.nan), sig.get("mom20", np.nan), sig.get("last", np.nan))
+
         m1, m2, m3, m4 = st.columns(4)
         m1.metric("Seneste close", f"{last:,.2f}")
         m2.metric("Dag %", f"{chg:.2f}%")
         m3.metric("Seneste dato", df["Date"].iloc[-1].date().isoformat())
-        m4.metric("Signal", sig.get("action", "—"))
+        m4.metric("Signal", sig.get("action", "—") if sig else "—")
 
-        st.caption(sig.get("why", ""))
+        st.markdown(f"#### Kurs (Close) — {period}")
+        st.line_chart(dfp.set_index("Date")["Close"])
 
-        show = slice_timeframe(df, timeframe)
-        if "Close" in show.columns:
-            st.markdown(f"#### Kurs (Close) — {timeframe}")
-            st.line_chart(show.set_index("Date")["Close"])
+        st.markdown("#### Signal (forklaring)")
+        if sig:
+            st.write(f"**{sig['action']}**  | Score: **{sig['score']}**  | Risiko: **{sig['risk']}**")
+            if sig.get("why"):
+                st.caption(sig["why"])
+        else:
+            st.info("Ikke nok historik til signal (kræver typisk 80+ dage).")
 
-        st.markdown("#### Seneste OHLC (10 rækker)")
-        st.dataframe(df.tail(10), use_container_width=True, hide_index=True)
+        st.markdown("#### OHLC (tabel, seneste 10)")
+        st.dataframe(dfp.tail(10), use_container_width=True, hide_index=True)
 
         st.markdown("#### Nyheder (følger valgt papir)")
         qtxt = f"{ticker} {name}".strip()
         st.markdown(f"- Google News: {google_news_link(qtxt)}")
+        if name:
+            st.markdown(f"- Google News (navn): {google_news_link(name)}")
 
-        st.markdown("#### Læring (ramte vi sidst?)")
-        _init_learning()
-        ll = st.session_state["learning_log"][-20:]
-        if ll:
-            # vis tabel + evaluering for seneste 5 events for dette ticker
-            rows = []
-            for r in reversed(ll):
-                if r["ticker"] != ticker:
-                    continue
-                ev = evaluate_learning(df, r)
-                rows.append({**r, **ev})
-                if len(rows) >= 5:
-                    break
-            if rows:
-                st.dataframe(pd.DataFrame(rows), use_container_width=True, hide_index=True)
-            else:
-                st.info("Ingen historik for dette ticker endnu (du bygger den ved at bruge app’en).")
+        st.markdown("#### Læring (simpel log)")
+        if os.path.exists(SIGNAL_LOG_PATH) and os.path.getsize(SIGNAL_LOG_PATH) > 0:
+            try:
+                log = pd.read_csv(SIGNAL_LOG_PATH).tail(20)
+                st.dataframe(log, use_container_width=True, hide_index=True)
+                st.caption("Næste step: vi beregner 'ramte vi rigtigt?' ved at måle efter 5/20/60 dage.")
+            except Exception:
+                st.caption("Kunne ikke læse signal_log.csv (ikke kritisk).")
         else:
-            st.info("Ingen historik endnu (du bygger den ved at bruge app’en).")
+            st.caption("Ingen signal-log endnu (oprettes automatisk når du åbner et papir).")
 
 
-# =============================
+# -----------------------------
 # TAB: Screener
-# =============================
+# -----------------------------
 with tab_screener:
     st.subheader("🏁 Screening (Top N) — RSI / momentum / trend")
     universe_name2 = st.selectbox("Vælg univers til screening", list(UNIVERSE_FILES.keys()), index=0, key="uni2")
     uni2 = get_universe(universe_name2)
-    market_hint2 = "US" if "S&P" in universe_name2 else ""
+    market_hint2 = market_hint_from_universe(universe_name2)
 
     if uni2.empty:
-        st.warning("Universet er tomt. Tryk 'Auto-byg universer' (sidebar) eller fyld CSV manuelt.")
+        st.warning("Universet er tomt. Tjek CSV.")
         st.stop()
 
-    st.caption("Tryk **Kør screening**. Vi begrænser antal tickers for hastighed.")
+    st.caption(
+        "Tryk **Kør screening** for at hente dagskurser og beregne signaler. "
+        "Vi begrænser antal tickers for hastighed."
+    )
 
     if st.button("Kør screening", type="primary"):
         tickers = uni2["ticker"].astype(str).str.strip().tolist()
-        tickers = [t for t in tickers if t][:max_screen]
+        tickers = [t for t in tickers if t]
+        tickers = tickers[: max_screen]
 
         rows = []
         prog = st.progress(0)
@@ -863,37 +615,37 @@ with tab_screener:
 
         for i, t in enumerate(tickers, start=1):
             status.write(f"Henter {i}/{len(tickers)}: {t}")
-            df = fetch_daily_ohlc_stooq(t, years=max(3, years), market_hint=market_hint2)
-            sig = compute_signals(df)
+            dfx = fetch_daily_ohlc_stooq(t, years=max(2, years), market_hint=market_hint2)
+            sig = compute_signals(dfx)
             if sig:
                 r = uni2[uni2["ticker"] == t]
-                nm = str(r["name"].iloc[0]).strip() if not r.empty else ""
-                sec = str(r["sector"].iloc[0]).strip() if not r.empty else ""
+                name = str(r["name"].iloc[0]).strip() if not r.empty else ""
+                sector = str(r["sector"].iloc[0]).strip() if not r.empty else ""
+
                 rows.append(
                     {
                         "Ticker": t,
-                        "Navn": nm,
-                        "Sektor": sec,
+                        "Navn": name,
+                        "Sektor": sector,
                         "Score": sig["score"],
                         "Signal": sig["action"],
-                        "Trend": "✅" if sig["trend_up"] else "—",
+                        "Trend op": "✅" if sig["trend_up"] else "—",
                         "RSI": round(sig["rsi"], 1) if not np.isnan(sig["rsi"]) else np.nan,
                         "Momentum 20d %": round(sig["mom20"], 1) if not np.isnan(sig["mom20"]) else np.nan,
                         "Vol20 %": round(sig["vol20"], 2) if not np.isnan(sig["vol20"]) else np.nan,
-                        "DD 3m %": round(sig["dd3m"], 1) if not np.isnan(sig["dd3m"]) else np.nan,
+                        "Drawdown 3m %": round(sig["dd3m"], 1) if not np.isnan(sig["dd3m"]) else np.nan,
                         "Seneste": round(sig["last"], 2),
                         "Hvorfor": sig["why"],
                         "Risiko": sig["risk"],
                     }
                 )
-
             prog.progress(i / len(tickers))
 
         status.empty()
         prog.empty()
 
         if not rows:
-            st.warning("Ingen tickers gav brugbar data. Tjek tickers i univers (Stooq-format).")
+            st.warning("Ingen tickers gav brugbar data. Tjek tickers (Stooq-format) i dit univers.")
             st.stop()
 
         out = pd.DataFrame(rows).sort_values(["Score"], ascending=False).reset_index(drop=True)
@@ -907,7 +659,7 @@ with tab_screener:
         pick = st.selectbox("Kandidat", choices)
         pick_ticker = pick.split(" — ")[0].strip()
 
-        dfp = fetch_daily_ohlc_stooq(pick_ticker, years=years, market_hint=market_hint2)
+        dfp = fetch_daily_ohlc_stooq(pick_ticker, years=max(2, years), market_hint=market_hint2)
         if dfp.empty:
             st.error("Kunne ikke hente data for valgt kandidat.")
         else:
@@ -915,116 +667,91 @@ with tab_screener:
             st.caption(f"Nyheder: {google_news_link(pick)}")
 
 
-# =============================
-# TAB: Portfolio (dynamisk)
-# =============================
+# -----------------------------
+# TAB: Portfolio (dynamisk – første version)
+# -----------------------------
 with tab_portfolio:
-    st.subheader("💼 Portefølje (dynamisk + vurdering)")
+    st.subheader("💼 Portefølje (dynamisk)")
 
-    if "portfolio_items" not in st.session_state:
-        st.session_state["portfolio_items"] = []  # list of dict: ticker, shares, name, sector
+    st.caption(
+        "Første gratis version: upload CSV (ticker,shares, optional name/sector/country). "
+        "Næste step: gem portefølje i session + knap 'Tilføj papir' (uden upload)."
+    )
 
-    st.markdown("### Tilføj position (uden CSV)")
-    pc1, pc2, pc3 = st.columns([2, 1, 1])
-    with pc1:
-        pticker = st.text_input("Ticker", "AAPL.US", key="pticker")
-    with pc2:
-        pshares = st.number_input("Antal (shares)", min_value=0.0, value=1.0, step=1.0, key="pshares")
-    with pc3:
-        add = st.button("➕ Tilføj")
-
-    if add and pticker.strip():
-        st.session_state["portfolio_items"].append(
-            {"ticker": pticker.strip(), "shares": float(pshares), "name": "", "sector": "", "country": ""}
-        )
-        st.success("Tilføjet til portefølje (session).")
-
-    st.divider()
-    st.markdown("### Eller upload CSV")
-    up = st.file_uploader("Upload portefølje CSV (ticker, shares[, name, sector])", type=["csv"])
-
-    combined = []
-    combined.extend(st.session_state["portfolio_items"])
-
-    if up is not None:
-        try:
-            raw = pd.read_csv(up)
-            raw = _normalize_cols(raw)
-            if "ticker" not in raw.columns:
-                raw = raw.rename(columns={raw.columns[0]: "ticker"})
-            if "shares" not in raw.columns:
-                if "antal" in raw.columns:
-                    raw = raw.rename(columns={"antal": "shares"})
-                if "qty" in raw.columns:
-                    raw = raw.rename(columns={"qty": "shares"})
-            if "shares" not in raw.columns:
-                st.error("CSV mangler 'shares' (eller 'antal/qty').")
-                st.stop()
-
-            for col in ("name", "sector", "country"):
-                if col not in raw.columns:
-                    raw[col] = ""
-
-            for _, r in raw.iterrows():
-                combined.append(
-                    {
-                        "ticker": str(r["ticker"]).strip(),
-                        "shares": float(pd.to_numeric(r["shares"], errors="coerce") or 0.0),
-                        "name": str(r.get("name", "")).strip(),
-                        "sector": str(r.get("sector", "")).strip(),
-                        "country": str(r.get("country", "")).strip(),
-                    }
-                )
-        except Exception as e:
-            st.error(f"Kunne ikke læse CSV: {e}")
-            st.stop()
-
-    if not combined:
-        st.info("Tilføj en position eller upload CSV for at se portefølje.")
+    up = st.file_uploader("Upload portefølje CSV", type=["csv"])
+    if up is None:
+        st.info("Upload en CSV for at se portefølje og sektorfordeling.")
         st.stop()
 
-    pdf = pd.DataFrame(combined)
+    try:
+        raw = pd.read_csv(up)
+    except Exception as e:
+        st.error(f"Kunne ikke læse CSV: {e}")
+        st.stop()
+
+    raw = _normalize_cols(raw)
+    if "ticker" not in raw.columns:
+        st.error("CSV skal have kolonnen 'ticker'.")
+        st.stop()
+
+    if "shares" not in raw.columns:
+        if "antal" in raw.columns:
+            raw = raw.rename(columns={"antal": "shares"})
+        if "qty" in raw.columns:
+            raw = raw.rename(columns={"qty": "shares"})
+    if "shares" not in raw.columns:
+        st.error("CSV mangler 'shares' (eller qty/antal).")
+        st.stop()
+
+    for col in ("name", "sector", "country"):
+        if col not in raw.columns:
+            raw[col] = ""
+
+    pdf = raw[["ticker", "shares", "name", "sector", "country"]].copy()
     pdf["ticker"] = pdf["ticker"].astype(str).str.strip()
     pdf["shares"] = pd.to_numeric(pdf["shares"], errors="coerce").fillna(0.0)
-    pdf = pdf[(pdf["ticker"].str.len() > 0) & (pdf["shares"] > 0)].copy()
-
+    pdf = pdf[pdf["shares"] > 0].copy()
     if pdf.empty:
-        st.warning("Portefølje er tom efter filtrering (shares > 0).")
+        st.warning("Ingen linjer med shares > 0.")
         st.stop()
 
-    # priser + signal
     price_map = {}
     sig_map = {}
+    why_map = {}
 
-    with st.spinner("Henter priser og beregner signaler ..."):
+    with st.spinner("Henter seneste dagskurser (gratis) ..."):
         for t in pdf["ticker"].tolist():
             mh = "US" if t.upper().endswith(".US") else ""
-            df = fetch_daily_ohlc_stooq(t, years=max(3, years), market_hint=mh)
-            if df.empty:
+            dfx = fetch_daily_ohlc_stooq(t, years=max(2, years), market_hint=mh)
+            if dfx.empty:
                 price_map[t] = np.nan
-                sig_map[t] = {}
+                sig_map[t] = "—"
+                why_map[t] = "Ingen data"
             else:
-                price_map[t] = float(df["Close"].iloc[-1])
-                sig_map[t] = compute_signals(df)
+                price_map[t] = float(dfx["Close"].iloc[-1])
+                sig = compute_signals(dfx)
+                sig_map[t] = sig.get("action", "—") if sig else "—"
+                why_map[t] = sig.get("why", "") if sig else ""
 
     pdf["last_price"] = pdf["ticker"].map(price_map)
     pdf["value"] = pdf["shares"] * pdf["last_price"]
     total = float(pdf["value"].sum()) if np.isfinite(pdf["value"].sum()) else 0.0
     pdf["weight_pct"] = (pdf["value"] / total * 100.0) if total > 0 else 0.0
+    pdf["signal"] = pdf["ticker"].map(sig_map)
+    pdf["why"] = pdf["ticker"].map(why_map)
 
-    pdf["signal"] = pdf["ticker"].apply(lambda t: sig_map.get(t, {}).get("action", "—"))
-    pdf["signal_why"] = pdf["ticker"].apply(lambda t: sig_map.get(t, {}).get("why", ""))
-
-    st.markdown("### Beholdning (med vurdering)")
-    show_cols = ["ticker", "shares", "last_price", "value", "weight_pct", "signal", "signal_why"]
+    st.markdown("### Beholdning + løbende vurdering")
+    show_cols = ["ticker", "name", "sector", "shares", "last_price", "value", "weight_pct", "signal", "why"]
     st.dataframe(
         pdf[show_cols].sort_values("weight_pct", ascending=False),
         use_container_width=True,
         hide_index=True,
     )
 
-    st.markdown("### Sektorfordeling (hvis sector findes)")
-    if "sector" in pdf.columns and not pdf["sector"].astype(str).str.strip().eq("").all():
+    st.markdown("### Sektorfordeling")
+    if pdf["sector"].astype(str).str.strip().eq("").all():
+        st.info("Ingen sektor angivet i CSV. Tilføj 'sector' for korrekt sektorfordeling.")
+    else:
         by_sector = (
             pdf.assign(sector=pdf["sector"].astype(str).replace("", "Ukendt"))
             .groupby("sector", dropna=False)["weight_pct"]
@@ -1032,142 +759,127 @@ with tab_portfolio:
             .sort_values(ascending=False)
         )
         st.bar_chart(by_sector)
-    else:
-        st.info("Ingen 'sector' data. Tilføj sector i CSV eller i session-items.")
 
-    st.markdown("### Nyheder (top 10 vægt)")
+    st.markdown("### Nyheder (følger porteføljen)")
     for _, r in pdf.sort_values("weight_pct", ascending=False).head(10).iterrows():
         label = f"{r['ticker']} {r.get('name','')}".strip()
         st.markdown(f"- {label}: {google_news_link(label)}")
 
 
-# =============================
-# TAB: Tema/forecast (Stooq som datakilde)
-# =============================
+# -----------------------------
+# TAB: Themes / forecast (Stooq som datakilde) - version 1
+# -----------------------------
 with tab_themes:
-    st.subheader("🧭 Tema/forecast (momentum-proxy via ETF’er)")
-    st.caption(
-        "Tema-radar: Relativ styrke vs SPY + trend/risk + nyhedsheat (Google News RSS). "
-        "Forecast er scenario-label (ikke kursmål). Ikke finansiel rådgivning."
-    )
+    st.subheader("🧭 Tema/forecast (momentum-proxy via ETF’er / tickers)")
+    st.caption("Dette er en teknisk momentum-indikator (ikke rådgivning).")
 
-    days_news = st.slider("Nyhedsvindue (dage)", 3, 30, 7, 1, key="days_news")
-
-    # Benchmark
-    bench_ticker = "SPY.US"
-    bench_df = fetch_daily_ohlc_stooq(bench_ticker, years=max(5, years), market_hint="US")
-    bench_close = _to_series_close(bench_df)
-    if bench_close.empty:
-        st.error("Kunne ikke hente benchmark (SPY.US) fra Stooq.")
-        st.stop()
-
-    # Du kan udvide denne liste når du vil
+    # Temaer (du kan ændre tickers – de skal være Stooq-format)
     themes = {
-        "AI & Software": ["QQQ.US"],
-        "Semiconductors": ["SOXX.US"],
-        "Elektrificering & batterier": ["LIT.US"],
-        "Solenergi": ["TAN.US"],
-        "Grøn energi": ["ICLN.US"],
-        "Robotics/Automation": ["BOTZ.US"],
-        "Defense/Aerospace": ["ITA.US"],
-        "Rum / Space": ["ARKX.US"],
-        "Cybersecurity": ["HACK.US"],
+        "AI & Software": ["QQQ.US", "MSFT.US", "NVDA.US"],
+        "Semiconductors": ["SOXX.US", "NVDA.US", "AMD.US"],
+        "Elektrificering & batterier": ["LIT.US", "TSLA.US"],
+        "Solenergi": ["TAN.US", "FSLR.US"],
+        "Defense/Aerospace": ["ITA.US", "LMT.US", "RTX.US"],
+        "Robotics/Automation": ["BOTZ.US", "ROK.US"],
+        "Cybersecurity": ["HACK.US", "PANW.US"],
+        "Rum / Space": ["ARKX.US", "RKLB.US"],
+        "Grøn energi": ["ICLN.US", "ENPH.US"],
     }
 
+    bench = st.text_input("Benchmark (relativ styrke)", value="SPY.US")
+
+    def rel_strength(asset: str, bench: str, days: int) -> float:
+        da = fetch_daily_ohlc_stooq(asset, years=10, market_hint="US")
+        db = fetch_daily_ohlc_stooq(bench, years=10, market_hint="US")
+        if da.empty or db.empty:
+            return float("nan")
+        da = da.set_index("Date")["Close"].astype(float)
+        db = db.set_index("Date")["Close"].astype(float)
+        common = da.index.intersection(db.index)
+        da = da.loc[common]
+        db = db.loc[common]
+        if len(da) < days + 5:
+            return float("nan")
+        ra = da.iloc[-1] / da.iloc[-days]
+        rb = db.iloc[-1] / db.iloc[-days]
+        return float(ra / rb - 1.0)  # relativ outperformance
+
     rows = []
-    with st.spinner("Beregner tema-momentum + nyhedsheat ..."):
-        for theme_name, tickers in themes.items():
-            for t in tickers:
-                df = fetch_daily_ohlc_stooq(t, years=max(5, years), market_hint="US")
-                close = _to_series_close(df)
-                if close.empty or len(close) < 260:
-                    continue
+    for theme, tickers in themes.items():
+        # brug første ticker som "tema-proxy" (du kan også lave gennemsnit senere)
+        proxy = tickers[0]
+        rs_1m = rel_strength(proxy, bench, days=21)
+        rs_3m = rel_strength(proxy, bench, days=63)
 
-                rs1 = _rel_strength(close, bench_close, 1)
-                rs3 = _rel_strength(close, bench_close, 3)
-                rs6 = _rel_strength(close, bench_close, 6)
-                rs12 = _rel_strength(close, bench_close, 12)
+        score = 0.0
+        if not np.isnan(rs_1m):
+            score += rs_1m * 100
+        if not np.isnan(rs_3m):
+            score += rs_3m * 100
 
-                trend = _trend_regime(close)
-                vol = _vol20(close)
-                dd = _dd3m(close)
-                score = _momentum_score(rs1, rs3, rs6, rs12, trend, vol, dd)
-
-                q = f"{t} {theme_name}"
-                news_count, tone_score, titles = _parse_google_news_rss(q, days=days_news)
-
-                tend = []
-                if trend == "Up":
-                    tend.append("Trend op (MA50>MA200)")
-                elif trend == "Down":
-                    tend.append("Trend ned (MA50<MA200)")
-                if not np.isnan(rs3):
-                    tend.append(f"RS 3M vs SPY: {rs3:+.1f}pp")
-                if news_count > 0:
-                    tend.append(f"Nyheder: {news_count}/{days_news}d")
-                if not np.isnan(vol):
-                    tend.append(f"Vol20: {vol:.2f}%")
-                if not np.isnan(dd):
-                    tend.append(f"DD3M: {dd:.1f}%")
-
-                # Scenario-labels (enkle og robuste)
-                if trend == "Up" and (not np.isnan(rs6) and rs6 > 0) and tone_score >= -0.1:
-                    scen_3m = "Bull/positiv"
-                elif trend == "Down" and (not np.isnan(rs3) and rs3 < 0) and tone_score <= 0.1:
-                    scen_3m = "Risk-off"
-                else:
-                    scen_3m = "Neutral"
-
-                if trend == "Up" and (not np.isnan(rs12) and rs12 > 0):
-                    scen_12m = "Strukturel styrke"
-                elif trend == "Down" and (not np.isnan(rs12) and rs12 < 0):
-                    scen_12m = "Strukturel svaghed"
-                else:
-                    scen_12m = "Uklart"
-
-                rows.append(
-                    {
-                        "Tema": theme_name,
-                        "Ticker": t,
-                        "MomentumScore": score,
-                        "RS_1M_vs_SPY": rs1,
-                        "RS_3M_vs_SPY": rs3,
-                        "RS_6M_vs_SPY": rs6,
-                        "RS_12M_vs_SPY": rs12,
-                        "Trend": trend,
-                        "Vol20_%": vol,
-                        "DD_3M_%": dd,
-                        f"NewsHeat_{days_news}d": news_count,
-                        "NewsTone": tone_score,
-                        "Forecast_3M": scen_3m,
-                        "Forecast_12M": scen_12m,
-                        "Tendens (kort)": " • ".join(tend),
-                        "NewsLink": google_news_link(q),
-                    }
-                )
-
-    if not rows:
-        st.warning("Ingen tema-ETF’er gav brugbar data (tjek tickers / Stooq).")
-        st.stop()
-
-    out = pd.DataFrame(rows).sort_values("MomentumScore", ascending=False).reset_index(drop=True)
-
-    st.dataframe(out, use_container_width=True, hide_index=True)
-
-    st.markdown("### 🔥 Temaer at kigge nærmere på (stærk relativ styrke)")
-    topk = out.head(6)
-    for _, r in topk.iterrows():
-        st.markdown(
-            f"- **{r['Tema']}** ({r['Ticker']}) — Score **{r['MomentumScore']:.2f}**, "
-            f"RS 1M {r['RS_1M_vs_SPY']:+.1f}pp, RS 3M {r['RS_3M_vs_SPY']:+.1f}pp, "
-            f"Trend **{r['Trend']}**, {days_news}d news **{int(r[f'NewsHeat_{days_news}d'])}** "
-            f"→ {r['Forecast_3M']} / {r['Forecast_12M']}"
+        rows.append(
+            {
+                "Tema": theme,
+                "Ticker": proxy,
+                "MomentumScore": round(score, 4),
+                "RS_1M_vs_SPY": round(rs_1m, 4) if not np.isnan(rs_1m) else np.nan,
+                "RS_3M_vs_SPY": round(rs_3m, 4) if not np.isnan(rs_3m) else np.nan,
+            }
         )
 
-    st.info(
-        "Hvis du vil næste: vi kan gøre temaer dynamiske (bygget fra dine univers-CSV’er), "
-        "og udvide learning-log til hit-rate pr signaltype."
+    df_theme = pd.DataFrame(rows).sort_values("MomentumScore", ascending=False).reset_index(drop=True)
+    st.dataframe(df_theme, use_container_width=True, hide_index=True)
+
+    st.markdown("🔥 Temaer at kigge nærmere på (stærk relativ styrke)")
+    for _, r in df_theme.head(6).iterrows():
+        st.write(f"- **{r['Tema']}** ({r['Ticker']}) — RS 1M: {r['RS_1M_vs_SPY']}, RS 3M: {r['RS_3M_vs_SPY']}")
+
+    st.caption("Næste step: forecast (3/5/10 år) bør være scenarie-baseret (trend+nyheder), ikke 'garanteret' model.")
+
+
+# -----------------------------
+# TAB: Universe builder
+# -----------------------------
+with tab_builder:
+    st.subheader("🧰 Auto-universe builder (gratis)")
+
+    st.write(
+        "Byg et stort univers automatisk (index-baseret) og download som CSV.\n\n"
+        "1) Vælg univers-type\n"
+        "2) Klik 'Byg'\n"
+        "3) Download CSV\n"
+        "4) Læg filen i repo: `data/universes/` og commit+push"
     )
 
+    kind = st.selectbox("Vælg univers-type", ["SP500", "NASDAQ100", "DAX", "CAC40"])
+    out_name = st.text_input("Gem som filnavn (i data/universes)", value=f"{kind.lower()}.csv")
 
-st.caption("Data: Stooq (gratis dagsdata). Nyheder: Google News links/RSS. Ikke finansiel rådgivning.")
+    if st.button("Byg univers", type="primary"):
+        try:
+            dfu = build_universe_from_wikipedia(kind)
+            if dfu.empty:
+                st.error("Builder gav tomt resultat. Prøv igen.")
+            else:
+                st.success(f"Bygget: {len(dfu)} tickers")
+                st.dataframe(dfu.head(50), use_container_width=True, hide_index=True)
+
+                csv_bytes = dfu.to_csv(index=False).encode("utf-8")
+                st.download_button(
+                    "⬇️ Download CSV",
+                    data=csv_bytes,
+                    file_name=out_name,
+                    mime="text/csv",
+                )
+
+                st.info(
+                    "Når du har downloadet:\n"
+                    "- Upload filen til GitHub: `data/universes/`\n"
+                    "- Commit + Push\n"
+                    "- Streamlit Cloud vil derefter kunne bruge universet"
+                )
+        except Exception as e:
+            st.error(f"Kunne ikke bygge univers: {e}")
+
+
+# Footer
+st.caption("Data: Stooq (gratis dagsdata). Nyheder: Google News links. Ikke finansiel rådgivning.")
