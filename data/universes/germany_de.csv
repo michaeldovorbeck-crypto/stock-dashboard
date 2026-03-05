@@ -1,6 +1,21 @@
 ticker,name,sector,country
 SAP.DE,SAP,Technology,DE
 SIE.DE,Siemens,Industrials,DE
+AIR.DE,Airbus,Industrials,DE
 ALV.DE,Allianz,Financials,DE
 BAS.DE,BASF,Materials,DE
-BMW.DE,BMW,Consumer,DE
+BAYN.DE,Bayer,Healthcare,DE
+BMW.DE,BMW,Consumer Discretionary,DE
+MBG.DE,Mercedes-Benz,Consumer Discretionary,DE
+VOW3.DE,Volkswagen,Consumer Discretionary,DE
+DB1.DE,Deutsche Boerse,Financials,DE
+DTE.DE,Deutsche Telekom,Communication Services,DE
+RWE.DE,RWE,Utilities,DE
+EOAN.DE,E.ON,Utilities,DE
+IFX.DE,Infineon,Technology,DE
+ADS.DE,Adidas,Consumer Discretionary,DE
+HEI.DE,Heidelberg Materials,Materials,DE
+HEN3.DE,Henkel,Consumer Staples,DE
+MRK.DE,Merck,Healthcare,DE
+FRE.DE,Fresenius,Healthcare,DE
+ZAL.DE,Zalando,Consumer Discretionary,DE
