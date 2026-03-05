@@ -1,6 +1,21 @@
 ticker,name,sector,country
 NOVO-B.CO,Novo Nordisk,Healthcare,DK
-VWS.CO,Vestas Wind Systems,Industrials,DK
-ORSTED.CO,Ørsted,Utilities,DK
 DSV.CO,DSV,Industrials,DK
-CARL-B.CO,Carlsberg,Consumer,DK
+VWS.CO,Vestas,Industrials,DK
+MAERSK-B.CO,Maersk,Industrials,DK
+ORSTED.CO,Orsted,Utilities,DK
+GEN.CO,Genmab,Healthcare,DK
+COLO-B.CO,Coloplast,Healthcare,DK
+CARL-B.CO,Carlsberg,Consumer Staples,DK
+NOVOZ.CO,Novozymes,Materials,DK
+TRYG.CO,Tryg,Financials,DK
+DANSKE.CO,Danske Bank,Financials,DK
+PNDORA.CO,Pandora,Consumer Discretionary,DK
+ROCK-B.CO,Rockwool,Industrials,DK
+ISS.CO,ISS,Industrials,DK
+DEMANT.CO,Demant,Healthcare,DK
+GN.CO,GN Store Nord,Healthcare,DK
+NETC.CO,Netcompany,Technology,DK
+ALK-B.CO,ALK-Abello,Healthcare,DK
+AMBU-B.CO,Ambu,Healthcare,DK
+JYSK.CO,Jyske Bank,Financials,DK
