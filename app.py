@@ -8,6 +8,130 @@ import pandas as pd
 import requests
 import streamlit as st
 
+import re
+from io import StringIO
+
+# --- Nasdaq Symbol Directory (5000+ tickers) ---
+NASDAQ_NASDAQLISTED = "https://ftp.nasdaqtrader.com/SymbolDirectory/nasdaqlisted.txt"
+NASDAQ_OTHERLISTED  = "https://ftp.nasdaqtrader.com/SymbolDirectory/otherlisted.txt"
+
+@st.cache_data(ttl=24 * 60 * 60, show_spinner=False)
+def _download_text(url: str) -> str:
+    r = requests.get(url, timeout=30)
+    r.raise_for_status()
+    return r.text
+
+def _parse_pipe_file(text: str) -> pd.DataFrame:
+    """
+    nasdaqlisted.txt og otherlisted.txt er pipe-delimited med headerlinje og footer.
+    Vi læser det defensivt.
+    """
+    lines = [ln for ln in text.splitlines() if ln.strip()]
+    if len(lines) < 3:
+        return pd.DataFrame()
+
+    header = lines[0]
+    data_lines = lines[1:]
+
+    # fjern footer-linje som typisk starter med 'File Creation Time' eller lign.
+    data_lines = [ln for ln in data_lines if not ln.lower().startswith("file creation time")]
+
+    # byg en pseudo-csv buffer med | separator
+    buf = header + "\n" + "\n".join(data_lines)
+    df = pd.read_csv(StringIO(buf), sep="|", dtype=str)
+    df = df.fillna("")
+    return df
+
+def _clean_us_symbol(sym: str) -> str:
+    """
+    US symbols kan indeholde tegn som '.' i nogle feeds (BRK.B). Stooq bruger typisk '-':
+    BRK-B.US, BF-B.US osv.
+    """
+    s = (sym or "").strip().upper()
+    if not s:
+        return ""
+    s = s.replace(".", "-")
+    # drop åbenlyse weird/test
+    return s
+
+@st.cache_data(ttl=24 * 60 * 60, show_spinner=False)
+def build_us_universe_from_nasdaq_directory(include_etf: bool = True) -> pd.DataFrame:
+    """
+    Bygger et stort US univers (typisk 6000-9000+ symbols) fra Nasdaq symbol directory.
+    Output schema: ticker,name,sector,country,asset_type,exchange
+    ticker bliver i Stooq-format: SYMBOL.US
+    """
+    t1 = _download_text(NASDAQ_NASDAQLISTED)
+    t2 = _download_text(NASDAQ_OTHERLISTED)
+
+    df1 = _parse_pipe_file(t1)  # Nasdaq listed
+    df2 = _parse_pipe_file(t2)  # Other listed (NYSE/AMEX/etc)
+
+    out_rows = []
+
+    # nasdaqlisted columns (typisk):
+    # Symbol|Security Name|Market Category|Test Issue|Financial Status|Round Lot Size|ETF|NextShares
+    if not df1.empty and "Symbol" in df1.columns:
+        for _, r in df1.iterrows():
+            sym = _clean_us_symbol(r.get("Symbol", ""))
+            if not sym:
+                continue
+            test = (r.get("Test Issue", "") or "").strip().upper() == "Y"
+            if test:
+                continue
+            etf_flag = (r.get("ETF", "") or "").strip().upper() == "Y"
+            if (not include_etf) and etf_flag:
+                continue
+
+            name = (r.get("Security Name", "") or "").strip()
+            out_rows.append({
+                "ticker": f"{sym}.US",
+                "name": name,
+                "sector": "",
+                "country": "US",
+                "asset_type": "ETF" if etf_flag else "Stock",
+                "exchange": "NASDAQ",
+            })
+
+    # otherlisted columns (typisk):
+    # ACT Symbol|Security Name|Exchange|CQS Symbol|ETF|Round Lot Size|Test Issue|NASDAQ Symbol
+    # Exchange: A=AMEX, N=NYSE, P=ARCA, Z=BATS etc.
+    if not df2.empty and ("ACT Symbol" in df2.columns or "ACT Symbol" in df2.columns):
+        act_col = "ACT Symbol" if "ACT Symbol" in df2.columns else df2.columns[0]
+        for _, r in df2.iterrows():
+            sym = _clean_us_symbol(r.get(act_col, ""))
+            if not sym:
+                continue
+            test = (r.get("Test Issue", "") or "").strip().upper() == "Y"
+            if test:
+                continue
+            etf_flag = (r.get("ETF", "") or "").strip().upper() == "Y"
+            if (not include_etf) and etf_flag:
+                continue
+
+            name = (r.get("Security Name", "") or "").strip()
+            exch = (r.get("Exchange", "") or "").strip().upper()
+            out_rows.append({
+                "ticker": f"{sym}.US",
+                "name": name,
+                "sector": "",
+                "country": "US",
+                "asset_type": "ETF" if etf_flag else "Stock",
+                "exchange": exch,
+            })
+
+    df = pd.DataFrame(out_rows)
+    if df.empty:
+        return pd.DataFrame(columns=["ticker","name","sector","country","asset_type","exchange"])
+
+    # drop duplicates
+    df = df.drop_duplicates(subset=["ticker"]).reset_index(drop=True)
+
+    # filtrér nogle kendte “ikke-aktie” symboler, hvis de sniger sig ind
+    # (warrants/preferred kan stadig være i listen – behold dem hvis du vil)
+    df = df[df["ticker"].str.match(r"^[A-Z0-9\-\^]+\.US$")].copy()
+
+    return df
 
 # -----------------------------
 # App config
