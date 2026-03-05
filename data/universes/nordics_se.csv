@@ -1,6 +1,21 @@
 ticker,name,sector,country
-ERIC-B.ST,Ericsson,Technology,SE
-VOLV-B.ST,Volvo,Industrials,SE
-SAAB-B.ST,Saab,Defense,SE
-ABB.ST,ABB,Industrials,SE
 ATCO-A.ST,Atlas Copco,Industrials,SE
+VOLV-B.ST,Volvo,Industrials,SE
+ERIC-B.ST,Ericsson,Technology,SE
+ABB.ST,ABB,Industrials,SE
+SAND.ST,Sandvik,Industrials,SE
+ALFA.ST,Alfa Laval,Industrials,SE
+SKF-B.ST,SKF,Industrials,SE
+EQT.ST,EQT,Financials,SE
+SEB-A.ST,SEB,Financials,SE
+SWED-A.ST,Swedbank,Financials,SE
+SHB-A.ST,Handelsbanken,Financials,SE
+ASSA-B.ST,Assa Abloy,Industrials,SE
+HM-B.ST,H&M,Consumer Discretionary,SE
+NDA-SE.ST,Nordea,Financials,SE
+TELIA.ST,Telia,Communication Services,SE
+ESSITY-B.ST,Essity,Consumer Staples,SE
+AZN.ST,AstraZeneca,Healthcare,SE
+INVE-B.ST,Investor AB,Financials,SE
+LATO-B.ST,Latour,Industrials,SE
+KINV-B.ST,Kinnevik,Financials,SE
