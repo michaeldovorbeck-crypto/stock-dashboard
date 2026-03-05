@@ -1,6 +1,51 @@
 ticker,name,sector,country
 AAPL.US,Apple,Technology,US
 MSFT.US,Microsoft,Technology,US
-NVDA.US,Nvidia,Technology,US
-AMZN.US,Amazon,Consumer,US
+NVDA.US,NVIDIA,Technology,US
+AMZN.US,Amazon,Consumer Discretionary,US
 GOOGL.US,Alphabet,Technology,US
+META.US,Meta Platforms,Technology,US
+BRK-B.US,Berkshire Hathaway,Financials,US
+LLY.US,Eli Lilly,Healthcare,US
+AVGO.US,Broadcom,Technology,US
+TSLA.US,Tesla,Consumer Discretionary,US
+JPM.US,JPMorgan Chase,Financials,US
+V.US,Visa,Financials,US
+XOM.US,Exxon Mobil,Energy,US
+UNH.US,UnitedHealth,Healthcare,US
+MA.US,Mastercard,Financials,US
+HD.US,Home Depot,Consumer Discretionary,US
+PG.US,Procter & Gamble,Consumer Staples,US
+COST.US,Costco,Consumer Staples,US
+JNJ.US,Johnson & Johnson,Healthcare,US
+ABBV.US,AbbVie,Healthcare,US
+KO.US,Coca-Cola,Consumer Staples,US
+PEP.US,PepsiCo,Consumer Staples,US
+ADBE.US,Adobe,Technology,US
+CRM.US,Salesforce,Technology,US
+NFLX.US,Netflix,Communication Services,US
+AMD.US,AMD,Technology,US
+INTC.US,Intel,Technology,US
+CSCO.US,Cisco,Technology,US
+QCOM.US,Qualcomm,Technology,US
+TXN.US,Texas Instruments,Technology,US
+LIN.US,Linde,Materials,US
+ACN.US,Accenture,Technology,US
+DHR.US,Danaher,Healthcare,US
+NEE.US,NextEra Energy,Utilities,US
+UPS.US,UPS,Industrials,US
+LOW.US,Lowes,Consumer Discretionary,US
+ORCL.US,Oracle,Technology,US
+AMAT.US,Applied Materials,Technology,US
+GE.US,General Electric,Industrials,US
+SBUX.US,Starbucks,Consumer Discretionary,US
+BA.US,Boeing,Industrials,US
+IBM.US,IBM,Technology,US
+RTX.US,RTX Corp,Industrials,US
+LMT.US,Lockheed Martin,Industrials,US
+CAT.US,Caterpillar,Industrials,US
+DE.US,Deere,Industrials,US
+GS.US,Goldman Sachs,Financials,US
+MS.US,Morgan Stanley,Financials,US
+BLK.US,BlackRock,Financials,US
+SCHW.US,Charles Schwab,Financials,US
