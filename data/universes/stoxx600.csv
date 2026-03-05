@@ -1,6 +1,17 @@
 ticker,name,sector,country
 ASML.AS,ASML,Technology,NL
-NESN.SW,Nestlé,Consumer,CH
-NOVN.SW,Novartis,Healthcare,CH
+MC.PA,LVMH,Consumer Discretionary,FR
+OR.PA,Loreal,Consumer Staples,FR
+TTE.PA,TotalEnergies,Energy,FR
+SAN.PA,Sanofi,Healthcare,FR
+AIR.PA,Airbus,Industrials,FR
+SHEL.L,Shell,Energy,UK
+HSBA.L,HSBC,Financials,UK
+BP.L,BP,Energy,UK
+AZN.L,AstraZeneca,Healthcare,UK
+ULVR.L,Unilever,Consumer Staples,UK
+RIO.L,Rio Tinto,Materials,UK
+NESN.SW,Nestle,Consumer Staples,CH
 ROG.SW,Roche,Healthcare,CH
-MC.PA,LVMH,Consumer,FR
+NOVN.SW,Novartis,Healthcare,CH
+UBSG.SW,UBS,Financials,CH
