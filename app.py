@@ -1,73 +1,70 @@
-import math
-from datetime import datetime, date
+# app.py
+import os
+import json
+from datetime import datetime
 from io import StringIO
-from typing import Dict, Tuple, List
+import math
 
 import numpy as np
 import pandas as pd
 import requests
 import streamlit as st
 
-
-# =============================
+# -----------------------------
 # Config
-# =============================
-st.set_page_config(
-    page_title="Stock Dashboard (gratis)",
-    layout="wide",
-    page_icon="📈",
-)
+# -----------------------------
+st.set_page_config(page_title="Stock Dashboard (gratis)", layout="wide", page_icon="📊")
 
-APP_TITLE = "📈 Stock Dashboard (EU + US + Tema/forecast) — gratis"
+APP_TITLE = "📊 Stock Dashboard (EU + US + Tema-radar) — gratis"
 DATA_DIR = "data/universes"
+LOG_DIR = "data"
+SIGNAL_LOG = os.path.join(LOG_DIR, "signals_log.csv")
+
 DEFAULT_TOPN = 10
 
+UNIVERSE_FILES = {
+    "US_ALL 5000+ (US)": f"{DATA_DIR}/us_all.csv",
+    "S&P 500 (US)": f"{DATA_DIR}/sp500.csv",
+    "STOXX Europe 600": f"{DATA_DIR}/stoxx600.csv",
+    "Nordics (DK)": f"{DATA_DIR}/nordics_dk.csv",
+    "Nordics (SE)": f"{DATA_DIR}/nordics_se.csv",
+    "Germany (DE)": f"{DATA_DIR}/germany_de.csv",
+}
 
-# =============================
+# -----------------------------
 # Robust CSV helpers
-# =============================
-def safe_read_csv_file(path: str) -> pd.DataFrame:
+# -----------------------------
+def _safe_read_csv_text(text: str) -> pd.DataFrame:
     try:
-        df = pd.read_csv(path)
-        if df is None:
-            return pd.DataFrame()
-        return df
+        return pd.read_csv(StringIO(text))
     except Exception:
         return pd.DataFrame()
 
-
-def normalize_cols(df: pd.DataFrame) -> pd.DataFrame:
+def _normalize_cols(df: pd.DataFrame) -> pd.DataFrame:
     df = df.copy()
     df.columns = [str(c).strip().lower() for c in df.columns]
     return df
 
-
-def ensure_universe_schema(df: pd.DataFrame) -> pd.DataFrame:
+def _ensure_universe_schema(df: pd.DataFrame) -> pd.DataFrame:
     """
-    Universe schema:
-      ticker (required)
-      name, sector, country (optional)
+    Universe CSV: ticker (required), name/sector/country optional
     """
     if df is None or df.empty:
         return pd.DataFrame(columns=["ticker", "name", "sector", "country"])
 
-    df = normalize_cols(df)
+    df = _normalize_cols(df)
 
-    # alias
-    rename = {}
+    # alias mapping
+    colmap = {}
     for c in df.columns:
-        if c in ("symbol", "sym", "code"):
-            rename[c] = "ticker"
-        if c in ("company", "companyname", "instrument", "security", "name"):
-            # keep name -> name
-            pass
-        if c in ("companyname", "company"):
-            rename[c] = "name"
-    if rename:
-        df = df.rename(columns=rename)
+        if c in ("symbol", "sym", "code", "act symbol"):
+            colmap[c] = "ticker"
+        if c in ("security name", "company", "companyname", "instrument", "security"):
+            colmap[c] = "name"
+    if colmap:
+        df = df.rename(columns=colmap)
 
     if "ticker" not in df.columns:
-        # guess first col
         df = df.rename(columns={df.columns[0]: "ticker"})
 
     for col in ("name", "sector", "country"):
@@ -78,40 +75,40 @@ def ensure_universe_schema(df: pd.DataFrame) -> pd.DataFrame:
     df = df[df["ticker"].str.len() > 0].drop_duplicates(subset=["ticker"])
     return df[["ticker", "name", "sector", "country"]].reset_index(drop=True)
 
-
-# =============================
-# Stooq data source
-# =============================
-def stooq_symbol(symbol: str, market_hint: str = "") -> str:
-    """
-    If user provides suffix (AAPL.US / NOVO-B.CO) keep it.
-    If no suffix and market_hint==US => append .US
-    Otherwise keep as-is.
-    """
-    s = (symbol or "").strip()
-    if not s:
-        return s
-    if "." in s:
-        return s
-    if market_hint.upper() == "US":
-        return f"{s}.US"
-    return s
-
-
-def safe_read_csv_text(text: str) -> pd.DataFrame:
+def load_universe_csv(path: str) -> tuple[pd.DataFrame, str]:
     try:
-        return pd.read_csv(StringIO(text))
-    except Exception:
-        return pd.DataFrame()
+        if not os.path.exists(path):
+            return pd.DataFrame(columns=["ticker", "name", "sector", "country"]), f"Mangler fil: {path}"
+        # Typisk fejl: merge-conflict markers gør CSV ulæselig
+        with open(path, "r", encoding="utf-8", errors="ignore") as f:
+            head = f.read(2048)
+        if "<<<<<<<" in head or ">>>>>>>" in head or "=======" in head:
+            return pd.DataFrame(columns=["ticker", "name", "sector", "country"]), (
+                f"Filen {path} indeholder merge-conflicts (<<<<<<). Rens filen og commit igen."
+            )
 
+        df = pd.read_csv(path)
+        df = _ensure_universe_schema(df)
+        if df.empty:
+            return df, f"Kunne ikke indlæse univers: {path} (tom eller ingen tickers)."
+        return df, ""
+    except Exception as e:
+        return pd.DataFrame(columns=["ticker", "name", "sector", "country"]), f"Kunne ikke læse {path}: {e}"
+
+# -----------------------------
+# Stooq price fetch
+# -----------------------------
+def _stooq_symbol(symbol: str) -> str:
+    return (symbol or "").strip()
 
 @st.cache_data(ttl=6 * 60 * 60, show_spinner=False)
-def fetch_daily_stooq(symbol: str, years: int = 10, market_hint: str = "") -> pd.DataFrame:
+def fetch_daily_ohlc_stooq(symbol: str, years: int = 5) -> pd.DataFrame:
     """
-    https://stooq.com/q/d/l/?s={sym}&i=d
-    returns columns: Date, Open, High, Low, Close, Volume
+    Stooq daily OHLCV:
+      https://stooq.com/q/d/l/?s={sym}&i=d
+    Return: Date, Open, High, Low, Close, Volume
     """
-    sym = stooq_symbol(symbol, market_hint=market_hint).lower()
+    sym = _stooq_symbol(symbol).lower()
     if not sym:
         return pd.DataFrame()
 
@@ -120,7 +117,7 @@ def fetch_daily_stooq(symbol: str, years: int = 10, market_hint: str = "") -> pd
         r = requests.get(url, timeout=20)
         if r.status_code != 200:
             return pd.DataFrame()
-        df = safe_read_csv_text(r.text)
+        df = _safe_read_csv_text(r.text)
     except Exception:
         return pd.DataFrame()
 
@@ -138,62 +135,10 @@ def fetch_daily_stooq(symbol: str, years: int = 10, market_hint: str = "") -> pd
 
     return df.reset_index(drop=True)
 
-
-def slice_timeframe(df: pd.DataFrame, tf: str) -> pd.DataFrame:
-    """
-    tf: 1D / 1U / 1M / 3M / 6M / YTD / 3Y / 5Y / 10Y / MAX
-    Uses daily df.
-    """
-    if df is None or df.empty:
-        return df
-
-    df = df.copy()
-    df = df.sort_values("Date")
-
-    last_dt = df["Date"].iloc[-1]
-
-    if tf == "MAX":
-        return df
-    if tf == "1D":
-        return df.tail(2)
-    if tf == "1U":
-        cutoff = last_dt - pd.Timedelta(days=7)
-        return df[df["Date"] >= cutoff]
-    if tf == "1M":
-        cutoff = last_dt - pd.Timedelta(days=30)
-        return df[df["Date"] >= cutoff]
-    if tf == "3M":
-        cutoff = last_dt - pd.Timedelta(days=90)
-        return df[df["Date"] >= cutoff]
-    if tf == "6M":
-        cutoff = last_dt - pd.Timedelta(days=182)
-        return df[df["Date"] >= cutoff]
-    if tf == "YTD":
-        cutoff = pd.Timestamp(year=last_dt.year, month=1, day=1)
-        return df[df["Date"] >= cutoff]
-    if tf == "3Y":
-        cutoff = last_dt - pd.Timedelta(days=int(365.25 * 3))
-        return df[df["Date"] >= cutoff]
-    if tf == "5Y":
-        cutoff = last_dt - pd.Timedelta(days=int(365.25 * 5))
-        return df[df["Date"] >= cutoff]
-    if tf == "10Y":
-        cutoff = last_dt - pd.Timedelta(days=int(365.25 * 10))
-        return df[df["Date"] >= cutoff]
-
-    return df
-
-
-# =============================
-# Indicators + scoring
-# =============================
-def pct_change(a: float, b: float) -> float:
-    if b == 0 or np.isnan(a) or np.isnan(b):
-        return float("nan")
-    return (a / b - 1.0) * 100.0
-
-
-def rsi(close: pd.Series, period: int = 14) -> float:
+# -----------------------------
+# Indicators + periods
+# -----------------------------
+def _rsi(close: pd.Series, period: int = 14) -> float:
     close = close.dropna()
     if len(close) < period + 5:
         return float("nan")
@@ -201,16 +146,61 @@ def rsi(close: pd.Series, period: int = 14) -> float:
     gain = delta.clip(lower=0).rolling(period).mean()
     loss = (-delta.clip(upper=0)).rolling(period).mean()
     rs = gain / loss
-    out = 100 - (100 / (1 + rs))
-    return float(out.iloc[-1])
+    rsi = 100 - (100 / (1 + rs))
+    return float(rsi.iloc[-1])
 
+def _pct(a: float, b: float) -> float:
+    if b == 0 or np.isnan(a) or np.isnan(b):
+        return float("nan")
+    return (a / b - 1.0) * 100.0
 
-def compute_signals(df: pd.DataFrame) -> Dict:
-    if df is None or df.empty or "Close" not in df.columns:
+def period_returns(df: pd.DataFrame) -> dict:
+    """
+    Returns over: 1D, 1W, 1M, 3M, 6M, YTD, 1Y, 3Y, 5Y, 10Y, MAX
+    Uses last available close <= target date.
+    """
+    if df is None or df.empty or "Close" not in df.columns or "Date" not in df.columns:
+        return {}
+    d = df[["Date", "Close"]].dropna().copy()
+    d["Close"] = d["Close"].astype(float)
+    d = d.sort_values("Date")
+    if d.empty:
         return {}
 
+    last_date = d["Date"].iloc[-1]
+    last = float(d["Close"].iloc[-1])
+
+    def close_on_or_before(target_date: pd.Timestamp) -> float:
+        sub = d[d["Date"] <= target_date]
+        if sub.empty:
+            return float("nan")
+        return float(sub["Close"].iloc[-1])
+
+    out = {}
+    out["1D"]  = _pct(last, float(d["Close"].iloc[-2])) if len(d) >= 2 else float("nan")
+    out["1W"]  = _pct(last, close_on_or_before(last_date - pd.Timedelta(days=7)))
+    out["1M"]  = _pct(last, close_on_or_before(last_date - pd.Timedelta(days=30)))
+    out["3M"]  = _pct(last, close_on_or_before(last_date - pd.Timedelta(days=90)))
+    out["6M"]  = _pct(last, close_on_or_before(last_date - pd.Timedelta(days=182)))
+
+    ytd_start = pd.Timestamp(year=last_date.year, month=1, day=1)
+    out["YTD"] = _pct(last, close_on_or_before(ytd_start))
+
+    out["1Y"]  = _pct(last, close_on_or_before(last_date - pd.Timedelta(days=365)))
+    out["3Y"]  = _pct(last, close_on_or_before(last_date - pd.Timedelta(days=365*3)))
+    out["5Y"]  = _pct(last, close_on_or_before(last_date - pd.Timedelta(days=365*5)))
+    out["10Y"] = _pct(last, close_on_or_before(last_date - pd.Timedelta(days=365*10)))
+
+    first = float(d["Close"].iloc[0])
+    out["MAX"] = _pct(last, first)
+
+    return out
+
+def compute_signals(df: pd.DataFrame) -> dict:
+    if df is None or df.empty or "Close" not in df.columns:
+        return {}
     close = df["Close"].astype(float).dropna()
-    if len(close) < 80:
+    if len(close) < 120:
         return {}
 
     last = float(close.iloc[-1])
@@ -219,19 +209,19 @@ def compute_signals(df: pd.DataFrame) -> Dict:
     ma200 = close.rolling(200).mean()
     trend_up = bool(ma50.iloc[-1] > ma200.iloc[-1]) if len(close) >= 200 else False
 
-    rsi14 = rsi(close, 14)
-    mom20 = pct_change(last, float(close.iloc[-21])) if len(close) >= 21 else float("nan")
+    rsi14 = _rsi(close, 14)
+    mom20 = _pct(last, float(close.iloc[-21])) if len(close) >= 21 else float("nan")
 
     ret = close.pct_change().dropna()
     vol20 = float(ret.rolling(20).std().iloc[-1] * 100.0) if len(ret) >= 25 else float("nan")
 
     window = 63
+    dd = float("nan")
     if len(close) >= window:
         peak = float(close.iloc[-window:].max())
         dd = (last / peak - 1.0) * 100.0
-    else:
-        dd = float("nan")
 
+    # score
     score = 0.0
     score += 2.0 if trend_up else 0.0
     if not np.isnan(rsi14):
@@ -248,12 +238,10 @@ def compute_signals(df: pd.DataFrame) -> Dict:
         risk = "Meget høj"
 
     why = []
-    if trend_up:
-        why.append("Trend op (MA50>MA200)")
-    if not np.isnan(rsi14):
-        why.append(f"RSI {rsi14:.0f}")
-    if not np.isnan(mom20):
-        why.append(f"Momentum 20d {mom20:.1f}%")
+    if trend_up: why.append("Trend op (MA50>MA200)")
+    if not np.isnan(rsi14): why.append(f"RSI {rsi14:.0f}")
+    if not np.isnan(mom20): why.append(f"Momentum 20d {mom20:.1f}%")
+    if not np.isnan(vol20): why.append(f"Vol20 {vol20:.1f}%")
 
     buy_zone = trend_up and (not np.isnan(rsi14)) and (35 <= rsi14 <= 60) and (not np.isnan(mom20)) and (mom20 >= 0)
     sell_zone = (not trend_up and (not np.isnan(rsi14)) and (rsi14 < 40)) or (risk in ("Meget høj",))
@@ -275,124 +263,131 @@ def compute_signals(df: pd.DataFrame) -> Dict:
         "risk": risk,
         "score": float(round(score, 2)),
         "action": action,
-        "why": " • ".join(why) if why else "",
+        "why": " • ".join(why),
     }
 
-
+# -----------------------------
+# News (free)
+# -----------------------------
 def google_news_link(query: str) -> str:
     q = requests.utils.quote(query)
     return f"https://news.google.com/search?q={q}&hl=da&gl=DK&ceid=DK%3Ada"
 
-
-# =============================
-# Universe loading
-# =============================
-UNIVERSE_FILES = {
-    "S&P 500 (US)": f"{DATA_DIR}/sp500.csv",
-    "STOXX Europe 600": f"{DATA_DIR}/stoxx600.csv",
-    "Nordics (DK)": f"{DATA_DIR}/nordics_dk.csv",
-    "Nordics (SE)": f"{DATA_DIR}/nordics_se.csv",
-    "Germany (DE)": f"{DATA_DIR}/germany_de.csv",
-    "Global (starter)": f"{DATA_DIR}/global_starter.csv",
-}
-
-
-def load_universe(name: str) -> Tuple[pd.DataFrame, str]:
-    path = UNIVERSE_FILES.get(name, "")
-    if not path:
-        return pd.DataFrame(columns=["ticker", "name", "sector", "country"]), "Ukendt univers"
-    df = safe_read_csv_file(path)
-    if df.empty:
-        return pd.DataFrame(columns=["ticker", "name", "sector", "country"]), f"Kunne ikke læse {path} (tom/ugyldig CSV)."
-    df = ensure_universe_schema(df)
-    if df.empty:
-        return df, f"{path} kunne læses, men der blev ikke fundet en 'ticker' kolonne med værdier."
-    return df, ""
-
-
-# =============================
-# Session state: learning log + portfolio
-# =============================
-if "signal_log" not in st.session_state:
-    # ticker -> list of dicts (date, action, last)
-    st.session_state["signal_log"] = {}
-
-if "portfolio_rows" not in st.session_state:
-    st.session_state["portfolio_rows"] = []  # list of dicts: ticker, shares, name, sector, country
-
-
-def log_signal(ticker: str, action: str, last: float):
-    hist = st.session_state["signal_log"].setdefault(ticker, [])
-    hist.append({"ts": datetime.utcnow().isoformat(timespec="seconds"), "action": action, "last": last})
-    hist[:] = hist[-30:]
-
-
-def signal_hit_rate(ticker: str) -> str:
+@st.cache_data(ttl=30 * 60, show_spinner=False)
+def google_news_rss(query: str, limit: int = 10) -> list[dict]:
     """
-    Super simpel "læring": sammenlign sidste signal med efterfølgende pris.
-    - Hvis sidste var KØB og pris steg siden => "ramte"
-    - Hvis SÆLG og pris faldt siden => "ramte"
+    Google News RSS (gratis). Ikke perfekt, men brugbar.
     """
-    hist = st.session_state["signal_log"].get(ticker, [])
-    if len(hist) < 2:
-        return "— (mangler historik)"
-    prev = hist[-2]
-    cur = hist[-1]
+    q = requests.utils.quote(query)
+    url = f"https://news.google.com/rss/search?q={q}&hl=da&gl=DK&ceid=DK:da"
     try:
-        p0 = float(prev["last"])
-        p1 = float(cur["last"])
+        r = requests.get(url, timeout=15)
+        if r.status_code != 200:
+            return []
+        txt = r.text
     except Exception:
-        return "—"
-    action = prev["action"]
-    if "KØB" in action:
-        return "✅ Ramte" if p1 > p0 else "❌ Miss"
-    if "SÆLG" in action:
-        return "✅ Ramte" if p1 < p0 else "❌ Miss"
-    return "—"
+        return []
 
+    # ultra-enkelt XML parse uden ekstra libs
+    items = []
+    parts = txt.split("<item>")
+    for p in parts[1:]:
+        title = ""
+        link = ""
+        pub = ""
+        if "<title>" in p and "</title>" in p:
+            title = p.split("<title>", 1)[1].split("</title>", 1)[0]
+        if "<link>" in p and "</link>" in p:
+            link = p.split("<link>", 1)[1].split("</link>", 1)[0]
+        if "<pubDate>" in p and "</pubDate>" in p:
+            pub = p.split("<pubDate>", 1)[1].split("</pubDate>", 1)[0]
+        if title and link:
+            items.append({"title": title, "link": link, "pub": pub})
+        if len(items) >= limit:
+            break
+    return items
 
-# =============================
-# Sidebar
-# =============================
+# -----------------------------
+# Learning log
+# -----------------------------
+def append_signal_log(ticker: str, action: str, score: float, last: float):
+    os.makedirs(LOG_DIR, exist_ok=True)
+    row = {
+        "ts": datetime.utcnow().isoformat(timespec="seconds"),
+        "ticker": ticker,
+        "action": action,
+        "score": score,
+        "last": last,
+    }
+    df = pd.DataFrame([row])
+    if os.path.exists(SIGNAL_LOG):
+        try:
+            old = pd.read_csv(SIGNAL_LOG)
+            out = pd.concat([old, df], ignore_index=True)
+        except Exception:
+            out = df
+    else:
+        out = df
+    out.to_csv(SIGNAL_LOG, index=False, encoding="utf-8")
+
+def read_signal_log(ticker: str) -> pd.DataFrame:
+    if not os.path.exists(SIGNAL_LOG):
+        return pd.DataFrame()
+    try:
+        df = pd.read_csv(SIGNAL_LOG)
+        df = df[df["ticker"] == ticker].copy()
+        return df.tail(50)
+    except Exception:
+        return pd.DataFrame()
+
+# -----------------------------
+# UI
+# -----------------------------
 st.title(APP_TITLE)
 
 with st.sidebar:
     st.header("⚙️ Indstillinger")
     top_n = st.slider("Top N (screening)", 5, 50, DEFAULT_TOPN, 1)
-    years = st.slider("Historik (år til hentning)", 1, 15, 10, 1)
-    max_screen = st.slider("Max tickers pr. screening", 20, 500, 150, 10)
+    years = st.slider("Historik (år)", 1, 10, 5, 1)
+    max_screen = st.slider("Max tickers pr. screening", 20, 1000, 250, 10)
 
     st.divider()
-    st.subheader("📌 Signal (simpel forklaring)")
+    st.subheader("📌 Hjælp (dansk)")
     st.markdown(
         """
-- **KØB / KIG NÆRMERE**: trend op + RSI i rimelig zone + momentum ikke negativt  
-- **HOLD / AFVENT**: blandet billede  
-- **SÆLG / UNDGÅ**: svag trend / høj risiko  
-
-*Ikke finansiel rådgivning.*
+- **Søg/analyse**: vælg papir, se kurs + periodeafkast + signal + nyheder.
+- **Screening**: kør scoring på et univers (begrænset for hastighed).
+- **Portefølje**: tilføj beholdninger løbende (antal) og få løbende signal pr. linje.
+- **Tema/forecast**: teknisk momentum-proxy på tema-ETF’er (Stooq).
         """
     )
 
-
 tab_search, tab_screener, tab_portfolio, tab_themes = st.tabs(
-    ["🔎 Søg & analyse", "🏁 Auto screener", "💼 Portefølje", "🧭 Tema/forecast"]
+    ["🔎 Søg & analyse", "🏁 Screening (Top N)", "💼 Portefølje", "🧭 Tema/forecast"]
 )
 
+def get_universe(name: str) -> pd.DataFrame:
+    path = UNIVERSE_FILES.get(name, "")
+    df, err = load_universe_csv(path)
+    if err:
+        st.error(err)
+    return df
 
-# =============================
-# TAB 1: Search & analyse
-# =============================
+# -----------------------------
+# TAB: Search
+# -----------------------------
 with tab_search:
-    st.subheader("🔎 Søg & analyse (dagsdata fra Stooq)")
+    st.subheader("🔎 Søg & analyse (dagskurser + perioder + nyheder)")
 
-    c1, c2 = st.columns([1, 2], gap="large")
+    left, right = st.columns([1, 2])
 
-    with c1:
+    with left:
         universe_name = st.selectbox("Vælg univers", list(UNIVERSE_FILES.keys()), index=0)
-        uni, err = load_universe(universe_name)
-        if err:
-            st.error(f"Kunne ikke indlæse univers: {err}")
+        uni = get_universe(universe_name)
+
+        if uni.empty:
+            st.warning("Universet er tomt/ulæseligt. Fix CSV (merge-conflict / tom fil) eller byg US_ALL.")
+            st.info("Tip: Kør `python tools/build_universes.py`, commit `data/universes/us_all.csv`, redeploy.")
             st.stop()
 
         uni = uni.copy()
@@ -401,24 +396,23 @@ with tab_search:
             axis=1,
         )
 
-        q = st.text_input("Søg navn eller ticker", "")
+        query = st.text_input("Søg navn eller ticker", "")
         view = uni
-        if q.strip():
-            qq = q.strip().lower()
+        if query.strip():
+            q = query.strip().lower()
             view = view[
-                view["ticker"].str.lower().str.contains(qq, na=False)
-                | view["name"].astype(str).str.lower().str.contains(qq, na=False)
+                view["ticker"].str.lower().str.contains(q, na=False)
+                | view["name"].astype(str).str.lower().str.contains(q, na=False)
             ]
 
         if view.empty:
-            st.info("Ingen match. Prøv anden søgning.")
+            st.info("Ingen match. Prøv en anden søgning.")
             st.stop()
 
         selection = st.selectbox("Vælg papir", view["display"].tolist(), index=0)
-
         rows = view[view["display"] == selection]
         if rows.empty:
-            st.warning("Ingen valg endnu. Prøv igen.")
+            st.warning("Ingen valg i listen endnu. Prøv igen eller skift univers.")
             st.stop()
 
         sel = rows.iloc[0]
@@ -426,84 +420,79 @@ with tab_search:
         name = str(sel.get("name", "")).strip()
         sector = str(sel.get("sector", "")).strip()
 
-        market_hint = "US" if "S&P" in universe_name else ""
-
-        tf = st.selectbox(
-            "Visning (timeframe)",
-            ["1D", "1U", "1M", "3M", "6M", "YTD", "3Y", "5Y", "10Y", "MAX"],
-            index=3,
-        )
-
         st.caption(f"Valgt: **{ticker}** {('— ' + name) if name else ''}")
         if sector:
             st.caption(f"Sektor: {sector}")
 
-    with c2:
-        df_all = fetch_daily_stooq(ticker, years=years, market_hint=market_hint)
-        if df_all.empty:
-            st.error(
-                "Kunne ikke hente dagskurser fra Stooq for denne ticker.\n\n"
-                "Tip: Brug tickers som Stooq forstår (fx AAPL.US, NOVO-B.CO)."
-            )
-            st.stop()
-
-        df = slice_timeframe(df_all, tf)
+    with right:
+        df = fetch_daily_ohlc_stooq(ticker, years=years)
         if df.empty:
-            st.warning("Ingen data i valgt timeframe.")
+            st.error("Kunne ikke hente dagskurser fra Stooq for denne ticker.")
             st.stop()
 
-        last = float(df_all["Close"].iloc[-1])
-        prev = float(df_all["Close"].iloc[-2]) if len(df_all) >= 2 else last
-        chg = (last / prev - 1) * 100 if prev else 0.0
+        sig = compute_signals(df)
+        rets = period_returns(df)
 
-        sig = compute_signals(df_all)
-        action = sig.get("action", "—")
-        log_signal(ticker, action, last)
+        last = float(df["Close"].iloc[-1])
+        prev = float(df["Close"].iloc[-2]) if len(df) >= 2 else last
+        chg = (last / prev - 1) * 100 if prev else 0
 
-        m1, m2, m3, m4, m5 = st.columns(5)
+        m1, m2, m3, m4 = st.columns(4)
         m1.metric("Seneste close", f"{last:,.2f}")
         m2.metric("Dag %", f"{chg:.2f}%")
-        m3.metric("Seneste dato", df_all["Date"].iloc[-1].date().isoformat())
-        m4.metric("Signal", action)
-        m5.metric("Læring (sidste signal)", signal_hit_rate(ticker))
+        m3.metric("Seneste dato", df["Date"].iloc[-1].date().isoformat())
+        m4.metric("Signal", sig.get("action", "—"))
 
-        st.markdown(f"#### Kurs (Close) — {tf}")
+        # log signal (learning)
+        if sig:
+            append_signal_log(ticker, sig.get("action",""), float(sig.get("score", np.nan)), float(sig.get("last", np.nan)))
+
+        st.markdown("#### Periode-afkast")
+        labels = ["1D", "1W", "1M", "3M", "6M", "YTD", "1Y", "3Y", "5Y", "10Y", "MAX"]
+        cols = st.columns(len(labels))
+        for i, k in enumerate(labels):
+            v = rets.get(k, np.nan)
+            txt = "—" if np.isnan(v) else f"{v:+.2f}%"
+            cols[i].metric(k, txt)
+
+        st.markdown("#### Kurs (Close)")
         st.line_chart(df.set_index("Date")["Close"])
 
-        st.markdown("#### Nøgletal / hvorfor")
-        st.write(sig.get("why", "—"))
-        st.caption(f"Risiko: {sig.get('risk','—')} | Score: {sig.get('score','—')}")
+        st.markdown("#### OHLC (seneste 10)")
+        st.dataframe(df.tail(10), use_container_width=True, hide_index=True)
 
-        st.markdown("#### Nyheder (følger valgt papir)")
+        st.markdown("#### Nyheder (følger dit valg)")
         qtxt = f"{ticker} {name}".strip()
-        st.markdown(f"- Google News: {google_news_link(qtxt)}")
+        st.markdown(f"- Google News (link): {google_news_link(qtxt)}")
 
-        with st.expander("Vis læringslog for dette papir"):
-            hist = st.session_state["signal_log"].get(ticker, [])
-            if not hist:
-                st.info("Ingen historik endnu.")
+        items = google_news_rss(qtxt, limit=10)
+        if items:
+            for it in items:
+                st.markdown(f"- {it['title']}  \n  {it['link']}")
+        else:
+            st.caption("Ingen RSS resultater lige nu (eller rate-limit).")
+
+        with st.expander("📈 Signal-historik (learning)"):
+            hist = read_signal_log(ticker)
+            if hist.empty:
+                st.info("Ingen log endnu.")
             else:
-                st.dataframe(pd.DataFrame(hist), use_container_width=True, hide_index=True)
+                st.dataframe(hist, use_container_width=True, hide_index=True)
 
-
-# =============================
-# TAB 2: Auto screener
-# =============================
+# -----------------------------
+# TAB: Screener
+# -----------------------------
 with tab_screener:
-    st.subheader("🏁 Auto screener (Top N) — RSI / momentum / trend")
+    st.subheader("🏁 Screening (Top N) — global (vælg univers)")
 
-    universe_name2 = st.selectbox("Vælg univers til screening", list(UNIVERSE_FILES.keys()), index=1, key="uni2")
-    uni2, err2 = load_universe(universe_name2)
-    if err2:
-        st.error(f"Kunne ikke indlæse univers: {err2}")
+    universe_name2 = st.selectbox("Vælg univers til screening", list(UNIVERSE_FILES.keys()), index=0, key="uni2")
+    uni2 = get_universe(universe_name2)
+
+    if uni2.empty:
+        st.warning("Universet er tomt/ulæseligt.")
         st.stop()
 
-    market_hint2 = "US" if "S&P" in universe_name2 else ""
-
-    st.caption(
-        "Tryk **Kør screening** for at hente dagskurser og beregne signaler. "
-        "Vi begrænser antal tickers for hastighed."
-    )
+    st.caption("Tryk **Kør screening** for at beregne signaler. Begrænset af max tickers for hastighed.")
 
     if st.button("Kør screening", type="primary"):
         tickers = uni2["ticker"].astype(str).str.strip().tolist()
@@ -515,29 +504,30 @@ with tab_screener:
 
         for i, t in enumerate(tickers, start=1):
             status.write(f"Henter {i}/{len(tickers)}: {t}")
-            df = fetch_daily_stooq(t, years=max(3, years), market_hint=market_hint2)
-            sig = compute_signals(df)
+            dfp = fetch_daily_ohlc_stooq(t, years=max(2, years))
+            sig = compute_signals(dfp)
             if sig:
-                meta = uni2[uni2["ticker"] == t]
-                nm = meta["name"].iloc[0] if not meta.empty else ""
-                sc = meta["sector"].iloc[0] if not meta.empty else ""
-                rows.append(
-                    {
-                        "Ticker": t,
-                        "Navn": nm,
-                        "Sektor": sc,
-                        "Score": sig["score"],
-                        "Signal": sig["action"],
-                        "Trend op": "✅" if sig["trend_up"] else "—",
-                        "RSI": round(sig["rsi"], 1) if not np.isnan(sig["rsi"]) else np.nan,
-                        "Momentum 20d %": round(sig["mom20"], 1) if not np.isnan(sig["mom20"]) else np.nan,
-                        "Vol20 %": round(sig["vol20"], 2) if not np.isnan(sig["vol20"]) else np.nan,
-                        "Drawdown 3m %": round(sig["dd3m"], 1) if not np.isnan(sig["dd3m"]) else np.nan,
-                        "Seneste": round(sig["last"], 2),
-                        "Hvorfor": sig["why"],
-                        "Risiko": sig["risk"],
-                    }
-                )
+                try:
+                    r = uni2[uni2["ticker"] == t].iloc[0]
+                    nm = str(r.get("name", "")).strip()
+                    sec = str(r.get("sector", "")).strip()
+                except Exception:
+                    nm, sec = "", ""
+                rows.append({
+                    "Ticker": t,
+                    "Navn": nm,
+                    "Sektor": sec,
+                    "Score": sig["score"],
+                    "Signal": sig["action"],
+                    "Trend": "✅" if sig["trend_up"] else "—",
+                    "RSI": round(sig["rsi"], 1) if not np.isnan(sig["rsi"]) else np.nan,
+                    "Mom20%": round(sig["mom20"], 1) if not np.isnan(sig["mom20"]) else np.nan,
+                    "Vol20%": round(sig["vol20"], 2) if not np.isnan(sig["vol20"]) else np.nan,
+                    "DD3m%": round(sig["dd3m"], 1) if not np.isnan(sig["dd3m"]) else np.nan,
+                    "Seneste": round(sig["last"], 2),
+                    "Risiko": sig["risk"],
+                    "Hvorfor": sig["why"],
+                })
             prog.progress(i / len(tickers))
 
         status.empty()
@@ -547,212 +537,262 @@ with tab_screener:
             st.warning("Ingen tickers gav brugbar data. Tjek tickers (Stooq-format) i dit univers.")
             st.stop()
 
-        out = pd.DataFrame(rows).sort_values("Score", ascending=False).reset_index(drop=True)
+        out = pd.DataFrame(rows).sort_values(["Score"], ascending=False).reset_index(drop=True)
         top = out.head(top_n)
 
-        st.markdown(f"### Top {top_n} kandidater")
+        st.markdown(f"### Top {top_n}")
         st.dataframe(top, use_container_width=True, hide_index=True)
 
-        st.markdown("### Vælg kandidat og se chart + nyheder")
+        st.markdown("### Vælg kandidat")
         choices = top.apply(lambda r: f"{r['Ticker']} — {r['Navn']}" if r["Navn"] else r["Ticker"], axis=1).tolist()
         pick = st.selectbox("Kandidat", choices)
         pick_ticker = pick.split(" — ")[0].strip()
 
-        dfp = fetch_daily_stooq(pick_ticker, years=years, market_hint=market_hint2)
+        dfp = fetch_daily_ohlc_stooq(pick_ticker, years=years)
         if dfp.empty:
             st.error("Kunne ikke hente data for valgt kandidat.")
         else:
             st.line_chart(dfp.set_index("Date")["Close"])
             st.caption(f"Nyheder: {google_news_link(pick)}")
 
+# -----------------------------
+# TAB: Portfolio (dynamic)
+# -----------------------------
+def _portfolio_init():
+    if "portfolio" not in st.session_state:
+        st.session_state["portfolio"] = []  # list of dicts: ticker, shares, name(optional)
 
-# =============================
-# TAB 3: Portfolio (dynamic)
-# =============================
+_portfolio_init()
+
+def portfolio_to_df() -> pd.DataFrame:
+    if not st.session_state["portfolio"]:
+        return pd.DataFrame(columns=["ticker", "shares", "name"])
+    df = pd.DataFrame(st.session_state["portfolio"])
+    df["ticker"] = df["ticker"].astype(str).str.strip()
+    df["shares"] = pd.to_numeric(df["shares"], errors="coerce").fillna(0.0)
+    df = df[df["ticker"].str.len() > 0]
+    df = df[df["shares"] > 0]
+    return df.reset_index(drop=True)
+
 with tab_portfolio:
-    st.subheader("💼 Portefølje (dynamisk)")
+    st.subheader("💼 Min portefølje (dynamisk) — køb/hold/sælg pr. linje")
+    st.caption("Tilføj linjer løbende. Du kan eksportere/importere som JSON.")
 
-    st.caption("Tilføj dine positioner her. App’en vurderer løbende Køb/Hold/Sælg pr position (simpel model).")
+    c1, c2, c3 = st.columns([1, 1, 1])
+    with c1:
+        t = st.text_input("Ticker (Stooq-format)", value="AAPL.US")
+    with c2:
+        sh = st.number_input("Antal", min_value=0.0, value=1.0, step=1.0)
+    with c3:
+        nm = st.text_input("Navn (valgfri)", value="")
 
-    with st.expander("➕ Tilføj position"):
-        t = st.text_input("Ticker (Stooq-format anbefalet, fx AAPL.US / NOVO-B.CO)", key="p_ticker").strip()
-        sh = st.number_input("Antal (shares)", min_value=0.0, value=0.0, step=1.0, key="p_shares")
-        nm = st.text_input("Navn (valgfrit)", key="p_name").strip()
-        sc = st.text_input("Sektor (valgfrit)", key="p_sector").strip()
-        co = st.text_input("Land (valgfrit)", key="p_country").strip()
+    add = st.button("➕ Tilføj til portefølje")
+    if add:
+        st.session_state["portfolio"].append({"ticker": t.strip(), "shares": float(sh), "name": nm.strip()})
 
-        if st.button("Tilføj til portefølje"):
-            if not t or sh <= 0:
-                st.warning("Angiv ticker og shares > 0.")
-            else:
-                st.session_state["portfolio_rows"].append(
-                    {"ticker": t, "shares": float(sh), "name": nm, "sector": sc, "country": co}
-                )
-                st.success("Tilføjet.")
-
-    if st.button("🧹 Ryd portefølje"):
-        st.session_state["portfolio_rows"] = []
-        st.success("Portefølje ryddet.")
-
-    if not st.session_state["portfolio_rows"]:
-        st.info("Ingen positioner endnu. Tilføj en position ovenfor.")
+    dfp = portfolio_to_df()
+    if dfp.empty:
+        st.info("Porteføljen er tom. Tilføj mindst én linje.")
         st.stop()
 
-    pdf = pd.DataFrame(st.session_state["portfolio_rows"])
-    pdf["shares"] = pd.to_numeric(pdf["shares"], errors="coerce").fillna(0.0)
-    pdf = pdf[pdf["shares"] > 0].copy()
-    if pdf.empty:
-        st.info("Ingen positioner med shares > 0.")
-        st.stop()
+    colA, colB = st.columns([2, 1])
+    with colA:
+        st.markdown("### Beholdninger (rå)")
+        st.dataframe(dfp, use_container_width=True, hide_index=True)
 
-    price_map = {}
-    signal_map = {}
-    with st.spinner("Henter seneste dagskurser + signaler ..."):
-        for t in pdf["ticker"].astype(str).tolist():
-            df = fetch_daily_stooq(t, years=max(3, years), market_hint=("US" if t.upper().endswith(".US") else ""))
-            if df.empty:
-                price_map[t] = np.nan
-                signal_map[t] = {"action": "—", "why": "Ingen data", "score": np.nan}
-            else:
-                price_map[t] = float(df["Close"].iloc[-1])
-                signal_map[t] = compute_signals(df) or {"action": "—", "why": "For lidt data", "score": np.nan}
+    with colB:
+        st.markdown("### Export/Import")
+        exp = json.dumps(st.session_state["portfolio"], ensure_ascii=False, indent=2)
+        st.download_button("⬇️ Download JSON", data=exp, file_name="portfolio.json", mime="application/json")
+        up = st.file_uploader("Upload portfolio.json", type=["json"])
+        if up is not None:
+            try:
+                loaded = json.loads(up.read().decode("utf-8"))
+                if isinstance(loaded, list):
+                    st.session_state["portfolio"] = loaded
+                    st.success("Importeret portfolio.json")
+                    st.rerun()
+                else:
+                    st.error("JSON skal være en liste.")
+            except Exception as e:
+                st.error(f"Kunne ikke læse JSON: {e}")
 
-    pdf["last_price"] = pdf["ticker"].map(price_map)
-    pdf["value"] = pdf["shares"] * pdf["last_price"]
-    total = float(pdf["value"].sum()) if np.isfinite(pdf["value"].sum()) else 0.0
-    pdf["weight_pct"] = (pdf["value"] / total * 100.0) if total > 0 else 0.0
+    st.markdown("### Analyse pr. holding")
+    rows = []
+    with st.spinner("Henter dagskurser og beregner signaler ..."):
+        for _, r in dfp.iterrows():
+            tic = str(r["ticker"]).strip()
+            shares = float(r["shares"])
+            name = str(r.get("name","")).strip()
+            dfx = fetch_daily_ohlc_stooq(tic, years=max(2, years))
+            sig = compute_signals(dfx)
+            last = float(dfx["Close"].iloc[-1]) if not dfx.empty else np.nan
+            value = shares * last if np.isfinite(last) else np.nan
+            rows.append({
+                "Ticker": tic,
+                "Navn": name,
+                "Antal": shares,
+                "Seneste": round(last, 4) if np.isfinite(last) else np.nan,
+                "Værdi": round(value, 2) if np.isfinite(value) else np.nan,
+                "Signal": sig.get("action","—"),
+                "Score": sig.get("score", np.nan),
+                "RSI": round(sig.get("rsi", np.nan), 1) if sig else np.nan,
+                "Mom20%": round(sig.get("mom20", np.nan), 1) if sig else np.nan,
+                "Risiko": sig.get("risk","—"),
+                "Kort forklaring": sig.get("why",""),
+                "Nyheder": google_news_link(f"{tic} {name}".strip()),
+            })
 
-    pdf["Signal"] = pdf["ticker"].map(lambda x: signal_map.get(x, {}).get("action", "—"))
-    pdf["Forklaring"] = pdf["ticker"].map(lambda x: signal_map.get(x, {}).get("why", ""))
-    pdf["Score"] = pdf["ticker"].map(lambda x: signal_map.get(x, {}).get("score", np.nan))
-
-    st.markdown("### Overblik")
-    show_cols = ["ticker", "name", "sector", "shares", "last_price", "value", "weight_pct", "Signal", "Score", "Forklaring"]
-    for c in show_cols:
-        if c not in pdf.columns:
-            pdf[c] = ""
-    st.dataframe(pdf[show_cols].sort_values("weight_pct", ascending=False), use_container_width=True, hide_index=True)
-
-    st.markdown("### Sektorfordeling")
-    if pdf["sector"].astype(str).str.strip().eq("").all():
-        st.info("Ingen sektor angivet. Tilføj sektor i portefølje for sektordiagram.")
+    out = pd.DataFrame(rows)
+    total = float(out["Værdi"].sum()) if "Værdi" in out.columns else 0.0
+    if total > 0:
+        out["Vægt %"] = (out["Værdi"] / total * 100.0).round(2)
     else:
-        by_sector = (
-            pdf.assign(sector=pdf["sector"].astype(str).replace("", "Ukendt"))
-            .groupby("sector", dropna=False)["weight_pct"]
-            .sum()
-            .sort_values(ascending=False)
-        )
-        st.bar_chart(by_sector)
+        out["Vægt %"] = np.nan
 
-    st.markdown("### Nyheder (top 10 positioner)")
-    for _, r in pdf.sort_values("weight_pct", ascending=False).head(10).iterrows():
-        label = f"{r['ticker']} {r.get('name','')}".strip()
-        st.markdown(f"- {label}: {google_news_link(label)}")
+    st.dataframe(out.sort_values("Vægt %", ascending=False), use_container_width=True, hide_index=True)
 
+    st.markdown("### Sektorfordeling (kræver sector i univers/portfolio)")
+    st.caption("Næste step: merge sektor fra univers-CSV. (Kan vi lave i næste iteration.)")
 
-# =============================
-# TAB 4: Tema/forecast (momentum proxy)
-# =============================
+# -----------------------------
+# TAB: Themes (Stooq)
+# -----------------------------
 with tab_themes:
-    st.subheader("🧭 Tema/forecast (momentum-proxy via ETF’er) — Stooq dagsdata")
-    st.caption("Teknisk momentum-indikator (ikke rådgivning). Forecast er *proxy* baseret på trend/RS — ikke en garanti.")
+    st.subheader("🧭 Tema/forecast (momentum-proxy via ETF’er)")
+    st.caption("Teknisk momentum-indikator (ikke rådgivning). Datakilde: Stooq.")
 
-    # Theme ETFs (many are US tickers; Stooq may require .US)
-    # Use suffix .US where possible to improve hit-rate
-    themes = [
-        {"Tema": "AI & Software", "Ticker": "QQQ.US"},
-        {"Tema": "Cybersecurity", "Ticker": "HACK.US"},
-        {"Tema": "Semiconductors", "Ticker": "SOXX.US"},
-        {"Tema": "Elektrificering & batterier", "Ticker": "LIT.US"},
-        {"Tema": "Solenergi", "Ticker": "TAN.US"},
-        {"Tema": "Defense/Aerospace", "Ticker": "ITA.US"},
-        {"Tema": "Robotics/Automation", "Ticker": "BOTZ.US"},
-        {"Tema": "Grøn energi", "Ticker": "ICLN.US"},
-        {"Tema": "Rumd / Space", "Ticker": "ARKX.US"},
-        {"Tema": "Biotech", "Ticker": "XBI.US"},
-    ]
-    bench = "SPY.US"
+    # 50+ temaer (du kan udvide løbende)
+    # NOTE: tickers skal være Stooq-format, ellers kommer der tom data.
+    THEMES = {
+        "AI & Software": ["QQQ.US", "XLK.US", "MSFT.US", "NVDA.US"],
+        "Semiconductors": ["SOXX.US", "SMH.US", "NVDA.US", "AVGO.US"],
+        "Cybersecurity": ["HACK.US", "CIBR.US", "PANW.US", "CRWD.US"],
+        "Defense/Aerospace": ["ITA.US", "XAR.US", "LMT.US", "NOC.US"],
+        "Space": ["ARKX.US", "RKLB.US", "ASTS.US"],
+        "Robotics/Automation": ["BOTZ.US", "ROBO.US", "ISRG.US"],
+        "Cloud/Datacenter": ["SKYY.US", "AMZN.US", "GOOGL.US"],
+        "Energy (Oil&Gas)": ["XLE.US", "CVX.US", "XOM.US"],
+        "Solar": ["TAN.US", "ENPH.US", "FSLR.US"],
+        "Wind": ["VWS.CO", "ORSTED.CO"],
+        "Clean Energy": ["ICLN.US", "PBW.US"],
+        "Uranium": ["URA.US", "CCJ.US"],
+        "EV & Batteries": ["LIT.US", "TSLA.US", "ALB.US"],
+        "Autonomous/AV": ["TSLA.US", "GOOGL.US"],
+        "Fintech": ["FINX.US", "PYPL.US", "SQ.US"],
+        "Payments": ["V.US", "MA.US", "PYPL.US"],
+        "Banks": ["XLF.US", "JPM.US", "BAC.US"],
+        "Insurance": ["KIE.US", "AIG.US"],
+        "Healthcare": ["XLV.US", "UNH.US", "JNJ.US"],
+        "Biotech": ["IBB.US", "XBI.US"],
+        "Medtech": ["IHI.US", "ISRG.US"],
+        "Pharma": ["PFE.US", "LLY.US", "NVO.CO"],
+        "Obesity/GLP-1": ["NVO.CO", "LLY.US"],
+        "Consumer Staples": ["XLP.US", "PG.US", "KO.US"],
+        "Luxury": ["MC.PA", "RMS.PA"],
+        "E-commerce": ["AMZN.US", "BABA.US"],
+        "China Tech": ["KWEB.US", "BABA.US", "TCEHY.US"],
+        "India Growth": ["INDA.US"],
+        "Japan": ["EWJ.US"],
+        "Emerging Markets": ["EEM.US", "VWO.US"],
+        "Commodities": ["DBC.US", "GLD.US"],
+        "Gold": ["GLD.US", "IAU.US"],
+        "Silver": ["SLV.US"],
+        "Real Estate": ["VNQ.US"],
+        "Utilities": ["XLU.US"],
+        "Water": ["PHO.US", "FIW.US"],
+        "Agriculture": ["DBA.US"],
+        "Shipping": ["SEA? (placeholder)"],
+        "Gaming": ["ESPO.US"],
+        "Media/Streaming": ["NFLX.US", "DIS.US"],
+        "Travel": ["JETS.US", "BKNG.US"],
+        "Construction": ["XHB.US"],
+        "Industrials": ["XLI.US"],
+        "Materials": ["XLB.US"],
+        "Metals & Mining": ["XME.US"],
+        "Rare Earths": ["REMX.US"],
+        "Telecom": ["IYZ.US"],
+        "Dividends": ["VYM.US", "SCHD.US"],
+        "Low Vol": ["SPLV.US"],
+        "Momentum": ["MTUM.US"],
+        "Small Cap": ["IWM.US"],
+        "Growth": ["VUG.US"],
+        "Value": ["VTV.US"],
+        "Bonds (AGG)": ["AGG.US"],
+        "Inflation": ["TIP.US"],
+    }
 
-    def rel_strength(series_a: pd.Series, series_b: pd.Series) -> float:
-        # relative strength as percent change ratio over window
-        if series_a is None or series_b is None:
+    # rens placeholders der ikke findes på stooq
+    # (du kan fjerne dem)
+    THEMES = {k: [t for t in v if "?" not in t] for k, v in THEMES.items()}
+
+    benchmark = "SPY.US"
+
+    def rel_strength(ticker: str, bench: str, days: int) -> float:
+        a = fetch_daily_ohlc_stooq(ticker, years=10)
+        b = fetch_daily_ohlc_stooq(bench, years=10)
+        if a.empty or b.empty:
             return float("nan")
-        a = series_a.dropna()
-        b = series_b.dropna()
-        if len(a) < 5 or len(b) < 5:
-            return float("nan")
-        # align by index
-        dfm = pd.DataFrame({"a": a, "b": b}).dropna()
-        if dfm.empty or len(dfm) < 5:
-            return float("nan")
-        return float((dfm["a"].iloc[-1] / dfm["a"].iloc[0]) / (dfm["b"].iloc[-1] / dfm["b"].iloc[0]) - 1.0)
 
-    df_b = fetch_daily_stooq(bench, years=10, market_hint="US")
-    if df_b.empty:
-        st.error("Kunne ikke hente benchmark (SPY.US) fra Stooq.")
-        st.stop()
+        a = a[["Date","Close"]].dropna().copy()
+        b = b[["Date","Close"]].dropna().copy()
+        a["Date"] = pd.to_datetime(a["Date"])
+        b["Date"] = pd.to_datetime(b["Date"])
+        a = a.sort_values("Date")
+        b = b.sort_values("Date")
 
-    b_close = df_b.set_index("Date")["Close"].astype(float)
+        end = min(a["Date"].iloc[-1], b["Date"].iloc[-1])
+        start = end - pd.Timedelta(days=days)
+
+        def close_on(df, d):
+            sub = df[df["Date"] <= d]
+            if sub.empty:
+                return float("nan")
+            return float(sub["Close"].iloc[-1])
+
+        a0 = close_on(a, start)
+        a1 = close_on(a, end)
+        b0 = close_on(b, start)
+        b1 = close_on(b, end)
+
+        if any(np.isnan(x) for x in [a0,a1,b0,b1]) or a0 == 0 or b0 == 0:
+            return float("nan")
+
+        ra = a1/a0 - 1.0
+        rb = b1/b0 - 1.0
+        return ra - rb  # outperformance vs SPY
 
     rows = []
-    for t in themes:
-        sym = t["Ticker"]
-        df_t = fetch_daily_stooq(sym, years=10, market_hint="US")
-        if df_t.empty:
-            rows.append({**t, "MomentumScore": np.nan, "RS_1M_vs_SPY": np.nan, "RS_3M_vs_SPY": np.nan, "Trend": "Ingen data"})
-            continue
+    with st.spinner("Beregner tema-momentum (kan tage lidt tid) ..."):
+        for theme, tickers in THEMES.items():
+            # vælg første som proxy
+            proxy = tickers[0] if tickers else ""
+            if not proxy:
+                continue
+            rs_1m = rel_strength(proxy, benchmark, 30)
+            rs_3m = rel_strength(proxy, benchmark, 90)
 
-        close = df_t.set_index("Date")["Close"].astype(float)
-        # windows
-        rs_1m = rel_strength(close.tail(22), b_close.tail(22))
-        rs_3m = rel_strength(close.tail(63), b_close.tail(63))
-        rs_6m = rel_strength(close.tail(126), b_close.tail(126))
+            score = 0.0
+            if not np.isnan(rs_1m): score += rs_1m * 100
+            if not np.isnan(rs_3m): score += rs_3m * 50
 
-        # simple momentum score
-        # weight: 3m + 6m + trend
-        sig = compute_signals(df_t)
-        trend_bonus = 2.0 if sig.get("trend_up") else 0.0
-        mom = sig.get("mom20", np.nan)
-        mom_part = 0.0 if np.isnan(mom) else max(-5.0, min(10.0, mom)) / 2.0  # clamp
-        score = 0.0
-        for x, w in [(rs_1m, 1.0), (rs_3m, 2.0), (rs_6m, 2.0)]:
-            if not np.isnan(x):
-                score += float(x) * 100.0 * w
-        score += trend_bonus + mom_part
-
-        trend_txt = sig.get("action", "—")
-        rows.append(
-            {
-                "Tema": t["Tema"],
-                "Ticker": sym,
-                "MomentumScore": round(score, 3),
+            rows.append({
+                "Tema": theme,
+                "Ticker (proxy)": proxy,
+                "MomentumScore": round(score, 4),
                 "RS_1M_vs_SPY": round(rs_1m, 4) if not np.isnan(rs_1m) else np.nan,
                 "RS_3M_vs_SPY": round(rs_3m, 4) if not np.isnan(rs_3m) else np.nan,
-                "RS_6M_vs_SPY": round(rs_6m, 4) if not np.isnan(rs_6m) else np.nan,
-                "Signal": trend_txt,
-            }
-        )
+            })
 
-    out = pd.DataFrame(rows).sort_values("MomentumScore", ascending=False, na_position="last").reset_index(drop=True)
-    st.dataframe(out, use_container_width=True, hide_index=True)
+    dfm = pd.DataFrame(rows).sort_values("MomentumScore", ascending=False).reset_index(drop=True)
+    st.dataframe(dfm, use_container_width=True, hide_index=True)
 
     st.markdown("### 🔥 Temaer at kigge nærmere på (stærk relativ styrke)")
-    top = out.dropna(subset=["MomentumScore"]).head(6)
-    if top.empty:
-        st.info("Ingen temaer med data endnu.")
-    else:
-        for _, r in top.iterrows():
-            st.write(
-                f"- **{r['Tema']} ({r['Ticker']})** — Score: {r['MomentumScore']} | "
-                f"RS 1M: {r['RS_1M_vs_SPY']}, RS 3M: {r['RS_3M_vs_SPY']}, RS 6M: {r['RS_6M_vs_SPY']} | "
-                f"Signal: {r['Signal']}"
-            )
+    topk = dfm.head(10)
+    for _, r in topk.iterrows():
+        st.markdown(
+            f"- **{r['Tema']}** ({r['Ticker (proxy)']}) — "
+            f"RS 1M: {r['RS_1M_vs_SPY']:+.2%} , RS 3M: {r['RS_3M_vs_SPY']:+.2%}"
+        )
 
-    st.markdown("### Trend-beskrivelse (kort)")
-    st.write(
-        "MomentumScore kombinerer relativ styrke vs SPY (1M/3M/6M) + trend (MA50/MA200) + kort momentum. "
-        "Det er en *proxy* for hvad der er stærkt lige nu – ikke en forudsigelse."
-    )
-
-st.caption("Data: Stooq (gratis dagsdata). Nyheder: Google News links. Ikke finansiel rådgivning.")
+st.caption("Data: Stooq (gratis dagsdata). Nyheder: Google News (link + RSS). Ikke finansiel rådgivning.")
