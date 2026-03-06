@@ -13,7 +13,7 @@ import streamlit as st
 # CONFIG
 # =========================================================
 st.set_page_config(
-    page_title="Stock Dashboard (Twelve Data + Yahoo fallback)",
+    page_title="Stock Dashboard (Global screener + teknisk analyse)",
     layout="wide",
     page_icon="📊",
 )
@@ -77,7 +77,7 @@ YAHOO_HEADERS = {"User-Agent": "Mozilla/5.0"}
 
 
 # =========================================================
-# API KEY / SECRETS
+# SECRETS / API KEY
 # =========================================================
 def get_twelve_data_api_key() -> str:
     try:
@@ -178,6 +178,30 @@ def google_news_link(query: str) -> str:
     return f"https://news.google.com/search?q={q}&hl=da&gl=DK&ceid=DK%3Ada"
 
 
+def safe_display_value(value) -> str:
+    if value is None:
+        return ""
+    try:
+        if pd.isna(value):
+            return ""
+    except Exception:
+        pass
+
+    if isinstance(value, (int, np.integer)):
+        return str(int(value))
+
+    if isinstance(value, (float, np.floating)):
+        if abs(value) >= 1_000_000_000:
+            return f"{value/1_000_000_000:.2f}B"
+        if abs(value) >= 1_000_000:
+            return f"{value/1_000_000:.2f}M"
+        if abs(value) >= 1_000:
+            return f"{value:,.0f}"
+        return f"{value:.4f}".rstrip("0").rstrip(".")
+
+    return str(value)
+
+
 # =========================================================
 # TWELVE DATA
 # =========================================================
@@ -229,6 +253,7 @@ def td_fetch_history(symbol: str, years: int = 5) -> pd.DataFrame:
             "volume": "Volume",
         }
     )
+
     keep = [c for c in ["Date", "Open", "High", "Low", "Close", "Volume"] if c in df.columns]
     df = df[keep].copy()
     df["Date"] = pd.to_datetime(df["Date"], errors="coerce")
@@ -394,9 +419,7 @@ def yahoo_fetch_overview(symbol: str) -> dict:
             url = f"https://query1.finance.yahoo.com/v10/finance/quoteSummary/{sym}"
             r = http_get(
                 url,
-                params={
-                    "modules": "price,summaryDetail,defaultKeyStatistics,financialData",
-                },
+                params={"modules": "price,summaryDetail,defaultKeyStatistics,financialData"},
                 headers=YAHOO_HEADERS,
             )
             if r.status_code != 200:
@@ -742,7 +765,7 @@ def period_returns(df: pd.DataFrame) -> Dict[str, float]:
         return float(sub["Close"].iloc[-1])
 
     out: Dict[str, float] = {}
-    out["1D"] = pct_change(last_close, float(d["Close"].iloc[-2])) if len(d) >= 2 else float("nan")
+    out["1D"] = pct_change(last_close, float(d["Close"].iloc[-2])) if len(d) >= 2 else np.nan
     out["1W"] = pct_change(last_close, close_on_or_before(last_date - pd.Timedelta(days=7)))
     out["1M"] = pct_change(last_close, close_on_or_before(last_date - pd.Timedelta(days=30)))
     out["3M"] = pct_change(last_close, close_on_or_before(last_date - pd.Timedelta(days=90)))
@@ -809,7 +832,7 @@ def relative_strength(symbol: str, benchmark: str, days: int) -> float:
     b, _ = fetch_history(benchmark, years=5)
 
     if a.empty or b.empty:
-        return float("nan")
+        return np.nan
 
     a = a[["Date", "Close"]].dropna().copy().sort_values("Date")
     b = b[["Date", "Close"]].dropna().copy().sort_values("Date")
@@ -820,7 +843,7 @@ def relative_strength(symbol: str, benchmark: str, days: int) -> float:
     def close_on(df_local: pd.DataFrame, d: pd.Timestamp) -> float:
         sub = df_local[df_local["Date"] <= d]
         if sub.empty:
-            return float("nan")
+            return np.nan
         return float(sub["Close"].iloc[-1])
 
     a0 = close_on(a, start)
@@ -830,7 +853,7 @@ def relative_strength(symbol: str, benchmark: str, days: int) -> float:
 
     vals = [a0, a1, b0, b1]
     if any(pd.isna(x) for x in vals) or a0 == 0 or b0 == 0:
-        return float("nan")
+        return np.nan
 
     return (a1 / a0 - 1.0) - (b1 / b0 - 1.0)
 
@@ -899,7 +922,7 @@ tab_search, tab_screener, tab_portfolio, tab_themes, tab_data = st.tabs(
 
 
 # =========================================================
-# TAB 1: SEARCH / ANALYSIS
+# TAB 1: SEARCH
 # =========================================================
 with tab_search:
     st.subheader("🔎 Søg & analyse")
@@ -969,7 +992,6 @@ with tab_search:
         with right:
             if ticker:
                 df, source_used = fetch_history(ticker, yahoo_symbol=yahoo_symbol, years=years)
-                quote_data = td_fetch_quote(ticker) if TD_API_KEY else {}
                 overview = yahoo_fetch_overview(yahoo_symbol or ticker)
                 tech = latest_technical_snapshot(df)
                 rets = period_returns(df)
@@ -1015,7 +1037,7 @@ with tab_search:
                         "Momentum 20d %": tech.get("mom20"),
                     }
                     show_overview = pd.DataFrame(
-                        [{"Felt": k, "Værdi": v} for k, v in overview_rows.items()]
+                        [{"Felt": str(k), "Værdi": safe_display_value(v)} for k, v in overview_rows.items()]
                     )
                     st.dataframe(show_overview, use_container_width=True, hide_index=True)
 
@@ -1034,6 +1056,8 @@ with tab_search:
 
                     st.markdown("#### Teknisk analyse")
                     tech_df = add_technical_columns(df).copy()
+
+                    st.markdown("##### Pris vs EMA")
                     tech_chart = tech_df.set_index("Date")[["Close", "EMA20", "EMA50", "EMA200"]].dropna(how="all")
                     st.line_chart(tech_chart)
 
@@ -1054,17 +1078,17 @@ with tab_search:
                     st.markdown("#### Seneste tekniske snapshot")
                     tech_snapshot = pd.DataFrame(
                         [
-                            {"Felt": "EMA20", "Værdi": tech.get("ema20")},
-                            {"Felt": "EMA50", "Værdi": tech.get("ema50")},
-                            {"Felt": "EMA200", "Værdi": tech.get("ema200")},
-                            {"Felt": "RSI14", "Værdi": tech.get("rsi")},
-                            {"Felt": "MACD", "Værdi": tech.get("macd")},
-                            {"Felt": "MACD Signal", "Værdi": tech.get("macd_signal")},
-                            {"Felt": "BB Upper", "Værdi": tech.get("bb_upper")},
-                            {"Felt": "BB Lower", "Værdi": tech.get("bb_lower")},
-                            {"Felt": "Risiko", "Værdi": tech.get("risk")},
-                            {"Felt": "Score", "Værdi": tech.get("score")},
-                            {"Felt": "Handling", "Værdi": tech.get("action")},
+                            {"Felt": "EMA20", "Værdi": safe_display_value(tech.get("ema20"))},
+                            {"Felt": "EMA50", "Værdi": safe_display_value(tech.get("ema50"))},
+                            {"Felt": "EMA200", "Værdi": safe_display_value(tech.get("ema200"))},
+                            {"Felt": "RSI14", "Værdi": safe_display_value(tech.get("rsi"))},
+                            {"Felt": "MACD", "Værdi": safe_display_value(tech.get("macd"))},
+                            {"Felt": "MACD Signal", "Værdi": safe_display_value(tech.get("macd_signal"))},
+                            {"Felt": "BB Upper", "Værdi": safe_display_value(tech.get("bb_upper"))},
+                            {"Felt": "BB Lower", "Værdi": safe_display_value(tech.get("bb_lower"))},
+                            {"Felt": "Risiko", "Værdi": safe_display_value(tech.get("risk"))},
+                            {"Felt": "Score", "Værdi": safe_display_value(tech.get("score"))},
+                            {"Felt": "Handling", "Værdi": safe_display_value(tech.get("action"))},
                         ]
                     )
                     st.dataframe(tech_snapshot, use_container_width=True, hide_index=True)
@@ -1146,7 +1170,7 @@ with tab_screener:
                         prog.progress(i / len(work))
                         continue
 
-                    overview = yahoo_fetch_overview(y)
+                    overview = yahoo_fetch_overview(y or t)
 
                     rows.append(
                         {
@@ -1155,16 +1179,16 @@ with tab_screener:
                             "Land": str(r.get("country", "")).strip(),
                             "Exchange": str(r.get("exchange", "")).strip(),
                             "Kilde": source_used,
-                            "Pris": round(tech["last"], 2),
+                            "Pris": tech["last"],
                             "P/E": overview.get("pe"),
                             "MCap": overview.get("market_cap"),
-                            "RSI": round(tech["rsi"], 1) if not np.isnan(tech["rsi"]) else np.nan,
+                            "RSI": tech["rsi"],
                             "Trend": "✅" if tech["trend_up"] else "—",
                             "Signal": tech["action"],
                             "Score": tech["score"],
-                            "Mom20%": round(tech["mom20"], 1) if not np.isnan(tech["mom20"]) else np.nan,
-                            "Vol20%": round(tech["vol20"], 2) if not np.isnan(tech["vol20"]) else np.nan,
-                            "DD3m%": round(tech["dd3m"], 1) if not np.isnan(tech["dd3m"]) else np.nan,
+                            "Mom20%": tech["mom20"],
+                            "Vol20%": tech["vol20"],
+                            "DD3m%": tech["dd3m"],
                             "MACD": tech["macd_state"],
                             "RSI State": tech["rsi_state"],
                             "BB": tech["bb_state"],
@@ -1183,11 +1207,20 @@ with tab_screener:
                     out = pd.DataFrame(rows).sort_values(["Score", "Mom20%"], ascending=[False, False]).reset_index(drop=True)
                     top = out.head(top_n)
 
+                    display_df = top.copy()
+                    for col in ["Pris", "P/E", "MCap", "RSI", "Score", "Mom20%", "Vol20%", "DD3m%"]:
+                        if col in display_df.columns:
+                            display_df[col] = display_df[col].apply(safe_display_value)
+
                     st.markdown(f"### Top {top_n}")
-                    st.dataframe(top, use_container_width=True, hide_index=True)
+                    st.dataframe(display_df, use_container_width=True, hide_index=True)
 
                     with st.expander("Vis hele screener-resultatet"):
-                        st.dataframe(out, use_container_width=True, hide_index=True)
+                        full_df = out.copy()
+                        for col in ["Pris", "P/E", "MCap", "RSI", "Score", "Mom20%", "Vol20%", "DD3m%"]:
+                            if col in full_df.columns:
+                                full_df[col] = full_df[col].apply(safe_display_value)
+                        st.dataframe(full_df, use_container_width=True, hide_index=True)
 
                     choices = top.apply(
                         lambda rr: f"{rr['Ticker']} — {rr['Navn']}" if str(rr["Navn"]).strip() else rr["Ticker"],
@@ -1306,15 +1339,15 @@ with tab_portfolio:
                         "Ticker": t,
                         "Navn": name,
                         "Antal": shares,
-                        "Seneste": round(last, 4) if np.isfinite(last) else np.nan,
-                        "Værdi": round(value, 2) if np.isfinite(value) else np.nan,
-                        "P/E": overview.get("pe"),
-                        "MCap": overview.get("market_cap"),
+                        "Seneste": safe_display_value(last),
+                        "Værdi": safe_display_value(value),
+                        "P/E": safe_display_value(overview.get("pe")),
+                        "MCap": safe_display_value(overview.get("market_cap")),
                         "Kilde": src,
                         "Signal": tech.get("action", "—"),
-                        "Score": tech.get("score", np.nan),
-                        "RSI": round(tech.get("rsi", np.nan), 1) if tech else np.nan,
-                        "Mom20%": round(tech.get("mom20", np.nan), 1) if tech else np.nan,
+                        "Score": safe_display_value(tech.get("score", np.nan)),
+                        "RSI": safe_display_value(tech.get("rsi", np.nan)),
+                        "Mom20%": safe_display_value(tech.get("mom20", np.nan)),
                         "Trend": "✅" if tech.get("trend_up") else "—",
                         "MACD": tech.get("macd_state", "—"),
                         "Risiko": tech.get("risk", "—"),
@@ -1324,9 +1357,7 @@ with tab_portfolio:
                 )
 
         out = pd.DataFrame(rows)
-        total = float(out["Værdi"].sum()) if "Værdi" in out.columns else 0.0
-        out["Vægt %"] = (out["Værdi"] / total * 100.0).round(2) if total > 0 else np.nan
-        st.dataframe(out.sort_values("Vægt %", ascending=False), use_container_width=True, hide_index=True)
+        st.dataframe(out, use_container_width=True, hide_index=True)
 
 
 # =========================================================
@@ -1352,22 +1383,18 @@ with tab_themes:
                 {
                     "Tema": theme,
                     "Proxy": proxy,
-                    "MomentumScore": round(score, 4),
-                    "RS_1M_vs_SPY": round(rs_1m, 4) if not np.isnan(rs_1m) else np.nan,
-                    "RS_3M_vs_SPY": round(rs_3m, 4) if not np.isnan(rs_3m) else np.nan,
+                    "MomentumScore": safe_display_value(round(score, 4)),
+                    "RS_1M_vs_SPY": safe_display_value(rs_1m),
+                    "RS_3M_vs_SPY": safe_display_value(rs_3m),
                 }
             )
 
-    dfm = pd.DataFrame(rows).sort_values("MomentumScore", ascending=False).reset_index(drop=True)
+    dfm = pd.DataFrame(rows)
     st.dataframe(dfm, use_container_width=True, hide_index=True)
 
     st.markdown("### Top temaer")
     for _, r in dfm.head(10).iterrows():
-        rs1 = r["RS_1M_vs_SPY"]
-        rs3 = r["RS_3M_vs_SPY"]
-        rs1_txt = "—" if pd.isna(rs1) else f"{rs1:+.2%}"
-        rs3_txt = "—" if pd.isna(rs3) else f"{rs3:+.2%}"
-        st.markdown(f"- **{r['Tema']}** ({r['Proxy']}) — RS 1M: {rs1_txt}, RS 3M: {rs3_txt}")
+        st.markdown(f"- **{r['Tema']}** ({r['Proxy']}) — RS 1M: {r['RS_1M_vs_SPY']}, RS 3M: {r['RS_3M_vs_SPY']}")
 
 
 # =========================================================
