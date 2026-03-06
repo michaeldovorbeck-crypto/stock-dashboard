@@ -4,4 +4,3 @@ numpy==2.0.1
 requests==2.32.3
 python-dateutil==2.9.0.post0
 plotly==5.23.1
-python-dateutil==2.9.0.post0
