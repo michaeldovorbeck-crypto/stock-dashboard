@@ -9,6 +9,10 @@ import numpy as np
 import pandas as pd
 import requests
 import streamlit as st
+import pandas as pd
+import plotly.graph_objects as go
+
+from src.indicators import trade_label
 
 # -----------------------------
 # Config
@@ -552,8 +556,9 @@ with tab_screener:
         if dfp.empty:
             st.error("Kunne ikke hente data for valgt kandidat.")
         else:
-            st.line_chart(dfp.set_index("Date")["Close"])
-            st.caption(f"Nyheder: {google_news_link(pick)}")
+            dfi = compute_signals(df)
+            latest = dfi.iloc[-1]
+            label = trade_label(latest)
 
 # -----------------------------
 # TAB: Portfolio (dynamic)
