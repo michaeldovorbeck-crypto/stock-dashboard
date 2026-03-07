@@ -25,6 +25,7 @@ SIGNAL_LOG = os.path.join(DATA_DIR, "signals_log.csv")
 DEFAULT_TOPN = 15
 HTTP_TIMEOUT = 25
 TD_BASE = "https://api.twelvedata.com"
+FRED_BASE = "https://api.stlouisfed.org/fred/series/observations"
 
 os.makedirs(DATA_DIR, exist_ok=True)
 os.makedirs(UNIVERSE_DIR, exist_ok=True)
@@ -49,44 +50,161 @@ TD_EXCHANGES: Dict[str, List[str]] = {
     "India": ["XNSE", "XBOM"],
 }
 
-THEMES: Dict[str, List[str]] = {
-    "AI & Software": ["QQQ", "XLK", "MSFT", "NVDA"],
-    "Semiconductors": ["SOXX", "SMH", "NVDA", "AVGO"],
-    "Cybersecurity": ["HACK", "CIBR", "PANW", "CRWD"],
-    "Defense/Aerospace": ["ITA", "XAR", "LMT", "NOC"],
-    "Cloud/Datacenter": ["SKYY", "AMZN", "GOOGL"],
-    "Solar": ["TAN", "ENPH", "FSLR"],
-    "Clean Energy": ["ICLN", "PBW"],
-    "Uranium": ["URA", "CCJ"],
-    "EV & Batteries": ["LIT", "TSLA", "ALB"],
-    "Healthcare": ["XLV", "UNH", "JNJ"],
-    "Biotech": ["IBB", "XBI"],
-    "Banks": ["XLF", "JPM", "BAC"],
-    "Japan": ["EWJ"],
-    "Emerging Markets": ["EEM", "VWO"],
-    "Gold": ["GLD", "IAU"],
-    "Utilities": ["XLU"],
-    "Momentum": ["MTUM"],
-    "Small Cap": ["IWM"],
-    "Growth": ["VUG"],
-    "Value": ["VTV"],
+THEMES: Dict[str, dict] = {
+    "AI & Software": {
+        "proxy": "QQQ",
+        "benchmark": "SPY",
+        "members": ["QQQ", "XLK", "MSFT", "NVDA", "AVGO", "GOOGL", "AMZN"],
+        "drivers": [
+            "Datacenter capex",
+            "GPU-efterspørgsel",
+            "Enterprise software spending",
+            "Cloud-vækst",
+            "Produktivitetsinvesteringer",
+        ],
+        "headwinds": [
+            "Høje multipler",
+            "Capex-normalisering",
+            "Regulatoriske risici",
+            "Langsommere AI-monetisering",
+        ],
+        "macro_series": {
+            "10Y rente": "DGS10",
+            "Inflation": "CPIAUCSL",
+            "Industriproduktion": "INDPRO",
+        },
+        "description": "Temaet dækker software, hyperscalers, AI-infrastruktur og halvlederefterspørgsel drevet af datacenterudbygning og enterprise adoption.",
+    },
+    "Semiconductors": {
+        "proxy": "SOXX",
+        "benchmark": "SPY",
+        "members": ["SOXX", "SMH", "NVDA", "AVGO", "AMD", "TSM", "ASML"],
+        "drivers": [
+            "AI-servere",
+            "Foundry-kapacitet",
+            "Memory-cyklus",
+            "Industrikapacitet",
+            "Elektrificering",
+        ],
+        "headwinds": [
+            "Cyklicitet",
+            "Geopolitik",
+            "Overkapacitet",
+            "Lagerkorrektioner",
+        ],
+        "macro_series": {
+            "Industriproduktion": "INDPRO",
+            "10Y rente": "DGS10",
+            "USD indeks": "DTWEXBGS",
+        },
+        "description": "Halvledertemaet drives af AI, datacenterkapacitet, foundry-økonomi og global industriefterspørgsel.",
+    },
+    "Defense/Aerospace": {
+        "proxy": "ITA",
+        "benchmark": "SPY",
+        "members": ["ITA", "XAR", "LMT", "NOC", "RTX", "GD"],
+        "drivers": [
+            "Forsvarsbudgetter",
+            "Lagergenopbygning",
+            "Geopolitisk spænding",
+            "NATO-spending",
+        ],
+        "headwinds": [
+            "Budgetskifte",
+            "Kontraktforsinkelser",
+            "Forsyningskædepres",
+        ],
+        "macro_series": {
+            "10Y rente": "DGS10",
+            "Industriproduktion": "INDPRO",
+            "Olie": "DCOILWTICO",
+        },
+        "description": "Defense/Aerospace støttes af stigende forsvarsbudgetter, lagre og et langvarigt sikkerhedspolitisk fokus.",
+    },
+    "Clean Energy": {
+        "proxy": "ICLN",
+        "benchmark": "SPY",
+        "members": ["ICLN", "PBW", "TAN", "ENPH", "FSLR"],
+        "drivers": [
+            "Subsidier",
+            "Netudbygning",
+            "Teknologiomkostninger",
+            "Elektrificering",
+        ],
+        "headwinds": [
+            "Høje renter",
+            "Projektforsinkelser",
+            "Politisk usikkerhed",
+            "Volatile inputpriser",
+        ],
+        "macro_series": {
+            "10Y rente": "DGS10",
+            "Inflation": "CPIAUCSL",
+            "Olie": "DCOILWTICO",
+        },
+        "description": "Clean Energy er rentefølsomt og afhænger af subsidier, netudbygning og konkurrenceevne mod fossile alternativer.",
+    },
+    "Banks": {
+        "proxy": "XLF",
+        "benchmark": "SPY",
+        "members": ["XLF", "JPM", "BAC", "WFC", "GS", "MS"],
+        "drivers": [
+            "Rentekurve",
+            "Kreditvækst",
+            "Net interest margin",
+            "Kapitalmarkedsaktivitet",
+        ],
+        "headwinds": [
+            "Kreditforringelser",
+            "Flad rentekurve",
+            "Regulatorisk pres",
+        ],
+        "macro_series": {
+            "10Y rente": "DGS10",
+            "2Y rente": "DGS2",
+            "Arbejdsløshed": "UNRATE",
+        },
+        "description": "Banker påvirkes især af rentekurven, kreditkvalitet og økonomisk aktivitet.",
+    },
+    "Gold": {
+        "proxy": "GLD",
+        "benchmark": "SPY",
+        "members": ["GLD", "IAU", "NEM", "AEM"],
+        "drivers": [
+            "Reale renter",
+            "USD-retning",
+            "Inflationsforventninger",
+            "Geopolitisk risiko",
+        ],
+        "headwinds": [
+            "Stigende reale renter",
+            "Stærk USD",
+            "Lav risikofrygt",
+        ],
+        "macro_series": {
+            "10Y rente": "DGS10",
+            "Inflation": "CPIAUCSL",
+            "USD indeks": "DTWEXBGS",
+        },
+        "description": "Guld fungerer ofte som hedge mod realrenter, dollarstyrke og geopolitisk usikkerhed.",
+    },
 }
-THEME_BENCHMARK = "SPY"
 
 YAHOO_HEADERS = {"User-Agent": "Mozilla/5.0"}
 
 
 # =========================================================
-# SECRETS / API KEY
+# SECRETS / KEYS
 # =========================================================
-def get_twelve_data_api_key() -> str:
+def get_secret(name: str) -> str:
     try:
-        return str(st.secrets["TWELVE_DATA_API_KEY"]).strip()
+        return str(st.secrets[name]).strip()
     except Exception:
-        return os.getenv("TWELVE_DATA_API_KEY", "").strip()
+        return os.getenv(name, "").strip()
 
 
-TD_API_KEY = get_twelve_data_api_key()
+TD_API_KEY = get_secret("TWELVE_DATA_API_KEY")
+FRED_API_KEY = get_secret("FRED_API_KEY")
 
 
 # =========================================================
@@ -109,73 +227,6 @@ def normalize_cols(df: pd.DataFrame) -> pd.DataFrame:
     df = df.copy()
     df.columns = [str(c).strip().lower() for c in df.columns]
     return df
-
-
-def ensure_universe_schema(df: pd.DataFrame) -> pd.DataFrame:
-    if df is None or df.empty:
-        return pd.DataFrame(
-            columns=["ticker", "name", "country", "exchange", "type", "source", "yahoo_symbol"]
-        )
-
-    df = normalize_cols(df)
-
-    rename_map = {}
-    for c in df.columns:
-        if c in ("symbol", "ticker_code"):
-            rename_map[c] = "ticker"
-        elif c in ("instrument_name", "company", "companyname", "security", "name"):
-            rename_map[c] = "name"
-
-    if rename_map:
-        df = df.rename(columns=rename_map)
-
-    if "ticker" not in df.columns and len(df.columns) > 0:
-        df = df.rename(columns={df.columns[0]: "ticker"})
-
-    for col in ("name", "country", "exchange", "type", "source", "yahoo_symbol"):
-        if col not in df.columns:
-            df[col] = ""
-
-    df["ticker"] = df["ticker"].astype(str).str.strip()
-    df["name"] = df["name"].astype(str).fillna("").str.strip()
-    df["country"] = df["country"].astype(str).fillna("").str.strip()
-    df["exchange"] = df["exchange"].astype(str).fillna("").str.strip()
-    df["type"] = df["type"].astype(str).fillna("").str.strip()
-    df["source"] = df["source"].astype(str).fillna("").str.strip()
-    df["yahoo_symbol"] = df["yahoo_symbol"].astype(str).fillna("").str.strip()
-
-    df = df[df["ticker"].str.len() > 0].drop_duplicates(subset=["ticker", "exchange"])
-    return df[["ticker", "name", "country", "exchange", "type", "source", "yahoo_symbol"]].reset_index(drop=True)
-
-
-def universe_file(key: str) -> str:
-    return os.path.join(UNIVERSE_DIR, f"{key}.csv")
-
-
-def list_universes() -> Dict[str, str]:
-    out: Dict[str, str] = {}
-    if not os.path.exists(UNIVERSE_DIR):
-        return out
-    for fn in sorted(os.listdir(UNIVERSE_DIR)):
-        if fn.endswith(".csv"):
-            out[fn[:-4]] = os.path.join(UNIVERSE_DIR, fn)
-    return out
-
-
-def load_universe(key: str) -> Tuple[pd.DataFrame, str]:
-    path = list_universes().get(key, "")
-    if not path:
-        return pd.DataFrame(), "Ukendt univers."
-    df = safe_read_csv(path)
-    df = ensure_universe_schema(df)
-    if df.empty:
-        return df, f"Tomt eller ulæseligt univers: {path}"
-    return df, ""
-
-
-def google_news_link(query: str) -> str:
-    q = requests.utils.quote(query)
-    return f"https://news.google.com/search?q={q}&hl=da&gl=DK&ceid=DK%3Ada"
 
 
 def safe_display_value(value) -> str:
@@ -203,6 +254,147 @@ def safe_display_value(value) -> str:
 
 
 # =========================================================
+# SYMBOL HELPERS
+# =========================================================
+def make_yahoo_symbol(ticker: str, exchange: str) -> str:
+    t = str(ticker).strip().upper()
+    ex = str(exchange).strip().upper()
+
+    suffix = {
+        "XCSE": ".CO",
+        "XSTO": ".ST",
+        "XHEL": ".HE",
+        "XOSL": ".OL",
+        "XPAR": ".PA",
+        "XAMS": ".AS",
+        "XBRU": ".BR",
+        "XLON": ".L",
+        "XMIL": ".MI",
+        "XMAD": ".MC",
+        "XSWX": ".SW",
+        "XTKS": ".T",
+        "XHKG": ".HK",
+        "XNSE": ".NS",
+        "XBOM": ".BO",
+        "XTSE": ".TO",
+        "XTSX": ".V",
+        "XETRA": ".DE",
+        "FWB": ".DE",
+        "NASDAQ": "",
+        "NYSE": "",
+        "AMEX": "",
+    }
+    return f"{t}{suffix[ex]}" if ex in suffix else t
+
+
+def make_td_symbol(ticker: str, exchange: str) -> str:
+    t = str(ticker).strip().upper()
+    ex = str(exchange).strip().upper()
+
+    if not t:
+        return ""
+    if ex in ("NASDAQ", "NYSE", "AMEX"):
+        return t
+    if ex:
+        return f"{t}:{ex}"
+    return t
+
+
+def yahoo_symbol_candidates(symbol: str) -> List[str]:
+    s = (symbol or "").strip().upper()
+    if not s:
+        return []
+
+    out = [s]
+    replacements = {
+        ".XCSE": ".CO", ".XSTO": ".ST", ".XHEL": ".HE", ".XOSL": ".OL",
+        ".XPAR": ".PA", ".XAMS": ".AS", ".XBRU": ".BR", ".XLON": ".L",
+        ".XMIL": ".MI", ".XMAD": ".MC", ".XSWX": ".SW", ".XTKS": ".T",
+        ".XHKG": ".HK", ".XNSE": ".NS", ".XBOM": ".BO", ".XTSE": ".TO",
+        ".XTSX": ".V", ".XETRA": ".DE", ".FWB": ".DE",
+        ":XCSE": ".CO", ":XSTO": ".ST", ":XHEL": ".HE", ":XOSL": ".OL",
+        ":XPAR": ".PA", ":XAMS": ".AS", ":XBRU": ".BR", ":XLON": ".L",
+        ":XMIL": ".MI", ":XMAD": ".MC", ":XSWX": ".SW", ":XTKS": ".T",
+        ":XHKG": ".HK", ":XNSE": ".NS", ":XBOM": ".BO", ":XTSE": ".TO",
+        ":XTSX": ".V", ":XETRA": ".DE", ":FWB": ".DE",
+    }
+    for old, new in replacements.items():
+        if old in s:
+            out.append(s.replace(old, new))
+    if ":" in s:
+        left, right = s.split(":", 1)
+        out.extend([left, right])
+
+    seen = set()
+    final = []
+    for x in out:
+        if x and x not in seen:
+            final.append(x)
+            seen.add(x)
+    return final
+
+
+# =========================================================
+# UNIVERSE HELPERS
+# =========================================================
+def ensure_universe_schema(df: pd.DataFrame) -> pd.DataFrame:
+    if df is None or df.empty:
+        return pd.DataFrame(
+            columns=["ticker", "name", "country", "exchange", "type", "source", "yahoo_symbol", "td_symbol"]
+        )
+
+    df = normalize_cols(df)
+
+    rename_map = {}
+    for c in df.columns:
+        if c in ("symbol", "ticker_code"):
+            rename_map[c] = "ticker"
+        elif c in ("instrument_name", "company", "companyname", "security", "name"):
+            rename_map[c] = "name"
+
+    if rename_map:
+        df = df.rename(columns=rename_map)
+
+    if "ticker" not in df.columns and len(df.columns) > 0:
+        df = df.rename(columns={df.columns[0]: "ticker"})
+
+    for col in ("name", "country", "exchange", "type", "source", "yahoo_symbol", "td_symbol"):
+        if col not in df.columns:
+            df[col] = ""
+
+    for col in ("ticker", "name", "country", "exchange", "type", "source", "yahoo_symbol", "td_symbol"):
+        df[col] = df[col].astype(str).fillna("").str.strip()
+
+    df = df[df["ticker"].str.len() > 0].drop_duplicates(subset=["ticker", "exchange"])
+    return df[["ticker", "name", "country", "exchange", "type", "source", "yahoo_symbol", "td_symbol"]].reset_index(drop=True)
+
+
+def universe_file(key: str) -> str:
+    return os.path.join(UNIVERSE_DIR, f"{key}.csv")
+
+
+def list_universes() -> Dict[str, str]:
+    out = {}
+    if not os.path.exists(UNIVERSE_DIR):
+        return out
+    for fn in sorted(os.listdir(UNIVERSE_DIR)):
+        if fn.endswith(".csv"):
+            out[fn[:-4]] = os.path.join(UNIVERSE_DIR, fn)
+    return out
+
+
+def load_universe(key: str) -> Tuple[pd.DataFrame, str]:
+    path = list_universes().get(key, "")
+    if not path:
+        return pd.DataFrame(), "Ukendt univers."
+    df = safe_read_csv(path)
+    df = ensure_universe_schema(df)
+    if df.empty:
+        return df, f"Tomt eller ulæseligt univers: {path}"
+    return df, ""
+
+
+# =========================================================
 # TWELVE DATA
 # =========================================================
 def td_get(endpoint: str, params: Optional[dict] = None) -> dict:
@@ -222,7 +414,7 @@ def td_get(endpoint: str, params: Optional[dict] = None) -> dict:
 
 
 @st.cache_data(ttl=6 * 60 * 60, show_spinner=False)
-def td_fetch_history(symbol: str, years: int = 5) -> pd.DataFrame:
+def td_fetch_history(symbol: str, years: int = 10) -> pd.DataFrame:
     outputsize = min(5000, max(300, int(years) * 260))
     data = td_get(
         "time_series",
@@ -253,7 +445,6 @@ def td_fetch_history(symbol: str, years: int = 5) -> pd.DataFrame:
             "volume": "Volume",
         }
     )
-
     keep = [c for c in ["Date", "Open", "High", "Low", "Close", "Volume"] if c in df.columns]
     df = df[keep].copy()
     df["Date"] = pd.to_datetime(df["Date"], errors="coerce")
@@ -262,18 +453,12 @@ def td_fetch_history(symbol: str, years: int = 5) -> pd.DataFrame:
         if c in df.columns:
             df[c] = pd.to_numeric(df[c], errors="coerce")
 
-    df = df.dropna(subset=["Date", "Close"]).sort_values("Date").reset_index(drop=True)
-    return df
-
-
-@st.cache_data(ttl=60 * 60, show_spinner=False)
-def td_fetch_quote(symbol: str) -> dict:
-    return td_get("quote", {"symbol": symbol})
+    return df.dropna(subset=["Date", "Close"]).sort_values("Date").reset_index(drop=True)
 
 
 @st.cache_data(ttl=24 * 60 * 60, show_spinner=False)
 def td_fetch_stocks(exchange: str = "", country: str = "") -> pd.DataFrame:
-    payload: Dict[str, str] = {"format": "JSON"}
+    payload = {"format": "JSON"}
     if exchange:
         payload["exchange"] = exchange
     if country:
@@ -281,7 +466,6 @@ def td_fetch_stocks(exchange: str = "", country: str = "") -> pd.DataFrame:
 
     data = td_get("stocks", payload)
     rows = []
-
     if isinstance(data, dict):
         if isinstance(data.get("data"), list):
             rows = data["data"]
@@ -295,76 +479,10 @@ def td_fetch_stocks(exchange: str = "", country: str = "") -> pd.DataFrame:
 
 
 # =========================================================
-# YAHOO FALLBACK
+# YAHOO
 # =========================================================
-def yahoo_symbol_candidates(symbol: str) -> List[str]:
-    s = (symbol or "").strip().upper()
-    if not s:
-        return []
-
-    out = [s]
-
-    replacements = {
-        ".XCSE": ".CO",
-        ".XSTO": ".ST",
-        ".XHEL": ".HE",
-        ".XOSL": ".OL",
-        ".XPAR": ".PA",
-        ".XAMS": ".AS",
-        ".XBRU": ".BR",
-        ".XLON": ".L",
-        ".XMIL": ".MI",
-        ".XMAD": ".MC",
-        ".XSWX": ".SW",
-        ".XTKS": ".T",
-        ".XHKG": ".HK",
-        ".XNSE": ".NS",
-        ".XBOM": ".BO",
-        ".XTSE": ".TO",
-        ".XTSX": ".V",
-        ".XETRA": ".DE",
-        ".FWB": ".DE",
-        ":XCSE": ".CO",
-        ":XSTO": ".ST",
-        ":XHEL": ".HE",
-        ":XOSL": ".OL",
-        ":XPAR": ".PA",
-        ":XAMS": ".AS",
-        ":XBRU": ".BR",
-        ":XLON": ".L",
-        ":XMIL": ".MI",
-        ":XMAD": ".MC",
-        ":XSWX": ".SW",
-        ":XTKS": ".T",
-        ":XHKG": ".HK",
-        ":XNSE": ".NS",
-        ":XBOM": ".BO",
-        ":XTSE": ".TO",
-        ":XTSX": ".V",
-        ":XETRA": ".DE",
-        ":FWB": ".DE",
-    }
-
-    for old, new in replacements.items():
-        if old in s:
-            out.append(s.replace(old, new))
-
-    if ":" in s:
-        left, right = s.split(":", 1)
-        out.append(left)
-        out.append(right)
-
-    seen = set()
-    dedup = []
-    for item in out:
-        if item and item not in seen:
-            dedup.append(item)
-            seen.add(item)
-    return dedup
-
-
 @st.cache_data(ttl=6 * 60 * 60, show_spinner=False)
-def yahoo_fetch_history(symbol: str, years: int = 5) -> pd.DataFrame:
+def yahoo_fetch_history(symbol: str, years: int = 10) -> pd.DataFrame:
     range_str = "10y" if years >= 10 else f"{max(1, int(years))}y"
 
     for sym in yahoo_symbol_candidates(symbol):
@@ -372,11 +490,7 @@ def yahoo_fetch_history(symbol: str, years: int = 5) -> pd.DataFrame:
             url = f"https://query1.finance.yahoo.com/v8/finance/chart/{sym}"
             r = http_get(
                 url,
-                params={
-                    "interval": "1d",
-                    "range": range_str,
-                    "includeAdjustedClose": "true",
-                },
+                params={"interval": "1d", "range": range_str, "includeAdjustedClose": "true"},
                 headers=YAHOO_HEADERS,
             )
             if r.status_code != 200:
@@ -447,7 +561,6 @@ def yahoo_fetch_overview(symbol: str) -> dict:
                 "fifty_two_week_high": raw("summaryDetail", "fiftyTwoWeekHigh"),
                 "fifty_two_week_low": raw("summaryDetail", "fiftyTwoWeekLow"),
                 "dividend_yield": raw("summaryDetail", "dividendYield"),
-                "currency": raw("price", "currency"),
             }
         except Exception:
             continue
@@ -456,63 +569,77 @@ def yahoo_fetch_overview(symbol: str) -> dict:
 
 
 # =========================================================
-# PRIMARY FETCHER
+# MAIN FETCH LOGIC
 # =========================================================
 @st.cache_data(ttl=6 * 60 * 60, show_spinner=False)
-def fetch_history(symbol: str, yahoo_symbol: str = "", years: int = 5) -> Tuple[pd.DataFrame, str]:
-    df = td_fetch_history(symbol, years=years)
-    if not df.empty:
-        return df, "Twelve Data"
+def fetch_history(ticker: str, td_symbol: str = "", yahoo_symbol: str = "", years: int = 10) -> Tuple[pd.DataFrame, str]:
+    td_candidates = []
+    if td_symbol:
+        td_candidates.append(td_symbol)
+    if ticker:
+        td_candidates.append(ticker)
 
-    if yahoo_symbol.strip():
-        df2 = yahoo_fetch_history(yahoo_symbol, years=years)
-        if not df2.empty:
-            return df2, "Yahoo"
+    seen = set()
+    td_candidates = [x for x in td_candidates if not (x in seen or seen.add(x))]
 
-    df3 = yahoo_fetch_history(symbol, years=years)
-    if not df3.empty:
-        return df3, "Yahoo"
+    for sym in td_candidates:
+        df = td_fetch_history(sym, years=years)
+        if not df.empty:
+            return df, "Twelve Data"
+
+    yh_candidates = []
+    if yahoo_symbol:
+        yh_candidates.append(yahoo_symbol)
+    if ticker:
+        yh_candidates.append(ticker)
+
+    seen = set()
+    yh_candidates = [x for x in yh_candidates if not (x in seen or seen.add(x))]
+
+    for sym in yh_candidates:
+        df = yahoo_fetch_history(sym, years=years)
+        if not df.empty:
+            return df, "Yahoo"
 
     return pd.DataFrame(), ""
 
 
 # =========================================================
+# FRED
+# =========================================================
+@st.cache_data(ttl=24 * 60 * 60, show_spinner=False)
+def fetch_fred_series(series_id: str, limit_years: int = 12) -> pd.DataFrame:
+    params = {
+        "series_id": series_id,
+        "file_type": "json",
+    }
+    if FRED_API_KEY:
+        params["api_key"] = FRED_API_KEY
+
+    try:
+        r = http_get(FRED_BASE, params=params)
+        if r.status_code != 200:
+            return pd.DataFrame()
+        js = r.json()
+        obs = js.get("observations", [])
+        if not obs:
+            return pd.DataFrame()
+
+        df = pd.DataFrame(obs)
+        df["date"] = pd.to_datetime(df["date"], errors="coerce")
+        df["value"] = pd.to_numeric(df["value"].replace(".", np.nan), errors="coerce")
+        df = df.dropna(subset=["date"]).sort_values("date")
+        if limit_years > 0 and not df.empty:
+            cutoff = df["date"].max() - pd.Timedelta(days=int(365.25 * limit_years))
+            df = df[df["date"] >= cutoff]
+        return df[["date", "value"]].reset_index(drop=True)
+    except Exception:
+        return pd.DataFrame()
+
+
+# =========================================================
 # UNIVERSE BUILDER
 # =========================================================
-def make_yahoo_symbol(ticker: str, exchange: str) -> str:
-    t = str(ticker).strip().upper()
-    ex = str(exchange).strip().upper()
-
-    suffix = {
-        "XCSE": ".CO",
-        "XSTO": ".ST",
-        "XHEL": ".HE",
-        "XOSL": ".OL",
-        "XPAR": ".PA",
-        "XAMS": ".AS",
-        "XBRU": ".BR",
-        "XLON": ".L",
-        "XMIL": ".MI",
-        "XMAD": ".MC",
-        "XSWX": ".SW",
-        "XTKS": ".T",
-        "XHKG": ".HK",
-        "XNSE": ".NS",
-        "XBOM": ".BO",
-        "XTSE": ".TO",
-        "XTSX": ".V",
-        "XETRA": ".DE",
-        "FWB": ".DE",
-        "NASDAQ": "",
-        "NYSE": "",
-        "AMEX": "",
-    }
-
-    if ex in suffix:
-        return f"{t}{suffix[ex]}"
-    return t
-
-
 def build_universe_for_country(country_name: str, exchanges: List[str]) -> pd.DataFrame:
     frames = []
 
@@ -541,44 +668,36 @@ def build_universe_for_country(country_name: str, exchanges: List[str]) -> pd.Da
             df["type"] = ""
 
         df["source"] = "Twelve Data"
-        df["yahoo_symbol"] = df.apply(
-            lambda r: make_yahoo_symbol(r.get("symbol", ""), r.get("exchange", ex)),
-            axis=1,
-        )
+        df["yahoo_symbol"] = df.apply(lambda r: make_yahoo_symbol(r.get("symbol", ""), r.get("exchange", ex)), axis=1)
+        df["td_symbol"] = df.apply(lambda r: make_td_symbol(r.get("symbol", ""), r.get("exchange", ex)), axis=1)
 
-        keep = ["symbol", "name", "country", "exchange", "type", "source", "yahoo_symbol"]
+        keep = ["symbol", "name", "country", "exchange", "type", "source", "yahoo_symbol", "td_symbol"]
         frames.append(df[keep].rename(columns={"symbol": "ticker"}))
 
     if not frames:
-        return pd.DataFrame(
-            columns=["ticker", "name", "country", "exchange", "type", "source", "yahoo_symbol"]
-        )
+        return pd.DataFrame(columns=["ticker", "name", "country", "exchange", "type", "source", "yahoo_symbol", "td_symbol"])
 
     out = pd.concat(frames, ignore_index=True).drop_duplicates(subset=["ticker", "exchange"])
     return ensure_universe_schema(out)
 
 
 def build_all_universes(selected_countries: List[str]) -> Dict[str, int]:
-    counts: Dict[str, int] = {}
+    counts = {}
     all_frames = []
 
     for country in selected_countries:
         exchanges = TD_EXCHANGES.get(country, [])
         df = build_universe_for_country(country, exchanges)
-
         key = country.lower().replace(" ", "_")
         df.to_csv(universe_file(key), index=False, encoding="utf-8")
         counts[key] = len(df)
-
         if not df.empty:
             all_frames.append(df)
 
     if all_frames:
         global_df = pd.concat(all_frames, ignore_index=True).drop_duplicates(subset=["ticker", "exchange"])
     else:
-        global_df = pd.DataFrame(
-            columns=["ticker", "name", "country", "exchange", "type", "source", "yahoo_symbol"]
-        )
+        global_df = pd.DataFrame(columns=["ticker", "name", "country", "exchange", "type", "source", "yahoo_symbol", "td_symbol"])
 
     global_df = ensure_universe_schema(global_df)
     global_df.to_csv(universe_file("global_all"), index=False, encoding="utf-8")
@@ -595,11 +714,11 @@ def build_all_universes(selected_countries: List[str]) -> Dict[str, int]:
 
 
 # =========================================================
-# TECHNICAL ANALYSIS
+# TECHNICALS
 # =========================================================
 def pct_change(a: float, b: float) -> float:
     if pd.isna(a) or pd.isna(b) or b == 0:
-        return float("nan")
+        return np.nan
     return (a / b - 1.0) * 100.0
 
 
@@ -633,8 +752,6 @@ def add_technical_columns(df: pd.DataFrame) -> pd.DataFrame:
     d["BB_MID"] = sma20
     d["BB_UPPER"] = sma20 + 2 * std20
     d["BB_LOWER"] = sma20 - 2 * std20
-
-    d["VOL20_AVG"] = pd.to_numeric(d.get("Volume", np.nan), errors="coerce").rolling(20).mean()
     return d
 
 
@@ -761,10 +878,10 @@ def period_returns(df: pd.DataFrame) -> Dict[str, float]:
     def close_on_or_before(target_date: pd.Timestamp) -> float:
         sub = d[d["Date"] <= target_date]
         if sub.empty:
-            return float("nan")
+            return np.nan
         return float(sub["Close"].iloc[-1])
 
-    out: Dict[str, float] = {}
+    out = {}
     out["1D"] = pct_change(last_close, float(d["Close"].iloc[-2])) if len(d) >= 2 else np.nan
     out["1W"] = pct_change(last_close, close_on_or_before(last_date - pd.Timedelta(days=7)))
     out["1M"] = pct_change(last_close, close_on_or_before(last_date - pd.Timedelta(days=30)))
@@ -779,7 +896,7 @@ def period_returns(df: pd.DataFrame) -> Dict[str, float]:
 
 
 # =========================================================
-# SIGNAL LOG
+# LOG
 # =========================================================
 def append_signal_log(ticker: str, action: str, score: float, last: float) -> None:
     row = {
@@ -794,15 +911,6 @@ def append_signal_log(ticker: str, action: str, score: float, last: float) -> No
     if os.path.exists(SIGNAL_LOG):
         try:
             old = pd.read_csv(SIGNAL_LOG)
-            if not old.empty and {"ticker", "action", "last"}.issubset(old.columns):
-                prev = old.iloc[-1].to_dict()
-                prev_last = pd.to_numeric(prev.get("last", np.nan), errors="coerce")
-                if (
-                    str(prev.get("ticker", "")) == ticker
-                    and str(prev.get("action", "")) == action
-                    and float(prev_last) == float(last)
-                ):
-                    return
             out = pd.concat([old, new_df], ignore_index=True)
         except Exception:
             out = new_df
@@ -825,37 +933,275 @@ def read_signal_log(ticker: str) -> pd.DataFrame:
 
 
 # =========================================================
-# THEME MOMENTUM
+# THEME ENGINE
 # =========================================================
-def relative_strength(symbol: str, benchmark: str, days: int) -> float:
-    a, _ = fetch_history(symbol, years=5)
-    b, _ = fetch_history(benchmark, years=5)
+def year_by_year_returns(df: pd.DataFrame) -> pd.DataFrame:
+    if df is None or df.empty:
+        return pd.DataFrame(columns=["Year", "Return %"])
 
-    if a.empty or b.empty:
+    d = df[["Date", "Close"]].dropna().copy()
+    d["Date"] = pd.to_datetime(d["Date"], errors="coerce")
+    d["Close"] = pd.to_numeric(d["Close"], errors="coerce")
+    d = d.dropna().sort_values("Date")
+    if d.empty:
+        return pd.DataFrame(columns=["Year", "Return %"])
+
+    d["Year"] = d["Date"].dt.year
+    rows = []
+    for year, grp in d.groupby("Year"):
+        grp = grp.sort_values("Date")
+        start = float(grp["Close"].iloc[0])
+        end = float(grp["Close"].iloc[-1])
+        ret = (end / start - 1.0) * 100 if start else np.nan
+        rows.append({"Year": int(year), "Return %": ret})
+
+    return pd.DataFrame(rows).sort_values("Year").reset_index(drop=True)
+
+
+def cumulative_index(df: pd.DataFrame) -> pd.DataFrame:
+    d = df[["Date", "Close"]].dropna().copy()
+    d["Date"] = pd.to_datetime(d["Date"], errors="coerce")
+    d["Close"] = pd.to_numeric(d["Close"], errors="coerce")
+    d = d.dropna().sort_values("Date")
+    if d.empty:
+        return pd.DataFrame(columns=["Date", "Index"])
+    base = float(d["Close"].iloc[0])
+    d["Index"] = d["Close"] / base * 100.0 if base else np.nan
+    return d[["Date", "Index"]].reset_index(drop=True)
+
+
+def calc_drawdown(close: pd.Series) -> float:
+    s = pd.to_numeric(close, errors="coerce").dropna()
+    if s.empty:
+        return np.nan
+    peak = s.cummax()
+    dd = s / peak - 1.0
+    return float(dd.min() * 100.0)
+
+
+def calc_cagr(df: pd.DataFrame) -> float:
+    d = df[["Date", "Close"]].dropna().copy()
+    d["Date"] = pd.to_datetime(d["Date"], errors="coerce")
+    d["Close"] = pd.to_numeric(d["Close"], errors="coerce")
+    d = d.dropna().sort_values("Date")
+    if len(d) < 2:
+        return np.nan
+    start = float(d["Close"].iloc[0])
+    end = float(d["Close"].iloc[-1])
+    years = (d["Date"].iloc[-1] - d["Date"].iloc[0]).days / 365.25
+    if start <= 0 or years <= 0:
+        return np.nan
+    return float((end / start) ** (1 / years) - 1.0) * 100.0
+
+
+def calc_relative_strength(proxy_df: pd.DataFrame, bench_df: pd.DataFrame, window_days: int) -> float:
+    if proxy_df.empty or bench_df.empty:
         return np.nan
 
-    a = a[["Date", "Close"]].dropna().copy().sort_values("Date")
-    b = b[["Date", "Close"]].dropna().copy().sort_values("Date")
+    a = proxy_df[["Date", "Close"]].dropna().copy()
+    b = bench_df[["Date", "Close"]].dropna().copy()
+    a["Date"] = pd.to_datetime(a["Date"], errors="coerce")
+    b["Date"] = pd.to_datetime(b["Date"], errors="coerce")
+    a = a.sort_values("Date")
+    b = b.sort_values("Date")
 
     end = min(a["Date"].iloc[-1], b["Date"].iloc[-1])
-    start = end - pd.Timedelta(days=days)
+    start = end - pd.Timedelta(days=window_days)
 
-    def close_on(df_local: pd.DataFrame, d: pd.Timestamp) -> float:
-        sub = df_local[df_local["Date"] <= d]
+    def close_on_or_before(df_: pd.DataFrame, dt: pd.Timestamp) -> float:
+        sub = df_[df_["Date"] <= dt]
         if sub.empty:
             return np.nan
         return float(sub["Close"].iloc[-1])
 
-    a0 = close_on(a, start)
-    a1 = close_on(a, end)
-    b0 = close_on(b, start)
-    b1 = close_on(b, end)
+    a0 = close_on_or_before(a, start)
+    a1 = close_on_or_before(a, end)
+    b0 = close_on_or_before(b, start)
+    b1 = close_on_or_before(b, end)
 
     vals = [a0, a1, b0, b1]
     if any(pd.isna(x) for x in vals) or a0 == 0 or b0 == 0:
         return np.nan
 
-    return (a1 / a0 - 1.0) - (b1 / b0 - 1.0)
+    return float((a1 / a0 - 1.0) - (b1 / b0 - 1.0))
+
+
+def calc_speed_label(rs_1m: float, rs_3m: float, ema20_slope: float, macd_hist_delta: float) -> str:
+    accel = 0.0
+    for x in [rs_1m, rs_3m, ema20_slope, macd_hist_delta]:
+        if pd.notna(x):
+            accel += float(x)
+
+    if accel > 8:
+        return "Acceleration op"
+    if accel > 2:
+        return "Stabil optrend"
+    if accel > -2:
+        return "Sideways / neutral"
+    if accel > -8:
+        return "Aftagende styrke"
+    return "Acceleration ned"
+
+
+def calc_regime_label(close: pd.Series) -> str:
+    s = pd.to_numeric(close, errors="coerce").dropna()
+    if len(s) < 220:
+        return "For lidt data"
+
+    ema20 = s.ewm(span=20, adjust=False).mean()
+    ema50 = s.ewm(span=50, adjust=False).mean()
+    ema200 = s.ewm(span=200, adjust=False).mean()
+
+    c = float(s.iloc[-1])
+    e20 = float(ema20.iloc[-1])
+    e50 = float(ema50.iloc[-1])
+    e200 = float(ema200.iloc[-1])
+
+    if c > e20 > e50 > e200:
+        return "Stærk optrend"
+    if c > e50 > e200:
+        return "Optrend"
+    if c < e20 < e50 < e200:
+        return "Stærk nedtrend"
+    if c < e50 < e200:
+        return "Nedtrend"
+    return "Blandet / overgang"
+
+
+def build_theme_yearly_comparison(proxy_df: pd.DataFrame, bench_df: pd.DataFrame) -> pd.DataFrame:
+    py = year_by_year_returns(proxy_df)
+    by = year_by_year_returns(bench_df)
+    if py.empty:
+        return pd.DataFrame(columns=["Year", "Theme %", "Benchmark %", "Alpha %"])
+
+    out = py.merge(by, on="Year", how="left", suffixes=(" Theme", " Benchmark"))
+    out = out.rename(columns={"Return % Theme": "Theme %", "Return % Benchmark": "Benchmark %"})
+    if "Benchmark %" not in out.columns:
+        out["Benchmark %"] = np.nan
+    out["Alpha %"] = out["Theme %"] - out["Benchmark %"]
+    return out.sort_values("Year").reset_index(drop=True)
+
+
+def build_theme_rankings() -> pd.DataFrame:
+    rows = []
+
+    for theme_name, cfg in THEMES.items():
+        proxy = cfg["proxy"]
+        bench = cfg.get("benchmark", "SPY")
+
+        proxy_df, _ = fetch_history(proxy, td_symbol=proxy, yahoo_symbol=proxy, years=10)
+        bench_df, _ = fetch_history(bench, td_symbol=bench, yahoo_symbol=bench, years=10)
+
+        if proxy_df.empty or bench_df.empty:
+            continue
+
+        close = pd.to_numeric(proxy_df["Close"], errors="coerce").dropna()
+        if len(close) < 220:
+            continue
+
+        ema20 = close.ewm(span=20, adjust=False).mean()
+        ema50 = close.ewm(span=50, adjust=False).mean()
+        ema200 = close.ewm(span=200, adjust=False).mean()
+        rsi14 = rsi(close, 14)
+
+        macd_line = close.ewm(span=12, adjust=False).mean() - close.ewm(span=26, adjust=False).mean()
+        macd_signal = macd_line.ewm(span=9, adjust=False).mean()
+        macd_hist = macd_line - macd_signal
+
+        rs_1m = calc_relative_strength(proxy_df, bench_df, 30)
+        rs_3m = calc_relative_strength(proxy_df, bench_df, 90)
+        rs_6m = calc_relative_strength(proxy_df, bench_df, 180)
+
+        trend_up = bool(ema50.iloc[-1] > ema200.iloc[-1])
+
+        score_trend = 0.0
+        if trend_up:
+            score_trend += 25.0
+        if float(close.iloc[-1]) > float(ema200.iloc[-1]):
+            score_trend += 10.0
+        if pd.notna(rsi14.iloc[-1]):
+            rr = float(rsi14.iloc[-1])
+            score_trend += max(0.0, 10.0 - abs(rr - 55) / 2.5)
+
+        score_relative = 0.0
+        for rs_, w in [(rs_1m, 20.0), (rs_3m, 30.0), (rs_6m, 20.0)]:
+            if pd.notna(rs_):
+                score_relative += max(-w, min(w, rs_ * 100.0))
+
+        ema20_slope = np.nan
+        if len(ema20) >= 21:
+            ema20_slope = float((ema20.iloc[-1] / ema20.iloc[-21] - 1.0) * 100.0)
+
+        macd_hist_delta = np.nan
+        if len(macd_hist) >= 20:
+            macd_hist_delta = float(macd_hist.iloc[-1] - macd_hist.iloc[-20])
+
+        score_acceleration = 0.0
+        for x, scale in [(ema20_slope, 2.0), (macd_hist_delta, 20.0)]:
+            if pd.notna(x):
+                score_acceleration += max(-15.0, min(15.0, x * scale))
+
+        dd = calc_drawdown(close)
+        score_stability = 0.0 if pd.isna(dd) else max(-20.0, min(10.0, 10.0 + dd / 2.0))
+
+        # breadth
+        members = cfg.get("members", [])[:8]
+        breadth_vals = []
+        for m in members:
+            mdf, _ = fetch_history(m, td_symbol=m, yahoo_symbol=m, years=5)
+            if mdf.empty or "Close" not in mdf.columns:
+                continue
+            mc = pd.to_numeric(mdf["Close"], errors="coerce").dropna()
+            if len(mc) < 220:
+                continue
+            me50 = mc.ewm(span=50, adjust=False).mean()
+            me200 = mc.ewm(span=200, adjust=False).mean()
+            mrs3 = calc_relative_strength(mdf, bench_df, 90)
+            local = 0.0
+            if bool(me50.iloc[-1] > me200.iloc[-1]):
+                local += 1.0
+            if pd.notna(mrs3) and mrs3 > 0:
+                local += 1.0
+            breadth_vals.append(local)
+
+        score_breadth = float(np.mean(breadth_vals) * 10.0) if breadth_vals else 0.0
+        total = score_trend + score_relative + score_acceleration + score_stability + score_breadth
+
+        speed_label = calc_speed_label(
+            rs_1m=(0.0 if pd.isna(rs_1m) else rs_1m * 100.0),
+            rs_3m=(0.0 if pd.isna(rs_3m) else rs_3m * 100.0),
+            ema20_slope=(0.0 if pd.isna(ema20_slope) else ema20_slope),
+            macd_hist_delta=(0.0 if pd.isna(macd_hist_delta) else macd_hist_delta * 100.0),
+        )
+        regime_label = calc_regime_label(close)
+
+        rows.append(
+            {
+                "Tema": theme_name,
+                "Proxy": proxy,
+                "Samlet score": round(total, 2),
+                "Trend": round(score_trend, 2),
+                "Relativ styrke": round(score_relative, 2),
+                "Acceleration": round(score_acceleration, 2),
+                "Stabilitet": round(score_stability, 2),
+                "Breadth": round(score_breadth, 2),
+                "Regime": regime_label,
+                "Hastighed": speed_label,
+            }
+        )
+
+    if not rows:
+        return pd.DataFrame()
+
+    return pd.DataFrame(rows).sort_values("Samlet score", ascending=False).reset_index(drop=True)
+
+
+# =========================================================
+# GOOGLE NEWS
+# =========================================================
+def google_news_link(query: str) -> str:
+    q = requests.utils.quote(query)
+    return f"https://news.google.com/search?q={q}&hl=da&gl=DK&ceid=DK%3Ada"
 
 
 # =========================================================
@@ -881,9 +1227,9 @@ with st.sidebar:
     st.divider()
     st.subheader("🔑 Datakilde")
     if TD_API_KEY:
-        st.success("Twelve Data key fundet")
+        st.success("Twelve Data key indlæst i dette miljø")
     else:
-        st.warning("Ingen Twelve Data key fundet. Yahoo fallback virker stadig ved gyldige symboler.")
+        st.warning("Ingen Twelve Data key fundet i dette miljø. Yahoo fallback bruges.")
 
     st.divider()
     st.subheader("🌍 Universe builder")
@@ -912,7 +1258,7 @@ with st.sidebar:
 - **Søg & analyse**: kurs, P/E, RSI, trend, teknisk analyse
 - **Screening**: global prefilter + Top N scoring
 - **Portefølje**: beholdninger med signaler og nøgletal
-- **Tema**: momentum-proxy
+- **Tema**: dyb temaanalyse med historik og drivere
         """
     )
 
@@ -922,7 +1268,7 @@ tab_search, tab_screener, tab_portfolio, tab_themes, tab_data = st.tabs(
 
 
 # =========================================================
-# TAB 1: SEARCH
+# TAB 1 SEARCH
 # =========================================================
 with tab_search:
     st.subheader("🔎 Søg & analyse")
@@ -943,11 +1289,11 @@ with tab_search:
                 st.error(err)
 
             ticker = ""
+            td_symbol = ""
             yahoo_symbol = ""
             name = ""
             country = ""
             exchange = ""
-            type_ = ""
 
             if not uni.empty:
                 uni = uni.copy()
@@ -971,13 +1317,15 @@ with tab_search:
                     selection = st.selectbox("Vælg papir", view["display"].tolist(), index=0)
                     row = view[view["display"] == selection].iloc[0]
                     ticker = str(row["ticker"]).strip()
+                    td_symbol = str(row.get("td_symbol", "")).strip()
                     yahoo_symbol = str(row.get("yahoo_symbol", "")).strip()
                     name = str(row.get("name", "")).strip()
                     country = str(row.get("country", "")).strip()
                     exchange = str(row.get("exchange", "")).strip()
-                    type_ = str(row.get("type", "")).strip()
 
                     st.caption(f"Ticker: **{ticker}**")
+                    if td_symbol:
+                        st.caption(f"Twelve Data symbol: {td_symbol}")
                     if yahoo_symbol:
                         st.caption(f"Yahoo fallback: {yahoo_symbol}")
                     if name:
@@ -986,12 +1334,10 @@ with tab_search:
                         st.caption(f"Land: {country}")
                     if exchange:
                         st.caption(f"Exchange: {exchange}")
-                    if type_:
-                        st.caption(f"Type: {type_}")
 
         with right:
             if ticker:
-                df, source_used = fetch_history(ticker, yahoo_symbol=yahoo_symbol, years=years)
+                df, source_used = fetch_history(ticker=ticker, td_symbol=td_symbol, yahoo_symbol=yahoo_symbol, years=years)
                 overview = yahoo_fetch_overview(yahoo_symbol or ticker)
                 tech = latest_technical_snapshot(df)
                 rets = period_returns(df)
@@ -1055,25 +1401,22 @@ with tab_search:
                     st.line_chart(df.set_index("Date")["Close"])
 
                     st.markdown("#### Teknisk analyse")
-                    tech_df = add_technical_columns(df).copy()
-
+                    tech_df = add_technical_columns(df)
                     st.markdown("##### Pris vs EMA")
-                    tech_chart = tech_df.set_index("Date")[["Close", "EMA20", "EMA50", "EMA200"]].dropna(how="all")
-                    st.line_chart(tech_chart)
+                    st.line_chart(tech_df.set_index("Date")[["Close", "EMA20", "EMA50", "EMA200"]].dropna(how="all"))
 
                     c1, c2 = st.columns(2)
                     with c1:
                         st.markdown("##### RSI14")
-                        rsi_chart = tech_df.set_index("Date")[["RSI14"]].dropna()
-                        st.line_chart(rsi_chart)
+                        st.line_chart(tech_df.set_index("Date")[["RSI14"]].dropna())
                     with c2:
                         st.markdown("##### MACD")
-                        macd_chart = tech_df.set_index("Date")[["MACD", "MACD_SIGNAL"]].dropna()
-                        st.line_chart(macd_chart)
+                        st.line_chart(tech_df.set_index("Date")[["MACD", "MACD_SIGNAL"]].dropna())
 
                     st.markdown("##### Bollinger Bands")
-                    bb_chart = tech_df.set_index("Date")[["Close", "BB_UPPER", "BB_MID", "BB_LOWER"]].dropna(how="all")
-                    st.line_chart(bb_chart)
+                    st.line_chart(
+                        tech_df.set_index("Date")[["Close", "BB_UPPER", "BB_MID", "BB_LOWER"]].dropna(how="all")
+                    )
 
                     st.markdown("#### Seneste tekniske snapshot")
                     tech_snapshot = pd.DataFrame(
@@ -1093,9 +1436,8 @@ with tab_search:
                     )
                     st.dataframe(tech_snapshot, use_container_width=True, hide_index=True)
 
-                    qtxt = f"{ticker} {name}".strip()
                     st.markdown("#### Nyheder")
-                    st.markdown(f"[Google News]({google_news_link(qtxt)})")
+                    st.markdown(f"[Google News]({google_news_link(f'{ticker} {name}'.strip())})")
 
                     with st.expander("Signal-log"):
                         hist = read_signal_log(ticker)
@@ -1106,7 +1448,7 @@ with tab_search:
 
 
 # =========================================================
-# TAB 2: SCREENER
+# TAB 2 SCREENER
 # =========================================================
 with tab_screener:
     st.subheader("🏁 Screening")
@@ -1153,10 +1495,11 @@ with tab_screener:
 
                 for i, (_, r) in enumerate(work.iterrows(), start=1):
                     t = str(r["ticker"]).strip()
+                    td_sym = str(r.get("td_symbol", "")).strip()
                     y = str(r.get("yahoo_symbol", "")).strip()
                     status.write(f"Henter {i}/{len(work)}: {t}")
 
-                    df, source_used = fetch_history(t, yahoo_symbol=y, years=max(3, years))
+                    df, source_used = fetch_history(ticker=t, td_symbol=td_sym, yahoo_symbol=y, years=max(3, years))
                     if df.empty:
                         prog.progress(i / len(work))
                         continue
@@ -1222,53 +1565,26 @@ with tab_screener:
                                 full_df[col] = full_df[col].apply(safe_display_value)
                         st.dataframe(full_df, use_container_width=True, hide_index=True)
 
-                    choices = top.apply(
-                        lambda rr: f"{rr['Ticker']} — {rr['Navn']}" if str(rr["Navn"]).strip() else rr["Ticker"],
-                        axis=1,
-                    ).tolist()
-
-                    if choices:
-                        pick = st.selectbox("Vælg kandidat", choices, key="screen_pick")
-                        pick_ticker = pick.split(" — ")[0].strip()
-
-                        meta = uni[uni["ticker"] == pick_ticker]
-                        ysym = str(meta["yahoo_symbol"].iloc[0]) if not meta.empty else ""
-
-                        dfx, src = fetch_history(pick_ticker, yahoo_symbol=ysym, years=years)
-                        if not dfx.empty:
-                            tech_df = add_technical_columns(dfx)
-                            st.line_chart(tech_df.set_index("Date")[["Close", "EMA20", "EMA50", "EMA200"]].dropna(how="all"))
-                            st.caption(f"Kilde: {src}")
-                            st.markdown(f"[Nyheder]({google_news_link(pick)})")
-
 
 # =========================================================
-# TAB 3: PORTFOLIO
+# TAB 3 PORTFOLIO
 # =========================================================
-def portfolio_to_df() -> pd.DataFrame:
-    if not st.session_state["portfolio"]:
-        return pd.DataFrame(columns=["ticker", "shares", "name", "yahoo_symbol"])
-    df = pd.DataFrame(st.session_state["portfolio"])
-    df["ticker"] = df["ticker"].astype(str).str.strip()
-    df["shares"] = pd.to_numeric(df["shares"], errors="coerce").fillna(0.0)
-    df["name"] = df.get("name", "").astype(str)
-    df["yahoo_symbol"] = df.get("yahoo_symbol", "").astype(str)
-    df = df[df["ticker"].str.len() > 0]
-    df = df[df["shares"] > 0]
-    return df.reset_index(drop=True)
-
-
 with tab_portfolio:
     st.subheader("💼 Portefølje")
 
-    c1, c2, c3, c4 = st.columns([1, 1, 1, 1])
+    if "portfolio" not in st.session_state:
+        st.session_state["portfolio"] = []
+
+    c1, c2, c3, c4, c5 = st.columns([1, 1, 1, 1, 1])
     with c1:
         p_ticker = st.text_input("Ticker", value="AAPL", key="pf_ticker")
     with c2:
-        p_yahoo = st.text_input("Yahoo symbol (valgfri)", value="", key="pf_yahoo")
+        p_td = st.text_input("TD symbol (valgfri)", value="", key="pf_td")
     with c3:
-        p_shares = st.number_input("Antal", min_value=0.0, value=1.0, step=1.0, key="pf_shares")
+        p_yahoo = st.text_input("Yahoo symbol (valgfri)", value="", key="pf_yahoo")
     with c4:
+        p_shares = st.number_input("Antal", min_value=0.0, value=1.0, step=1.0, key="pf_shares")
+    with c5:
         p_name = st.text_input("Navn", value="", key="pf_name")
 
     if st.button("➕ Tilføj til portefølje"):
@@ -1276,6 +1592,7 @@ with tab_portfolio:
             st.session_state["portfolio"].append(
                 {
                     "ticker": p_ticker.strip(),
+                    "td_symbol": p_td.strip(),
                     "yahoo_symbol": p_yahoo.strip(),
                     "shares": float(p_shares),
                     "name": p_name.strip(),
@@ -1283,122 +1600,195 @@ with tab_portfolio:
             )
             st.rerun()
 
-    dfp = portfolio_to_df()
-
-    left, right = st.columns([2, 1])
-    with left:
-        st.markdown("### Beholdninger")
-        if dfp.empty:
-            st.info("Porteføljen er tom.")
-        else:
-            st.dataframe(dfp, use_container_width=True, hide_index=True)
-
-    with right:
-        export_json = json.dumps(st.session_state["portfolio"], ensure_ascii=False, indent=2)
-        st.download_button(
-            "⬇️ Download portfolio.json",
-            data=export_json,
-            file_name="portfolio.json",
-            mime="application/json",
-        )
-
-        up = st.file_uploader("Upload portfolio.json", type=["json"], key="pf_upload")
-        if up is not None:
-            try:
-                loaded = json.loads(up.read().decode("utf-8"))
-                if isinstance(loaded, list):
-                    st.session_state["portfolio"] = loaded
-                    st.success("Importeret.")
-                    st.rerun()
-                else:
-                    st.error("JSON skal være en liste.")
-            except Exception as e:
-                st.error(f"Kunne ikke læse JSON: {e}")
-
-    st.markdown("### Analyse pr. holding")
-    if dfp.empty:
-        st.info("Tilføj mindst én holding.")
+    if not st.session_state["portfolio"]:
+        st.info("Porteføljen er tom.")
     else:
+        pdf = pd.DataFrame(st.session_state["portfolio"])
         rows = []
-        with st.spinner("Henter data og beregner signaler ..."):
-            for _, r in dfp.iterrows():
-                t = str(r["ticker"]).strip()
-                y = str(r.get("yahoo_symbol", "")).strip()
-                shares = float(r["shares"])
-                name = str(r.get("name", "")).strip()
+        for _, r in pdf.iterrows():
+            t = str(r.get("ticker", "")).strip()
+            td_sym = str(r.get("td_symbol", "")).strip()
+            y = str(r.get("yahoo_symbol", "")).strip()
+            shares = float(r.get("shares", 0.0))
+            name = str(r.get("name", "")).strip()
 
-                dfx, src = fetch_history(t, yahoo_symbol=y, years=max(3, years))
-                tech = latest_technical_snapshot(dfx)
-                overview = yahoo_fetch_overview(y or t)
+            dfx, src = fetch_history(ticker=t, td_symbol=td_sym, yahoo_symbol=y, years=max(3, years))
+            tech = latest_technical_snapshot(dfx)
+            overview = yahoo_fetch_overview(y or t)
 
-                last = float(dfx["Close"].iloc[-1]) if not dfx.empty else np.nan
-                value = shares * last if np.isfinite(last) else np.nan
-
-                rows.append(
-                    {
-                        "Ticker": t,
-                        "Navn": name,
-                        "Antal": shares,
-                        "Seneste": safe_display_value(last),
-                        "Værdi": safe_display_value(value),
-                        "P/E": safe_display_value(overview.get("pe")),
-                        "MCap": safe_display_value(overview.get("market_cap")),
-                        "Kilde": src,
-                        "Signal": tech.get("action", "—"),
-                        "Score": safe_display_value(tech.get("score", np.nan)),
-                        "RSI": safe_display_value(tech.get("rsi", np.nan)),
-                        "Mom20%": safe_display_value(tech.get("mom20", np.nan)),
-                        "Trend": "✅" if tech.get("trend_up") else "—",
-                        "MACD": tech.get("macd_state", "—"),
-                        "Risiko": tech.get("risk", "—"),
-                        "Forklaring": tech.get("action", ""),
-                        "Nyheder": google_news_link(f"{t} {name}".strip()),
-                    }
-                )
-
-        out = pd.DataFrame(rows)
-        st.dataframe(out, use_container_width=True, hide_index=True)
-
-
-# =========================================================
-# TAB 4: THEMES
-# =========================================================
-with tab_themes:
-    st.subheader("🧭 Tema-momentum")
-
-    rows = []
-    with st.spinner("Beregner temaer ..."):
-        for theme, tickers in THEMES.items():
-            proxy = tickers[0]
-            rs_1m = relative_strength(proxy, THEME_BENCHMARK, 30)
-            rs_3m = relative_strength(proxy, THEME_BENCHMARK, 90)
-
-            score = 0.0
-            if not np.isnan(rs_1m):
-                score += rs_1m * 100
-            if not np.isnan(rs_3m):
-                score += rs_3m * 50
+            last = float(dfx["Close"].iloc[-1]) if not dfx.empty else np.nan
+            value = shares * last if np.isfinite(last) else np.nan
 
             rows.append(
                 {
-                    "Tema": theme,
-                    "Proxy": proxy,
-                    "MomentumScore": safe_display_value(round(score, 4)),
-                    "RS_1M_vs_SPY": safe_display_value(rs_1m),
-                    "RS_3M_vs_SPY": safe_display_value(rs_3m),
+                    "Ticker": t,
+                    "Navn": name,
+                    "Antal": shares,
+                    "Seneste": safe_display_value(last),
+                    "Værdi": safe_display_value(value),
+                    "P/E": safe_display_value(overview.get("pe")),
+                    "MCap": safe_display_value(overview.get("market_cap")),
+                    "Kilde": src,
+                    "Signal": tech.get("action", "—"),
+                    "Score": safe_display_value(tech.get("score", np.nan)),
+                    "RSI": safe_display_value(tech.get("rsi", np.nan)),
+                    "Trend": "✅" if tech.get("trend_up") else "—",
                 }
             )
 
-    dfm = pd.DataFrame(rows)
-    st.dataframe(dfm, use_container_width=True, hide_index=True)
-
-    st.markdown("### Top temaer")
-    for _, r in dfm.head(10).iterrows():
-        st.markdown(f"- **{r['Tema']}** ({r['Proxy']}) — RS 1M: {r['RS_1M_vs_SPY']}, RS 3M: {r['RS_3M_vs_SPY']}")
+        st.dataframe(pd.DataFrame(rows), use_container_width=True, hide_index=True)
 
 
 # =========================================================
-# TAB 5: DATA
+# TAB 4 THEMES
+# =========================================================
+with tab_themes:
+    st.subheader("🧭 Temaanalyse (stærk version)")
+
+    ranking_df = build_theme_rankings()
+    st.markdown("### Tema-rangering")
+    if ranking_df.empty:
+        st.warning("Kunne ikke beregne tema-rangering endnu.")
+    else:
+        st.dataframe(ranking_df, use_container_width=True, hide_index=True)
+
+    selected_theme = st.selectbox("Vælg tema", list(THEMES.keys()), index=0, key="theme_pick")
+    cfg = THEMES[selected_theme]
+    proxy = cfg["proxy"]
+    benchmark = cfg.get("benchmark", "SPY")
+
+    proxy_df, _ = fetch_history(ticker=proxy, td_symbol=proxy, yahoo_symbol=proxy, years=10)
+    bench_df, _ = fetch_history(ticker=benchmark, td_symbol=benchmark, yahoo_symbol=benchmark, years=10)
+
+    if proxy_df.empty:
+        st.error(f"Kunne ikke hente data for proxy {proxy}")
+    else:
+        yearly = build_theme_yearly_comparison(proxy_df, bench_df if not bench_df.empty else pd.DataFrame())
+        proxy_index = cumulative_index(proxy_df)
+        bench_index = cumulative_index(bench_df) if not bench_df.empty else pd.DataFrame()
+
+        cagr = calc_cagr(proxy_df)
+        max_dd = calc_drawdown(pd.to_numeric(proxy_df["Close"], errors="coerce"))
+        beat_rate = np.nan
+        if not yearly.empty and "Alpha %" in yearly.columns:
+            beat_rate = float((yearly["Alpha %"] > 0).mean() * 100.0)
+
+        # scores from ranking
+        row = ranking_df[ranking_df["Tema"] == selected_theme]
+        regime = row["Regime"].iloc[0] if not row.empty else "—"
+        speed = row["Hastighed"].iloc[0] if not row.empty else "—"
+        total_score = row["Samlet score"].iloc[0] if not row.empty else np.nan
+
+        st.markdown(f"## {selected_theme}")
+        st.write(cfg.get("description", ""))
+
+        m1, m2, m3, m4, m5 = st.columns(5)
+        m1.metric("Proxy", proxy)
+        m2.metric("CAGR 10 år", "—" if pd.isna(cagr) else f"{cagr:.2f}%")
+        m3.metric("Max drawdown", "—" if pd.isna(max_dd) else f"{max_dd:.1f}%")
+        m4.metric("Slår benchmark", "—" if pd.isna(beat_rate) else f"{beat_rate:.0f}% år")
+        m5.metric("Score", "—" if pd.isna(total_score) else f"{total_score:.1f}")
+
+        rs_1m = calc_relative_strength(proxy_df, bench_df, 30) if not bench_df.empty else np.nan
+        rs_3m = calc_relative_strength(proxy_df, bench_df, 90) if not bench_df.empty else np.nan
+        rs_6m = calc_relative_strength(proxy_df, bench_df, 180) if not bench_df.empty else np.nan
+
+        driver_text = ", ".join(cfg.get("drivers", [])[:3])
+        headwind_text = ", ".join(cfg.get("headwinds", [])[:3])
+
+        st.markdown("### Hvad sker lige nu")
+        st.info(
+            f"{selected_theme} er aktuelt i regime '{regime}' med hastighed '{speed}'. "
+            f"Relativ styrke mod benchmark er 1M={('—' if pd.isna(rs_1m) else f'{rs_1m*100:.1f}%')}, "
+            f"3M={('—' if pd.isna(rs_3m) else f'{rs_3m*100:.1f}%')}, "
+            f"6M={('—' if pd.isna(rs_6m) else f'{rs_6m*100:.1f}%')}. "
+            f"De vigtigste aktuelle drivere er {driver_text}. "
+            f"De vigtigste modvinde er {headwind_text}."
+        )
+
+        st.markdown("### De kommende år")
+        st.info(
+            f"De kommende år vil {selected_theme} især afhænge af: {driver_text}. "
+            f"Væsentlige risici er: {headwind_text}. "
+            f"Hvis makro og kapitalflow fortsætter i samme retning, er sandsynligheden højere for fortsat styrke; "
+            f"ved regimeskifte kan acceleration og relative score falde hurtigt."
+        )
+
+        st.markdown("### Historik: år-for-år (10 år)")
+        if yearly.empty:
+            st.warning("Ingen år-for-år-data endnu.")
+        else:
+            show_yearly = yearly.copy()
+            for col in ["Theme %", "Benchmark %", "Alpha %"]:
+                if col in show_yearly.columns:
+                    show_yearly[col] = show_yearly[col].round(2)
+            st.dataframe(show_yearly, use_container_width=True, hide_index=True)
+
+        st.markdown("### Kumulativ udvikling")
+        if not proxy_index.empty:
+            chart_df = proxy_index.rename(columns={"Index": selected_theme}).copy()
+            if not bench_index.empty:
+                chart_df = chart_df.merge(
+                    bench_index.rename(columns={"Index": benchmark}),
+                    on="Date",
+                    how="left",
+                )
+            st.line_chart(chart_df.set_index("Date"))
+
+        st.markdown("### Drivere og modvinde")
+        d1, d2 = st.columns(2)
+        with d1:
+            st.markdown("**Positive drivere**")
+            for x in cfg.get("drivers", []):
+                st.write(f"- {x}")
+        with d2:
+            st.markdown("**Modvinde / risici**")
+            for x in cfg.get("headwinds", []):
+                st.write(f"- {x}")
+
+        st.markdown("### Global markedskontekst")
+        macro_rows = []
+        for label, series_id in cfg.get("macro_series", {}).items():
+            dfm = fetch_fred_series(series_id, limit_years=12)
+            if dfm.empty:
+                macro_rows.append({"Indikator": label, "Serie": series_id, "Seneste": np.nan, "1 år ændring %": np.nan})
+                continue
+
+            latest = float(dfm["value"].dropna().iloc[-1]) if not dfm["value"].dropna().empty else np.nan
+            prev = np.nan
+            if len(dfm.dropna(subset=["value"])) >= 13:
+                prev = float(dfm.dropna(subset=["value"])["value"].iloc[-13])
+
+            yoy = np.nan
+            if pd.notna(latest) and pd.notna(prev) and prev != 0:
+                yoy = (latest / prev - 1.0) * 100.0
+
+            macro_rows.append(
+                {
+                    "Indikator": label,
+                    "Serie": series_id,
+                    "Seneste": latest,
+                    "1 år ændring %": yoy,
+                }
+            )
+
+        macro_df = pd.DataFrame(macro_rows)
+        if not macro_df.empty:
+            for col in ["Seneste", "1 år ændring %"]:
+                if col in macro_df.columns:
+                    macro_df[col] = macro_df[col].round(2)
+            st.dataframe(macro_df, use_container_width=True, hide_index=True)
+
+        st.markdown("### Hastighed i udviklingen")
+        st.write(f"**Aktuel hastighed:** {speed}")
+        st.write(f"**Regime:** {regime}")
+        st.write(
+            "Hastigheden er udledt af relativ styrke, acceleration i trend, EMA-hældning og ændring i MACD-dynamik."
+        )
+
+
+# =========================================================
+# TAB 5 DATA
 # =========================================================
 with tab_data:
     st.subheader("🛠 Data")
@@ -1413,7 +1803,6 @@ with tab_data:
             rows.append({"Univers": key, "Fil": path, "Rækker": len(df)})
         st.dataframe(pd.DataFrame(rows).sort_values("Univers"), use_container_width=True, hide_index=True)
 
-    st.markdown("### Ryd signal-log")
     if st.button("Slet signals_log.csv"):
         if os.path.exists(SIGNAL_LOG):
             os.remove(SIGNAL_LOG)
@@ -1421,4 +1810,4 @@ with tab_data:
         st.rerun()
 
 
-st.caption("Primær datakilde: Twelve Data. Fallback og nøgletal: Yahoo Finance. Ikke finansiel rådgivning.")
+st.caption("Primær datakilde: Twelve Data. Fallback og nøgletal: Yahoo Finance. FRED bruges til makro, hvis tilgængelig. Ikke finansiel rådgivning.")
