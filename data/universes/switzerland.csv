@@ -1,0 +1,534 @@
+ticker,name,country,exchange,type,source,yahoo_symbol
+AA,Alcoa Corporation,Switzerland,SIX,Common Stock,Twelve Data,AA
+AAD,Amadeus Fire AG,Switzerland,SIX,Common Stock,Twelve Data,AAD
+AAM,Anglo American plc,Switzerland,SIX,Common Stock,Twelve Data,AAM
+AAPL,Apple Inc.,Switzerland,SIX,Common Stock,Twelve Data,AAPL
+ABB25,ABB25,Switzerland,SIX,Common Stock,Twelve Data,ABB25
+ABB251,ABB251,Switzerland,SIX,Common Stock,Twelve Data,ABB251
+ABBN,ABB Ltd,Switzerland,SIX,Common Stock,Twelve Data,ABBN
+ABBNE,ABB Ltd.,Switzerland,SIX,Common Stock,Twelve Data,ABBNE
+ABBV,AbbVie Inc.,Switzerland,SIX,Common Stock,Twelve Data,ABBV
+ABC26,ABC26,Switzerland,SIX,Common Stock,Twelve Data,ABC26
+ABC261,ABC261,Switzerland,SIX,Common Stock,Twelve Data,ABC261
+ABC262,Alphabet Inc. 1.2525% 03/03/36,Switzerland,SIX,Common Stock,Twelve Data,ABC262
+ABC263,ABC263,Switzerland,SIX,Common Stock,Twelve Data,ABC263
+ABC264,ABC264,Switzerland,SIX,Common Stock,Twelve Data,ABC264
+ABT,Abbott Laboratories,Switzerland,SIX,Common Stock,Twelve Data,ABT
+ACLN,Accelleron Industries AG,Switzerland,SIX,Common Stock,Twelve Data,ACLN
+ADBE.USD,ADBE.USD,Switzerland,SIX,Common Stock,Twelve Data,ADBE.USD
+ADEN,Adecco Group AG,Switzerland,SIX,Common Stock,Twelve Data,ADEN
+ADS,adidas AG,Switzerland,SIX,Common Stock,Twelve Data,ADS
+ADVN,Adval Tech Holding AG,Switzerland,SIX,Common Stock,Twelve Data,ADVN
+ADXN,Addex Therapeutics Ltd,Switzerland,SIX,Common Stock,Twelve Data,ADXN
+ADYEN,Adyen N.V.,Switzerland,SIX,Common Stock,Twelve Data,ADYEN
+AERO,Montana Aerospace AG,Switzerland,SIX,Common Stock,Twelve Data,AERO
+AEVS,Aevis Victoria SA,Switzerland,SIX,Common Stock,Twelve Data,AEVS
+AFX,Carl Zeiss Meditec AG,Switzerland,SIX,Common Stock,Twelve Data,AFX
+AGK253,AGK253,Switzerland,SIX,Common Stock,Twelve Data,AGK253
+AKE25,AKE25,Switzerland,SIX,Common Stock,Twelve Data,AKE25
+AKE251,AKE251,Switzerland,SIX,Common Stock,Twelve Data,AKE251
+ALB,Albemarle Corporation,Switzerland,SIX,Common Stock,Twelve Data,ALB
+ALC,Alcon Inc.,Switzerland,SIX,Common Stock,Twelve Data,ALC
+ALF26,ALF26,Switzerland,SIX,Common Stock,Twelve Data,ALF26
+ALF261,Air Liquide Finance S.A. 0.9571% 03-Mar-2034,Switzerland,SIX,Common Stock,Twelve Data,ALF261
+ALF262,Air Liquide Finance S.A. 1.3125% 05/03/2038 EMTN,Switzerland,SIX,Common Stock,Twelve Data,ALF262
+ALLN,Allreal Holding AG,Switzerland,SIX,Common Stock,Twelve Data,ALLN
+ALSN,ALSO Holding AG,Switzerland,SIX,Common Stock,Twelve Data,ALSN
+ALV,Allianz SE,Switzerland,SIX,Common Stock,Twelve Data,ALV
+AMG251,AMG251,Switzerland,SIX,Common Stock,Twelve Data,AMG251
+AMG252,AMG252,Switzerland,SIX,Common Stock,Twelve Data,AMG252
+AMG253,AMG253,Switzerland,SIX,Common Stock,Twelve Data,AMG253
+AMG26,AMAG Leasing AG,Switzerland,SIX,Common Stock,Twelve Data,AMG26
+AMRZ,Amrize Ltd,Switzerland,SIX,Common Stock,Twelve Data,AMRZ
+AMS,ams OSRAM AG,Switzerland,SIX,Common Stock,Twelve Data,AMS
+AMZN,"Amazon.com, Inc.",Switzerland,SIX,Common Stock,Twelve Data,AMZN
+AMZN.USD,"Amazon.com, Inc.",Switzerland,SIX,Common Stock,Twelve Data,AMZN.USD
+AND25,AND25,Switzerland,SIX,Common Stock,Twelve Data,AND25
+APGN,APG|SGA SA,Switzerland,SIX,Common Stock,Twelve Data,APGN
+ARBN,Arbonia AG,Switzerland,SIX,Common Stock,Twelve Data,ARBN
+ARYN,Aryzta AG,Switzerland,SIX,Common Stock,Twelve Data,ARYN
+ASCN,Ascom Holding AG,Switzerland,SIX,Common Stock,Twelve Data,ASCN
+ASCNE,Ascom Holding AG,Switzerland,SIX,Common Stock,Twelve Data,ASCNE
+ASML,ASML Holding N.V.,Switzerland,SIX,Common Stock,Twelve Data,ASML
+ASWN,Asmallworld AG,Switzerland,SIX,Common Stock,Twelve Data,ASWN
+ATH251,ATH251,Switzerland,SIX,Common Stock,Twelve Data,ATH251
+AUTN,Autoneum Holding AG,Switzerland,SIX,Common Stock,Twelve Data,AUTN
+AVGO,Broadcom Inc.,Switzerland,SIX,Common Stock,Twelve Data,AVGO
+AVGO.USD,AVGO.USD,Switzerland,SIX,Common Stock,Twelve Data,AVGO.USD
+AVOL,Avolta AG,Switzerland,SIX,Common Stock,Twelve Data,AVOL
+AXP,American Express Company,Switzerland,SIX,Common Stock,Twelve Data,AXP
+AXP25,AXP25,Switzerland,SIX,Common Stock,Twelve Data,AXP25
+B,Barrick Mining Corporation,Switzerland,SIX,Common Stock,Twelve Data,B
+BAER,Julius Bär Gruppe AG,Switzerland,SIX,Common Stock,Twelve Data,BAER
+BANB,Bachem Holding AG,Switzerland,SIX,Common Stock,Twelve Data,BANB
+BARN,Barry Callebaut AG,Switzerland,SIX,Common Stock,Twelve Data,BARN
+BAS,BASF SE,Switzerland,SIX,Common Stock,Twelve Data,BAS
+BAY025,BAY025,Switzerland,SIX,Common Stock,Twelve Data,BAY025
+BAY251,BAY251,Switzerland,SIX,Common Stock,Twelve Data,BAY251
+BAYN,Bayer AG,Switzerland,SIX,Common Stock,Twelve Data,BAYN
+BBN,Bellevue Group AG,Switzerland,SIX,Common Stock,Twelve Data,BBN
+BCA25,BCA25,Switzerland,SIX,Common Stock,Twelve Data,BCA25
+BCGE,Banque Cantonale de Genève SA,Switzerland,SIX,Common Stock,Twelve Data,BCGE
+BCHN,Burckhardt Compression Holding AG,Switzerland,SIX,Common Stock,Twelve Data,BCHN
+BCJ,Banque Cantonale du Jura SA,Switzerland,SIX,Common Stock,Twelve Data,BCJ
+BCM25,BCM25,Switzerland,SIX,Common Stock,Twelve Data,BCM25
+BCT252,Banca dello Stato del Cantone Ticino 0.8% 2032 Bond,Switzerland,SIX,Common Stock,Twelve Data,BCT252
+BCVN,Banque Cantonale Vaudoise,Switzerland,SIX,Common Stock,Twelve Data,BCVN
+BDC25,BDC25,Switzerland,SIX,Common Stock,Twelve Data,BDC25
+BEAN,Belimo Holding AG,Switzerland,SIX,Common Stock,Twelve Data,BEAN
+BEC25,BEC25,Switzerland,SIX,Common Stock,Twelve Data,BEC25
+BEI,Beiersdorf AG,Switzerland,SIX,Common Stock,Twelve Data,BEI
+BEKN,Berner Kantonalbank AG,Switzerland,SIX,Common Stock,Twelve Data,BEKN
+BELL,Bell Food Group Ltd,Switzerland,SIX,Common Stock,Twelve Data,BELL
+BER255,BER255,Switzerland,SIX,Common Stock,Twelve Data,BER255
+BIE26,City of Biel BIENNE 1 03/03/36,Switzerland,SIX,Common Stock,Twelve Data,BIE26
+BIIB,Biogen Inc.,Switzerland,SIX,Common Stock,Twelve Data,BIIB
+BIOV,BioVersys AG,Switzerland,SIX,Common Stock,Twelve Data,BIOV
+BKW,BKW AG,Switzerland,SIX,Common Stock,Twelve Data,BKW
+BLDP,BALLARD POWER SYSTEMS INC Common Stock,Switzerland,SIX,Common Stock,Twelve Data,BLDP
+BLK,"BlackRock, Inc.",Switzerland,SIX,Common Stock,Twelve Data,BLK
+BLK253,Basellandschaftliche Kantonalbank 1.15% 17nov2045,Switzerland,SIX,Common Stock,Twelve Data,BLK253
+BLKB,Basellandschaftliche Kantonalbank,Switzerland,SIX,Common Stock,Twelve Data,BLKB
+BMAG,Bajaj Mobility AG,Switzerland,SIX,Common Stock,Twelve Data,BMAG
+BMY,Bristol-Myers Squibb Company,Switzerland,SIX,Common Stock,Twelve Data,BMY
+BOB25,BOB25,Switzerland,SIX,Common Stock,Twelve Data,BOB25
+BOM25,BOM25,Switzerland,SIX,Common Stock,Twelve Data,BOM25
+BOSN,Bossard Holding AG,Switzerland,SIX,Common Stock,Twelve Data,BOSN
+BRK,BRK,Switzerland,SIX,Common Stock,Twelve Data,BRK
+BRKN,Burkhalter Holding AG,Switzerland,SIX,Common Stock,Twelve Data,BRKN
+BRK.USD,Berkshire Hathaway Inc. Class B,Switzerland,SIX,Common Stock,Twelve Data,BRK.USD
+BS261,BS261,Switzerland,SIX,Common Stock,Twelve Data,BS261
+BS262,"Banco Santander, S.A. 1.36% 29jan2036 EMTN",Switzerland,SIX,Common Stock,Twelve Data,BS262
+BSK251,BSK251,Switzerland,SIX,Common Stock,Twelve Data,BSK251
+BSKP,Basler Kantonalbank Partizipsch,Switzerland,SIX,Common Stock,Twelve Data,BSKP
+BSLN,Basilea Pharmaceutica Ltd,Switzerland,SIX,Common Stock,Twelve Data,BSLN
+BUCN,Bucher Industries AG,Switzerland,SIX,Common Stock,Twelve Data,BUCN
+BUCNE,Bucher Industries AG,Switzerland,SIX,Common Stock,Twelve Data,BUCNE
+B.USD,Barrick Mining Corporation,Switzerland,SIX,Common Stock,Twelve Data,B.USD
+BVZN,BVZ Holding AG,Switzerland,SIX,Common Stock,Twelve Data,BVZN
+BYS,Bystronic AG,Switzerland,SIX,Common Stock,Twelve Data,BYS
+CAL255,CAL255,Switzerland,SIX,Common Stock,Twelve Data,CAL255
+CAL26,Crédit Agricole S.A. 1.475% EMTN due 22 January 2036 (ACAFP),Switzerland,SIX,Common Stock,Twelve Data,CAL26
+CALN,Calida Holding AG,Switzerland,SIX,Common Stock,Twelve Data,CALN
+CAT,Caterpillar Inc.,Switzerland,SIX,Common Stock,Twelve Data,CAT
+CBK,Commerzbank AG,Switzerland,SIX,Common Stock,Twelve Data,CBK
+CDE,"Coeur Mining, Inc.",Switzerland,SIX,Common Stock,Twelve Data,CDE
+CFR,Compagnie Financière Richemont SA,Switzerland,SIX,Common Stock,Twelve Data,CFR
+CFS25,CFS25,Switzerland,SIX,Common Stock,Twelve Data,CFS25
+CFT,Compagnie Financière Tradition SA,Switzerland,SIX,Common Stock,Twelve Data,CFT
+CFTE,Compagnie Financière Tradition S.A.,Switzerland,SIX,Common Stock,Twelve Data,CFTE
+CHAM,Cham Swiss Properties AG,Switzerland,SIX,Common Stock,Twelve Data,CHAM
+CIB25,CIB25,Switzerland,SIX,Common Stock,Twelve Data,CIB25
+CIB261,Canadian Imperial Bank of Commerce 0.63% 01/20/31 EMTN,Switzerland,SIX,Common Stock,Twelve Data,CIB261
+CICN,Cicor Technologies Ltd,Switzerland,SIX,Common Stock,Twelve Data,CICN
+CIF1,Cronos Immo Fund Right,Switzerland,SIX,Common Stock,Twelve Data,CIF1
+CLN,Clariant AG,Switzerland,SIX,Common Stock,Twelve Data,CLN
+CLN252,CLN252,Switzerland,SIX,Common Stock,Twelve Data,CLN252
+CLN253,CLN253,Switzerland,SIX,Common Stock,Twelve Data,CLN253
+CLTN,Coltene Holding AG,Switzerland,SIX,Common Stock,Twelve Data,CLTN
+CMB25,CMB25,Switzerland,SIX,Common Stock,Twelve Data,CMB25
+CMB251,CMB251,Switzerland,SIX,Common Stock,Twelve Data,CMB251
+CMBN,Cembra Money Bank AG,Switzerland,SIX,Common Stock,Twelve Data,CMBN
+CMCSA,Comcast Corp,Switzerland,SIX,Common Stock,Twelve Data,CMCSA
+COP25,COP25,Switzerland,SIX,Common Stock,Twelve Data,COP25
+COP251,COP251,Switzerland,SIX,Common Stock,Twelve Data,COP251
+COPN,Cosmo Pharmaceuticals N.V.,Switzerland,SIX,Common Stock,Twelve Data,COPN
+COTN,Comet Holding AG,Switzerland,SIX,Common Stock,Twelve Data,COTN
+CPHN,CPH Group AG,Switzerland,SIX,Common Stock,Twelve Data,CPHN
+CRM,CRM,Switzerland,SIX,Common Stock,Twelve Data,CRM
+CRM.USD,"Salesforce, Inc.",Switzerland,SIX,Common Stock,Twelve Data,CRM.USD
+CSCO,"Cisco Systems, Inc.",Switzerland,SIX,Common Stock,Twelve Data,CSCO
+CSCO.USD,CSCO.USD,Switzerland,SIX,Common Stock,Twelve Data,CSCO.USD
+CSP25,CSP25,Switzerland,SIX,Common Stock,Twelve Data,CSP25
+CURN,Curatis Holding AG,Switzerland,SIX,Common Stock,Twelve Data,CURN
+CVX,Chevron Corporation,Switzerland,SIX,Common Stock,Twelve Data,CVX
+DAE,Dätwyler Holding AG,Switzerland,SIX,Common Stock,Twelve Data,DAE
+DAT25,DAT25,Switzerland,SIX,Common Stock,Twelve Data,DAT25
+DBK,Deutsche Bank AG,Switzerland,SIX,Common Stock,Twelve Data,DBK
+DESN,Dottikon ES Holding AG,Switzerland,SIX,Common Stock,Twelve Data,DESN
+DHER,Delivery Hero SE,Switzerland,SIX,Common Stock,Twelve Data,DHER
+DHL,DHL Group AG,Switzerland,SIX,Common Stock,Twelve Data,DHL
+DHS25,DHS25,Switzerland,SIX,Common Stock,Twelve Data,DHS25
+DHS251,DHS251,Switzerland,SIX,Common Stock,Twelve Data,DHS251
+DHS252,DHS252,Switzerland,SIX,Common Stock,Twelve Data,DHS252
+DHS253,DHS253,Switzerland,SIX,Common Stock,Twelve Data,DHS253
+DHS254,DHS254,Switzerland,SIX,Common Stock,Twelve Data,DHS254
+DKSH,DKSH Holding AG,Switzerland,SIX,Common Stock,Twelve Data,DKSH
+DOCM,DocMorris AG,Switzerland,SIX,Common Stock,Twelve Data,DOCM
+DOKA,dormakaba Holding AG,Switzerland,SIX,Common Stock,Twelve Data,DOKA
+DOR25,DOR25,Switzerland,SIX,Common Stock,Twelve Data,DOR25
+DTE,Deutsche Telekom AG,Switzerland,SIX,Common Stock,Twelve Data,DTE
+DTE26,DTE26,Switzerland,SIX,Common Stock,Twelve Data,DTE26
+DTG,Daimler Truck Holding AG,Switzerland,SIX,Common Stock,Twelve Data,DTG
+E319,E319,Switzerland,SIX,Common Stock,Twelve Data,E319
+EFGN,EFG International AG,Switzerland,SIX,Common Stock,Twelve Data,EFGN
+EGI251,EGI251,Switzerland,SIX,Common Stock,Twelve Data,EGI251
+ELMN,Elma Electronic AG,Switzerland,SIX,Common Stock,Twelve Data,ELMN
+EL.USD,The Estée Lauder Companies Inc. Class A,Switzerland,SIX,Common Stock,Twelve Data,EL.USD
+EMMN,Emmi AG,Switzerland,SIX,Common Stock,Twelve Data,EMMN
+EMSN,EMS-Chemie Holding AG,Switzerland,SIX,Common Stock,Twelve Data,EMSN
+ENR,ENR,Switzerland,SIX,Common Stock,Twelve Data,ENR
+EPH,EPH European Property Holdings Ltd.,Switzerland,SIX,Common Stock,Twelve Data,EPH
+EPIC,EPIC Suisse AG,Switzerland,SIX,Common Stock,Twelve Data,EPIC
+ESUN,Edisun Power Europe AG,Switzerland,SIX,Common Stock,Twelve Data,ESUN
+EVE,EvoNext Holdings SA,Switzerland,SIX,Common Stock,Twelve Data,EVE
+EW.USD,Edwards Lifesciences Corporation,Switzerland,SIX,Common Stock,Twelve Data,EW.USD
+FCX,Freeport-McMoRan Inc.,Switzerland,SIX,Common Stock,Twelve Data,FCX
+FHZN,Flughafen Zürich AG,Switzerland,SIX,Common Stock,Twelve Data,FHZN
+FNTN,freenet AG,Switzerland,SIX,Common Stock,Twelve Data,FNTN
+FORN,Forbo Holding AG,Switzerland,SIX,Common Stock,Twelve Data,FORN
+FREN,Fundamenta Real Estate AG,Switzerland,SIX,Common Stock,Twelve Data,FREN
+FTON,Feintool International Holding AG,Switzerland,SIX,Common Stock,Twelve Data,FTON
+GAL25,GAL25,Switzerland,SIX,Common Stock,Twelve Data,GAL25
+GALD,Galderma Group AG,Switzerland,SIX,Common Stock,Twelve Data,GALD
+GALE,Galenica AG,Switzerland,SIX,Common Stock,Twelve Data,GALE
+GAM,GAM Holding AG,Switzerland,SIX,Common Stock,Twelve Data,GAM
+GAV,Carlo Gavazzi Holding AG,Switzerland,SIX,Common Stock,Twelve Data,GAV
+GEB25,GEB25,Switzerland,SIX,Common Stock,Twelve Data,GEB25
+GEBN,Geberit AG,Switzerland,SIX,Common Stock,Twelve Data,GEBN
+GEBNE,Geberit AG,Switzerland,SIX,Common Stock,Twelve Data,GEBNE
+GEM,Gem Co. Ltd.,Switzerland,SIX,Depositary Receipt,Twelve Data,GEM
+GF,Georg Fischer AG,Switzerland,SIX,Common Stock,Twelve Data,GF
+GFI251,GFI251,Switzerland,SIX,Common Stock,Twelve Data,GFI251
+GFI252,GFI252,Switzerland,SIX,Common Stock,Twelve Data,GFI252
+GIVN,Givaudan SA,Switzerland,SIX,Common Stock,Twelve Data,GIVN
+GLKBN,Glarner Kantonalbank,Switzerland,SIX,Common Stock,Twelve Data,GLKBN
+GLW,Corning Incorporated,Switzerland,SIX,Common Stock,Twelve Data,GLW
+GMI,Groupe Minoteries SA,Switzerland,SIX,Common Stock,Twelve Data,GMI
+GOB,Compagnie de Saint-Gobain S.A.,Switzerland,SIX,Common Stock,Twelve Data,GOB
+GOOG,GOOG,Switzerland,SIX,Common Stock,Twelve Data,GOOG
+GOOGL,Alphabet Inc.,Switzerland,SIX,Common Stock,Twelve Data,GOOGL
+GOOGL.USD,GOOGL.USD,Switzerland,SIX,Common Stock,Twelve Data,GOOGL.USD
+GRE25,GRE25,Switzerland,SIX,Common Stock,Twelve Data,GRE25
+GRK25,GRK25,Switzerland,SIX,Common Stock,Twelve Data,GRK25
+GRKP,Graubündner Kantonalbank,Switzerland,SIX,Common Stock,Twelve Data,GRKP
+GT,The Goodyear Tire & Rubber Company,Switzerland,SIX,Common Stock,Twelve Data,GT
+GURN,Gurit Holding AG,Switzerland,SIX,Common Stock,Twelve Data,GURN
+GXI,Gerresheimer AG,Switzerland,SIX,Common Stock,Twelve Data,GXI
+HAG,HAG,Switzerland,SIX,Common Stock,Twelve Data,HAG
+HAL,Halliburton Company,Switzerland,SIX,Common Stock,Twelve Data,HAL
+HAL.USD,Halliburton Company,Switzerland,SIX,Common Stock,Twelve Data,HAL.USD
+HBAN,Helvetia Baloise Holding AG,Switzerland,SIX,Common Stock,Twelve Data,HBAN
+HBLN,Hypothekarbank Lenzburg AG,Switzerland,SIX,Common Stock,Twelve Data,HBLN
+HEN3,Henkel AG & Co. KGaA Vz (Preferred Shares),Switzerland,SIX,Preferred Stock,Twelve Data,HEN3
+HIAG,HIAG Immobilien Holding AG,Switzerland,SIX,Common Stock,Twelve Data,HIAG
+HIL25,HIL25,Switzerland,SIX,Common Stock,Twelve Data,HIL25
+HIL251,HIL251,Switzerland,SIX,Common Stock,Twelve Data,HIL251
+HL,HL,Switzerland,SIX,Common Stock,Twelve Data,HL
+HLEE,Highlight Event and Entertainment AG,Switzerland,SIX,Common Stock,Twelve Data,HLEE
+HNR1,Hannover Rück SE,Switzerland,SIX,Common Stock,Twelve Data,HNR1
+HOLN,Holcim Ltd,Switzerland,SIX,Common Stock,Twelve Data,HOLN
+HOOD.USD,HOOD.USD,Switzerland,SIX,Common Stock,Twelve Data,HOOD.USD
+HOT,Hochtief Aktiengesellschaft,Switzerland,SIX,Common Stock,Twelve Data,HOT
+HPQ,HP Inc.,Switzerland,SIX,Common Stock,Twelve Data,HPQ
+HT5,HT5 AG,Switzerland,SIX,Common Stock,Twelve Data,HT5
+HUBN,Huber+Suhner AG,Switzerland,SIX,Common Stock,Twelve Data,HUBN
+IDIA,Idorsia Ltd,Switzerland,SIX,Common Stock,Twelve Data,IDIA
+IFCN,INFICON Holding AG,Switzerland,SIX,Common Stock,Twelve Data,IFCN
+IFX,Infineon Technologies AG,Switzerland,SIX,Common Stock,Twelve Data,IFX
+IMP26,IMP26,Switzerland,SIX,Common Stock,Twelve Data,IMP26
+IMPN,Implenia AG,Switzerland,SIX,Common Stock,Twelve Data,IMPN
+INGA,ING Groep N.V.,Switzerland,SIX,Common Stock,Twelve Data,INGA
+INRN,Interroll Holding AG,Switzerland,SIX,Common Stock,Twelve Data,INRN
+INTC,Intel Corporation,Switzerland,SIX,Common Stock,Twelve Data,INTC
+IREN,Investis Holding SA,Switzerland,SIX,Common Stock,Twelve Data,IREN
+ISN,Intershop Holding AG,Switzerland,SIX,Common Stock,Twelve Data,ISN
+JEN,Jenoptik AG,Switzerland,SIX,Common Stock,Twelve Data,JEN
+JFN,Jungfraubahn Holding AG,Switzerland,SIX,Common Stock,Twelve Data,JFN
+JNJ,Johnson & Johnson,Switzerland,SIX,Common Stock,Twelve Data,JNJ
+JUN3,Jungheinrich AG Preferred Stock,Switzerland,SIX,Preferred Stock,Twelve Data,JUN3
+KAL25,"Korean Air Lines Co., Ltd. 0.4275% Senior Unsecured Bonds due November 13, 2028",Switzerland,SIX,Common Stock,Twelve Data,KAL25
+KARN,Kardex Holding AG,Switzerland,SIX,Common Stock,Twelve Data,KARN
+KBX,Knorr-Bremse AG,Switzerland,SIX,Common Stock,Twelve Data,KBX
+KEDA,"Keda Industrial Group Co., Ltd.",Switzerland,SIX,Depositary Receipt,Twelve Data,KEDA
+KG,Kinross Gold Corporation,Switzerland,SIX,Common Stock,Twelve Data,KG
+KGX,KION GROUP AG,Switzerland,SIX,Common Stock,Twelve Data,KGX
+KLIN,Klingelnberg AG,Switzerland,SIX,Common Stock,Twelve Data,KLIN
+KLL25,KLL25,Switzerland,SIX,Common Stock,Twelve Data,KLL25
+KNI25,KNI25,Switzerland,SIX,Common Stock,Twelve Data,KNI25
+KNI251,KNI251,Switzerland,SIX,Common Stock,Twelve Data,KNI251
+KNIN,Kuehne + Nagel International AG,Switzerland,SIX,Common Stock,Twelve Data,KNIN
+KO,The Coca-Cola Company,Switzerland,SIX,Common Stock,Twelve Data,KO
+KOE25,KOE25,Switzerland,SIX,Common Stock,Twelve Data,KOE25
+KOMN,Komax Holding AG,Switzerland,SIX,Common Stock,Twelve Data,KOMN
+KSA25,KSA25,Switzerland,SIX,Common Stock,Twelve Data,KSA25
+KUD,Kudelski SA,Switzerland,SIX,Common Stock,Twelve Data,KUD
+KURN,Kuros Biosciences AG,Switzerland,SIX,Common Stock,Twelve Data,KURN
+LAND,Landis+Gyr Group AG,Switzerland,SIX,Common Stock,Twelve Data,LAND
+LBK26,LBK26,Switzerland,SIX,Common Stock,Twelve Data,LBK26
+LECN,Leclanché SA,Switzerland,SIX,Common Stock,Twelve Data,LECN
+LEHN,LEM Holding SA,Switzerland,SIX,Common Stock,Twelve Data,LEHN
+LEON,Leonteq AG,Switzerland,SIX,Common Stock,Twelve Data,LEON
+LEPU,"Lepu Medical Technology (Beijing) Co., Ltd.",Switzerland,SIX,Depositary Receipt,Twelve Data,LEPU
+LHA,Deutsche Lufthansa AG,Switzerland,SIX,Common Stock,Twelve Data,LHA
+LIN25,LIN25,Switzerland,SIX,Common Stock,Twelve Data,LIN25
+LIN251,LIN251,Switzerland,SIX,Common Stock,Twelve Data,LIN251
+LINK,LINK,Switzerland,SIX,Common Stock,Twelve Data,LINK
+LISN,Chocoladefabriken Lindt & Sprüngli AG,Switzerland,SIX,Common Stock,Twelve Data,LISN
+LISNE,Chocoladefabriken Lindt & Sprüngli AG,Switzerland,SIX,Common Stock,Twelve Data,LISNE
+LISP,Chocoladefabriken Lindt & Sprüngli AG,Switzerland,SIX,Common Stock,Twelve Data,LISP
+LISPE,Chocoladefabriken Lindt & Sprüngli AG,Switzerland,SIX,Common Stock,Twelve Data,LISPE
+LLB251,Liechtensteinische Landesbank AG 0.95% 12 Nov 2032 Bond,Switzerland,SIX,Common Stock,Twelve Data,LLB251
+LLBN,Liechtenstein Landesbank,Switzerland,SIX,Common Stock,Twelve Data,LLBN
+LLY,Eli Lilly and Company,Switzerland,SIX,Common Stock,Twelve Data,LLY
+LMN,lastminute.com N.V.,Switzerland,SIX,Common Stock,Twelve Data,LMN
+LMT,Lockheed Martin Corporation,Switzerland,SIX,Common Stock,Twelve Data,LMT
+LOGN,Logitech International S.A.,Switzerland,SIX,Common Stock,Twelve Data,LOGN
+LOGNE,Logitech International S.A.,Switzerland,SIX,Common Stock,Twelve Data,LOGNE
+LONN,Lonza Group AG,Switzerland,SIX,Common Stock,Twelve Data,LONN
+LUK25,LUK25,Switzerland,SIX,Common Stock,Twelve Data,LUK25
+LUK258,Luzerner Kantonalbank AG,Switzerland,SIX,Common Stock,Twelve Data,LUK258
+LUKN,Luzerner Kantonalbank AG,Switzerland,SIX,Common Stock,Twelve Data,LUKN
+MA,Mastercard Incorporated,Switzerland,SIX,Common Stock,Twelve Data,MA
+MBG,Mercedes-Benz Group AG,Switzerland,SIX,Common Stock,Twelve Data,MBG
+MCHN,MCH Group AG,Switzerland,SIX,Common Stock,Twelve Data,MCHN
+MCHP.USD,Microchip Technology Inc.,Switzerland,SIX,Common Stock,Twelve Data,MCHP.USD
+MDLZ,"Mondelez International, Inc.",Switzerland,SIX,Common Stock,Twelve Data,MDLZ
+MED,Medartis Holding AG,Switzerland,SIX,Common Stock,Twelve Data,MED
+MEDX,medmix AG,Switzerland,SIX,Common Stock,Twelve Data,MEDX
+META,Meta Platforms Inc Class A,Switzerland,SIX,Common Stock,Twelve Data,META
+METN,Metall Zug AG,Switzerland,SIX,Common Stock,Twelve Data,METN
+MIKN,Mikron Holding AG,Switzerland,SIX,Common Stock,Twelve Data,MIKN
+MMM,3M Company,Switzerland,SIX,Common Stock,Twelve Data,MMM
+MMTX,MindMaze Therapeutics Holding SA,Switzerland,SIX,Common Stock,Twelve Data,MMTX
+MO,"Altria Group, Inc.",Switzerland,SIX,Common Stock,Twelve Data,MO
+MOB25,MOB25,Switzerland,SIX,Common Stock,Twelve Data,MOB25
+MOB26,Mobimo Holding AG 1.35% 03/30/34,Switzerland,SIX,Common Stock,Twelve Data,MOB26
+MOBN,Mobimo Holding AG,Switzerland,SIX,Common Stock,Twelve Data,MOBN
+MOLN,Molecular Partners AG,Switzerland,SIX,Common Stock,Twelve Data,MOLN
+MOVE,Medacta Group SA,Switzerland,SIX,Common Stock,Twelve Data,MOVE
+MOZN,Mobilezone Holding AG,Switzerland,SIX,Common Stock,Twelve Data,MOZN
+MPL26,Metropolitan Life Global Funding I 1.3075% 01/16/34 EMTN,Switzerland,SIX,Common Stock,Twelve Data,MPL26
+MRNA,"Moderna, Inc.",Switzerland,SIX,Common Stock,Twelve Data,MRNA
+MSFT,MSFT,Switzerland,SIX,Common Stock,Twelve Data,MSFT
+MSFT.USD,MSFT.USD,Switzerland,SIX,Common Stock,Twelve Data,MSFT.USD
+MTG,Meier Tobler Group AG,Switzerland,SIX,Common Stock,Twelve Data,MTG
+MU,"Micron Technology, Inc.",Switzerland,SIX,Common Stock,Twelve Data,MU
+MUV2,Münchener Rückversicherungs-Gesellschaft Aktiengesellschaft in München,Switzerland,SIX,Common Stock,Twelve Data,MUV2
+NDA,Aurubis AG,Switzerland,SIX,Common Stock,Twelve Data,NDA
+NDAQ.USD,"Nasdaq, Inc.",Switzerland,SIX,Common Stock,Twelve Data,NDAQ.USD
+NDD26,Nant de Drance SA 1.35% 03/03/2036,Switzerland,SIX,Common Stock,Twelve Data,NDD26
+NDX1,Nordex SE,Switzerland,SIX,Common Stock,Twelve Data,NDX1
+NEAG,naturenergie holding AG,Switzerland,SIX,Common Stock,Twelve Data,NEAG
+NEMA,NEMA,Switzerland,SIX,Common Stock,Twelve Data,NEMA
+NESN,Nestlé S.A.,Switzerland,SIX,Common Stock,Twelve Data,NESN
+NEV,New Venturetec AG,Switzerland,SIX,Common Stock,Twelve Data,NEV
+NFLX,"Netflix, Inc.",Switzerland,SIX,Common Stock,Twelve Data,NFLX
+NIBEB,NIBE Industrier AB Class B,Switzerland,SIX,Common Stock,Twelve Data,NIBEB
+NOVN,Novartis AG,Switzerland,SIX,Common Stock,Twelve Data,NOVN
+NOVNEE,Novartis AG,Switzerland,SIX,Common Stock,Twelve Data,NOVNEE
+NREN,Novavest Real Estate AG,Switzerland,SIX,Common Stock,Twelve Data,NREN
+NVDA,NVIDIA Corporation,Switzerland,SIX,Common Stock,Twelve Data,NVDA
+NVDA.USD,NVIDIA Corporation,Switzerland,SIX,Common Stock,Twelve Data,NVDA.USD
+NWRN,Newron Pharmaceuticals SpA,Switzerland,SIX,Common Stock,Twelve Data,NWRN
+NYG26,New York Life Global Funding 1.375% 01/23/34,Switzerland,SIX,Common Stock,Twelve Data,NYG26
+OBE26,Kraftwerke Oberhasli AG 1% 30/05/2033,Switzerland,SIX,Common Stock,Twelve Data,OBE26
+OERL,OC Oerlikon Corporation AG,Switzerland,SIX,Common Stock,Twelve Data,OERL
+OFN,Orell Füssli AG,Switzerland,SIX,Common Stock,Twelve Data,OFN
+ORCL,Oracle Corporation,Switzerland,SIX,Common Stock,Twelve Data,ORCL
+ORON,Orior AG,Switzerland,SIX,Common Stock,Twelve Data,ORON
+OXY,Occidental Petroleum Corporation,Switzerland,SIX,Common Stock,Twelve Data,OXY
+OXY.USD,OXY.USD,Switzerland,SIX,Common Stock,Twelve Data,OXY.USD
+PB512,PB512,Switzerland,SIX,Common Stock,Twelve Data,PB512
+PB548,"Pfandbriefbank schweizerischer Hypothekarinstitute AG, 2.625% Covered Bond due February 14, 2031",Switzerland,SIX,Common Stock,Twelve Data,PB548
+PB601,PB601,Switzerland,SIX,Common Stock,Twelve Data,PB601
+PB619,PB619,Switzerland,SIX,Common Stock,Twelve Data,PB619
+PB635,PB635,Switzerland,SIX,Common Stock,Twelve Data,PB635
+PB717,PB717,Switzerland,SIX,Common Stock,Twelve Data,PB717
+PB720,PB720,Switzerland,SIX,Common Stock,Twelve Data,PB720
+PB722,PB722,Switzerland,SIX,Common Stock,Twelve Data,PB722
+PB741,PB741,Switzerland,SIX,Common Stock,Twelve Data,PB741
+PB7571,PB7571,Switzerland,SIX,Common Stock,Twelve Data,PB7571
+PB769,PB769,Switzerland,SIX,Common Stock,Twelve Data,PB769
+PB770,PB770,Switzerland,SIX,Common Stock,Twelve Data,PB770
+PB771,PB771,Switzerland,SIX,Common Stock,Twelve Data,PB771
+PB772,PB772,Switzerland,SIX,Common Stock,Twelve Data,PB772
+PB773,PB773,Switzerland,SIX,Common Stock,Twelve Data,PB773
+PB774,PB774,Switzerland,SIX,Common Stock,Twelve Data,PB774
+PB775,Pfandbriefbank Schweizerischer Hypothekarinstitute AG 0.75% 26-May-2034,Switzerland,SIX,Common Stock,Twelve Data,PB775
+PB776,PB776,Switzerland,SIX,Common Stock,Twelve Data,PB776
+PB777,PB777,Switzerland,SIX,Common Stock,Twelve Data,PB777
+PB778,PB778,Switzerland,SIX,Common Stock,Twelve Data,PB778
+PB779,Pfandbriefbank schweizerischer Hypothekarinstitute AG PSHYPO 0.75% 04/05/33,Switzerland,SIX,Common Stock,Twelve Data,PB779
+PB780,Pfandbriefbank Schweizerischer Hypothekarinstitute 0.875% 09/05/2036 Pfandbrief,Switzerland,SIX,Common Stock,Twelve Data,PB780
+PB781,Pfandbriefbank schweizerischer Hypothekarinstitute 1.125% 06/11/2040,Switzerland,SIX,Common Stock,Twelve Data,PB781
+PB782,PB782,Switzerland,SIX,Common Stock,Twelve Data,PB782
+PBC261,Province of British Columbia 0.935% 30jan2036,Switzerland,SIX,Common Stock,Twelve Data,PBC261
+PBC262,Province of British Columbia 1.3525% 30jan2046 EMTN,Switzerland,SIX,Common Stock,Twelve Data,PBC262
+PEAN,Peach Property Group AG,Switzerland,SIX,Common Stock,Twelve Data,PEAN
+PEDU,Perrot Duval Holding S.A.,Switzerland,SIX,Common Stock,Twelve Data,PEDU
+PEP,"PepsiCo, Inc.",Switzerland,SIX,Common Stock,Twelve Data,PEP
+PFE,Pfizer Inc.,Switzerland,SIX,Common Stock,Twelve Data,PFE
+PGHN,Partners Group Holding AG,Switzerland,SIX,Common Stock,Twelve Data,PGHN
+PKTM,Bajaj Mobility AG,Switzerland,SIX,Common Stock,Twelve Data,PKTM
+PLA26,Plazza AG,Switzerland,SIX,Common Stock,Twelve Data,PLA26
+PLAN,Plazza AG,Switzerland,SIX,Common Stock,Twelve Data,PLAN
+PLTR,PLTR,Switzerland,SIX,Common Stock,Twelve Data,PLTR
+PLTR.USD,Palantir Technologies Inc.,Switzerland,SIX,Common Stock,Twelve Data,PLTR.USD
+PLUG,Plug Power Inc.,Switzerland,SIX,Common Stock,Twelve Data,PLUG
+PMI,Philip Morris International Inc.,Switzerland,SIX,Common Stock,Twelve Data,PMI
+PMN,Phoenix Mecano AG,Switzerland,SIX,Common Stock,Twelve Data,PMN
+PPGN,PolyPeptide Group AG,Switzerland,SIX,Common Stock,Twelve Data,PPGN
+PRX,PRX,Switzerland,SIX,Common Stock,Twelve Data,PRX
+PSP25,PSP25,Switzerland,SIX,Common Stock,Twelve Data,PSP25
+PSPN,PSP Swiss Property AG,Switzerland,SIX,Common Stock,Twelve Data,PSPN
+PSX.USD,Phillips 66,Switzerland,SIX,Common Stock,Twelve Data,PSX.USD
+PUM,PUMA SE,Switzerland,SIX,Common Stock,Twelve Data,PUM
+PYPL,"PayPal Holdings, Inc.",Switzerland,SIX,Common Stock,Twelve Data,PYPL
+PZ499,PZ499,Switzerland,SIX,Common Stock,Twelve Data,PZ499
+PZ512,PZ512,Switzerland,SIX,Common Stock,Twelve Data,PZ512
+PZ522,PZ522,Switzerland,SIX,Common Stock,Twelve Data,PZ522
+PZ555,PZ555,Switzerland,SIX,Common Stock,Twelve Data,PZ555
+PZ556,PZ556,Switzerland,SIX,Common Stock,Twelve Data,PZ556
+PZ557,PZ557,Switzerland,SIX,Common Stock,Twelve Data,PZ557
+PZ559,Pfandbriefzentrale der Schweizer Kantonalbanken 1.50% Pfandbrief 2029,Switzerland,SIX,Common Stock,Twelve Data,PZ559
+PZ579,Pfandbriefzentrale der schweizerischen Kantonalbanken AG 1.85% Bond due 26 November 2038,Switzerland,SIX,Common Stock,Twelve Data,PZ579
+PZ602,PZ602,Switzerland,SIX,Common Stock,Twelve Data,PZ602
+PZ603,PZ603,Switzerland,SIX,Common Stock,Twelve Data,PZ603
+PZ605,PZ605,Switzerland,SIX,Common Stock,Twelve Data,PZ605
+PZ606,PZ606,Switzerland,SIX,Common Stock,Twelve Data,PZ606
+PZ610,PZ610,Switzerland,SIX,Common Stock,Twelve Data,PZ610
+PZ611,PZ611,Switzerland,SIX,Common Stock,Twelve Data,PZ611
+PZ614,PZ614,Switzerland,SIX,Common Stock,Twelve Data,PZ614
+PZ615,PZ615,Switzerland,SIX,Common Stock,Twelve Data,PZ615
+PZ616,PZ616,Switzerland,SIX,Common Stock,Twelve Data,PZ616
+PZ620,PZ620,Switzerland,SIX,Common Stock,Twelve Data,PZ620
+PZ621,Pfandbriefzentrale der schweizerischen Kantonalbanken AG,Switzerland,SIX,Common Stock,Twelve Data,PZ621
+QUE251,QUE251,Switzerland,SIX,Common Stock,Twelve Data,QUE251
+R3NK,RENK Group AG,Switzerland,SIX,Common Stock,Twelve Data,R3NK
+RAI292,RAI292,Switzerland,SIX,Common Stock,Twelve Data,RAI292
+REHN,Romande Energie Holding SA,Switzerland,SIX,Common Stock,Twelve Data,REHN
+RHM,Rheinmetall AG,Switzerland,SIX,Common Stock,Twelve Data,RHM
+RIEN,Rieter Holding AG,Switzerland,SIX,Common Stock,Twelve Data,RIEN
+RO,Roche Holding AG,Switzerland,SIX,Common Stock,Twelve Data,RO
+ROG,Roche Holding AG Genussscheine,Switzerland,SIX,Common Stock,Twelve Data,ROG
+ROSE,Zur Rose Group AG,Switzerland,SIX,Common Stock,Twelve Data,ROSE
+RSGN,R&S Group Holding AG,Switzerland,SIX,Common Stock,Twelve Data,RSGN
+RTX,RTX Corporation,Switzerland,SIX,Common Stock,Twelve Data,RTX
+RWE,RWE AG,Switzerland,SIX,Common Stock,Twelve Data,RWE
+RY25,RY25,Switzerland,SIX,Common Stock,Twelve Data,RY25
+RY26,Royal Bank of Canada 1.0875% 02/02/2033 EMTN,Switzerland,SIX,Common Stock,Twelve Data,RY26
+SANN,Santhera Pharmaceuticals Holding AG,Switzerland,SIX,Common Stock,Twelve Data,SANN
+SAP,SAP SE,Switzerland,SIX,Common Stock,Twelve Data,SAP
+SCHN,Schindler Holding AG,Switzerland,SIX,Common Stock,Twelve Data,SCHN
+SCHNE,Schindler Holding AG,Switzerland,SIX,Common Stock,Twelve Data,SCHNE
+SCHP,Schindler Holding AG Participation Certificate,Switzerland,SIX,Common Stock,Twelve Data,SCHP
+SCHPE,Schindler Holding AG,Switzerland,SIX,Common Stock,Twelve Data,SCHPE
+SCM25,SCM25,Switzerland,SIX,Common Stock,Twelve Data,SCM25
+SCM251,SCM251,Switzerland,SIX,Common Stock,Twelve Data,SCM251
+SCM26,SCM26,Switzerland,SIX,Common Stock,Twelve Data,SCM26
+SCMN,Swisscom AG,Switzerland,SIX,Common Stock,Twelve Data,SCMN
+SCO25,SCO25,Switzerland,SIX,Common Stock,Twelve Data,SCO25
+SCO26,Scotiabank Chile 1.21% 02/05/32 EMTN,Switzerland,SIX,Common Stock,Twelve Data,SCO26
+SCR,SCOR SE,Switzerland,SIX,Common Stock,Twelve Data,SCR
+SDZ,Sandoz Group AG,Switzerland,SIX,Common Stock,Twelve Data,SDZ
+SENS,Sensirion Holding AG,Switzerland,SIX,Common Stock,Twelve Data,SENS
+SFPN,SF Urban Properties AG,Switzerland,SIX,Common Stock,Twelve Data,SFPN
+SFSN,SFS Group AG,Switzerland,SIX,Common Stock,Twelve Data,SFSN
+SFZ25,SFZ25,Switzerland,SIX,Common Stock,Twelve Data,SFZ25
+SFZN,Siegfried Holding AG,Switzerland,SIX,Common Stock,Twelve Data,SFZN
+SGK253,St. Galler Kantonalbank AG,Switzerland,SIX,Common Stock,Twelve Data,SGK253
+SGK26,SGK26,Switzerland,SIX,Common Stock,Twelve Data,SGK26
+SGKN,St. Galler Kantonalbank AG,Switzerland,SIX,Common Stock,Twelve Data,SGKN
+SGSN,SGS SA,Switzerland,SIX,Common Stock,Twelve Data,SGSN
+SHL,Siemens Healthineers AG,Switzerland,SIX,Common Stock,Twelve Data,SHL
+SHLTN,SHL Telemedicine Ltd.,Switzerland,SIX,Common Stock,Twelve Data,SHLTN
+SIE,Siemens Aktiengesellschaft,Switzerland,SIX,Common Stock,Twelve Data,SIE
+SIGN,SIG Group AG,Switzerland,SIX,Common Stock,Twelve Data,SIGN
+SIK255,SIK255,Switzerland,SIX,Common Stock,Twelve Data,SIK255
+SIK256,SIK256,Switzerland,SIX,Common Stock,Twelve Data,SIK256
+SIKA,Sika AG,Switzerland,SIX,Common Stock,Twelve Data,SIKA
+SKAN,SKAN Group AG,Switzerland,SIX,Common Stock,Twelve Data,SKAN
+SLH26,SLH26,Switzerland,SIX,Common Stock,Twelve Data,SLH26
+SLH261,Swiss Life Holding AG 1.875% 23jan2042 hybrid bond,Switzerland,SIX,Common Stock,Twelve Data,SLH261
+SLHN,Swiss Life Holding AG,Switzerland,SIX,Common Stock,Twelve Data,SLHN
+SLHNE,Swiss Life Holding AG,Switzerland,SIX,Common Stock,Twelve Data,SLHNE
+SMCI,Super Micro Computer Inc,Switzerland,SIX,Common Stock,Twelve Data,SMCI
+SMG,SMG Swiss Marketplace Group Holding AG,Switzerland,SIX,Common Stock,Twelve Data,SMG
+SMHN,SUSS MicroTec SE,Switzerland,SIX,Common Stock,Twelve Data,SMHN
+SNBN,Schweizerische Nationalbank,Switzerland,SIX,Common Stock,Twelve Data,SNBN
+SNOW,Snowflake Inc.,Switzerland,SIX,Common Stock,Twelve Data,SNOW
+SON25,SON25,Switzerland,SIX,Common Stock,Twelve Data,SON25
+SOON,Sonova Holding AG,Switzerland,SIX,Common Stock,Twelve Data,SOON
+SPOT.USD,SPOT.USD,Switzerland,SIX,Common Stock,Twelve Data,SPOT.USD
+SPSN,Swiss Prime Site AG,Switzerland,SIX,Common Stock,Twelve Data,SPSN
+SQN,Swissquote Group Holding Ltd,Switzerland,SIX,Common Stock,Twelve Data,SQN
+SRAIL,Stadler Rail AG,Switzerland,SIX,Common Stock,Twelve Data,SRAIL
+SREN,Swiss Re AG,Switzerland,SIX,Common Stock,Twelve Data,SREN
+SRENE,Swiss Re AG,Switzerland,SIX,Common Stock,Twelve Data,SRENE
+SRG25,SRG25,Switzerland,SIX,Common Stock,Twelve Data,SRG25
+SRT3,Sartorius AG Preference Shares,Switzerland,SIX,Preferred Stock,Twelve Data,SRT3
+STGN,StarragTornos Group AG,Switzerland,SIX,Common Stock,Twelve Data,STGN
+STM25,STM25,Switzerland,SIX,Common Stock,Twelve Data,STM25
+STMN,Straumann Holding AG,Switzerland,SIX,Common Stock,Twelve Data,STMN
+STRN,Schlatter Industries AG,Switzerland,SIX,Common Stock,Twelve Data,STRN
+SUN,Sulzer Ltd,Switzerland,SIX,Common Stock,Twelve Data,SUN
+SUNN,Sunrise Communications AG,Switzerland,SIX,Common Stock,Twelve Data,SUNN
+SVT25,SVT25,Switzerland,SIX,Common Stock,Twelve Data,SVT25
+SWD,"Sunwoda Electronic Co., Ltd.",Switzerland,SIX,Depositary Receipt,Twelve Data,SWD
+SWON,SoftwareOne Holding AG,Switzerland,SIX,Common Stock,Twelve Data,SWON
+SWTQ,Schweiter Technologies AG,Switzerland,SIX,Common Stock,Twelve Data,SWTQ
+SY1,Symrise AG,Switzerland,SIX,Common Stock,Twelve Data,SY1
+TEC25,TEC25,Switzerland,SIX,Common Stock,Twelve Data,TEC25
+TECN,Tecan Group AG,Switzerland,SIX,Common Stock,Twelve Data,TECN
+TEL25,TEL25,Switzerland,SIX,Common Stock,Twelve Data,TEL25
+TEMN,Temenos AG,Switzerland,SIX,Common Stock,Twelve Data,TEMN
+TG25,TG25,Switzerland,SIX,Common Stock,Twelve Data,TG25
+TI256,TI256,Switzerland,SIX,Common Stock,Twelve Data,TI256
+TIBN,Bergbahnen Engelberg-Trübsee-Titlis AG,Switzerland,SIX,Common Stock,Twelve Data,TIBN
+TKA,thyssenkrupp AG,Switzerland,SIX,Common Stock,Twelve Data,TKA
+TKBP,Thurgauer Kantonalbank,Switzerland,SIX,Common Stock,Twelve Data,TKBP
+TQF25,TQF25,Switzerland,SIX,Common Stock,Twelve Data,TQF25
+TRF25,TRF25,Switzerland,SIX,Common Stock,Twelve Data,TRF25
+TSLA,"Tesla, Inc.",Switzerland,SIX,Common Stock,Twelve Data,TSLA
+TSLA.USD,"Tesla, Inc.",Switzerland,SIX,Common Stock,Twelve Data,TSLA.USD
+TXGN,TX Group AG,Switzerland,SIX,Common Stock,Twelve Data,TXGN
+TXGNE,TX Group AG,Switzerland,SIX,Common Stock,Twelve Data,TXGNE
+TXN,Texas Instruments Inc,Switzerland,SIX,Common Stock,Twelve Data,TXN
+UBER,"Uber Technologies, Inc.",Switzerland,SIX,Common Stock,Twelve Data,UBER
+UBS255,UBS255,Switzerland,SIX,Common Stock,Twelve Data,UBS255
+UBS256,UBS256,Switzerland,SIX,Common Stock,Twelve Data,UBS256
+UBS261,UBS261,Switzerland,SIX,Common Stock,Twelve Data,UBS261
+UBS262,UBS Switzerland AG 1.0225% 01/15/36 Corporate Bond,Switzerland,SIX,Common Stock,Twelve Data,UBS262
+UBSG,UBS Group AG,Switzerland,SIX,Common Stock,Twelve Data,UBSG
+UBSGE,UBS Group AG,Switzerland,SIX,Common Stock,Twelve Data,UBSGE
+UBXN,u-blox Holding AG,Switzerland,SIX,Common Stock,Twelve Data,UBXN
+UEC,Uranium Energy Corp.,Switzerland,SIX,Common Stock,Twelve Data,UEC
+UHR,The Swatch Group AG,Switzerland,SIX,Common Stock,Twelve Data,UHR
+UHRN,The Swatch Group AG,Switzerland,SIX,Common Stock,Twelve Data,UHRN
+UNH,UnitedHealth Group Incorporated,Switzerland,SIX,Common Stock,Twelve Data,UNH
+VACN,VAT Group AG,Switzerland,SIX,Common Stock,Twelve Data,VACN
+VAHN,Vaudoise Assurances Holding SA,Switzerland,SIX,Common Stock,Twelve Data,VAHN
+VARN,Varia US Properties AG,Switzerland,SIX,Common Stock,Twelve Data,VARN
+VATN,Valiant Holding AG,Switzerland,SIX,Common Stock,Twelve Data,VATN
+VBSN,IVF Hartmann Holding AG,Switzerland,SIX,Common Stock,Twelve Data,VBSN
+VETN,Vetropack Holding AG,Switzerland,SIX,Common Stock,Twelve Data,VETN
+VILN,Villars Holding S.A.,Switzerland,SIX,Common Stock,Twelve Data,VILN
+VLH25,Hypo Vorarlberg Bank AG 4.375% Perpetual Subordinated Bond,Switzerland,SIX,Common Stock,Twelve Data,VLH25
+VLRT,Valartis Group AG,Switzerland,SIX,Common Stock,Twelve Data,VLRT
+VNA26,VNA26,Switzerland,SIX,Common Stock,Twelve Data,VNA26
+VONN,Vontobel Holding AG,Switzerland,SIX,Common Stock,Twelve Data,VONN
+VOW3,Volkswagen AG Pref. Share,Switzerland,SIX,Preferred Stock,Twelve Data,VOW3
+VPBN,VP Bank AG,Switzerland,SIX,Common Stock,Twelve Data,VPBN
+VZN,VZ Holding AG,Switzerland,SIX,Common Stock,Twelve Data,VZN
+VZUG,V-ZUG Holding AG,Switzerland,SIX,Common Stock,Twelve Data,VZUG
+WARN,Warteck Invest AG,Switzerland,SIX,Common Stock,Twelve Data,WARN
+WIHN,WISeKey International Holding AG,Switzerland,SIX,Common Stock,Twelve Data,WIHN
+WKBN,Walliser Kantonalbank,Switzerland,SIX,Common Stock,Twelve Data,WKBN
+XLS,Xlife Sciences AG,Switzerland,SIX,Common Stock,Twelve Data,XLS
+XOM,Exxon Mobil Corporation,Switzerland,SIX,Common Stock,Twelve Data,XOM
+YPSN,Ypsomed Holding AG,Switzerland,SIX,Common Stock,Twelve Data,YPSN
+YTME,Youngtimers AG,Switzerland,SIX,Common Stock,Twelve Data,YTME
+ZBH,"Zimmer Biomet Holdings, Inc.",Switzerland,SIX,Common Stock,Twelve Data,ZBH
+ZBH250,ZBH250,Switzerland,SIX,Common Stock,Twelve Data,ZBH250
+ZBH251,ZBH251,Switzerland,SIX,Common Stock,Twelve Data,ZBH251
+ZEH25,ZEH25,Switzerland,SIX,Common Stock,Twelve Data,ZEH25
+ZEHN,Zehnder Group AG,Switzerland,SIX,Common Stock,Twelve Data,ZEHN
+ZKB162,ZKB162,Switzerland,SIX,Common Stock,Twelve Data,ZKB162
+ZKB165,ZKB165,Switzerland,SIX,Common Stock,Twelve Data,ZKB165
+ZTS.USD,Zoetis Inc.,Switzerland,SIX,Common Stock,Twelve Data,ZTS.USD
+ZUBN,Züblin Immobilien Holding AG,Switzerland,SIX,Common Stock,Twelve Data,ZUBN
+ZUGER,Zuger Kantonalbank AG,Switzerland,SIX,Common Stock,Twelve Data,ZUGER
+ZUGN,Zug Estates Holding AG Serie B,Switzerland,SIX,Common Stock,Twelve Data,ZUGN
+ZURN,Zurich Insurance Group AG,Switzerland,SIX,Common Stock,Twelve Data,ZURN
+ZWM,Zwahlen & Mayr S.A.,Switzerland,SIX,Common Stock,Twelve Data,ZWM

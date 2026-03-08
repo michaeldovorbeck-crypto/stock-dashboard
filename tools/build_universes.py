@@ -1,171 +1,273 @@
 import os
-from io import StringIO
+from typing import Dict, List
 
 import pandas as pd
 import requests
 
-NASDAQ_LISTED = "https://ftp.nasdaqtrader.com/SymbolDirectory/nasdaqlisted.txt"
-OTHER_LISTED = "https://ftp.nasdaqtrader.com/SymbolDirectory/otherlisted.txt"
+# =========================================================
+# CONFIG
+# =========================================================
+DATA_DIR = "data"
+UNIVERSE_DIR = os.path.join(DATA_DIR, "universes")
+HTTP_TIMEOUT = 25
+TD_BASE = "https://api.twelvedata.com"
 
-OUT_DIR = os.path.join("data", "universes")
-US_ALL_OUT = os.path.join(OUT_DIR, "us_all.csv")
-GLOBAL_ALL_OUT = os.path.join(OUT_DIR, "global_all.csv")
+os.makedirs(UNIVERSE_DIR, exist_ok=True)
 
+TD_EXCHANGES: Dict[str, List[str]] = {
+    "USA": ["NASDAQ", "NYSE", "AMEX"],
+    "Germany": ["XETRA", "FWB"],
+    "Denmark": ["XCSE"],
+    "Sweden": ["XSTO"],
+    "United Kingdom": ["XLON"],
+    "France": ["XPAR"],
+    "Netherlands": ["XAMS"],
+    "Switzerland": ["XSWX"],
+    "Italy": ["XMIL"],
+    "Spain": ["XMAD"],
+    "Norway": ["XOSL"],
+    "Finland": ["XHEL"],
+    "Belgium": ["XBRU"],
+    "Canada": ["XTSE", "XTSX"],
+    "Japan": ["XTKS"],
+    "Hong Kong": ["XHKG"],
+    "India": ["XNSE", "XBOM"],
+}
 
-def download_text(url: str) -> str:
-    r = requests.get(url, timeout=60)
-    r.raise_for_status()
-    return r.text
-
-
-def parse_pipe_table(txt: str) -> pd.DataFrame:
-    lines = [ln for ln in txt.splitlines() if ln.strip()]
-    if len(lines) < 3:
-        return pd.DataFrame()
-
-    header = lines[0]
-    data_lines = lines[1:]
-    data_lines = [ln for ln in data_lines if not ln.lower().startswith("file creation time")]
-
-    buf = header + "\n" + "\n".join(data_lines)
-    return pd.read_csv(StringIO(buf), sep="|", dtype=str).fillna("")
-
-
-def clean_symbol(sym: str) -> str:
-    s = (sym or "").strip().upper()
-    if not s:
-        return ""
-    return s.replace(".", "-")
-
-
-def to_stooq_us(sym: str) -> str:
-    s = clean_symbol(sym)
-    if not s:
-        return ""
-    return f"{s}.US"
+# =========================================================
+# API KEY
+# =========================================================
+def get_api_key() -> str:
+    # Først miljøvariabel, derefter evt. lokal secrets-fil hvis du vil udbygge senere
+    return os.getenv("TWELVE_DATA_API_KEY", "").strip()
 
 
-def build_us_all(include_etf: bool = True) -> pd.DataFrame:
-    t1 = download_text(NASDAQ_LISTED)
-    t2 = download_text(OTHER_LISTED)
+TD_API_KEY = get_api_key()
 
-    df1 = parse_pipe_table(t1)
-    df2 = parse_pipe_table(t2)
+
+# =========================================================
+# HELPERS
+# =========================================================
+def http_get(url: str, params: dict | None = None) -> requests.Response:
+    return requests.get(url, params=params, timeout=HTTP_TIMEOUT)
+
+
+def td_get(endpoint: str, params: dict | None = None) -> dict:
+    if not TD_API_KEY:
+        return {"status": "error", "message": "Missing TWELVE_DATA_API_KEY"}
+
+    payload = dict(params or {})
+    payload["apikey"] = TD_API_KEY
+
+    try:
+        r = http_get(f"{TD_BASE}/{endpoint}", params=payload)
+        if r.status_code != 200:
+            return {"status": "error", "message": f"HTTP {r.status_code}"}
+        return r.json()
+    except Exception as e:
+        return {"status": "error", "message": str(e)}
+
+
+def normalize_cols(df: pd.DataFrame) -> pd.DataFrame:
+    df = df.copy()
+    df.columns = [str(c).strip().lower() for c in df.columns]
+    return df
+
+
+def ensure_schema(df: pd.DataFrame) -> pd.DataFrame:
+    if df is None or df.empty:
+        return pd.DataFrame(
+            columns=["ticker", "name", "country", "exchange", "type", "source", "yahoo_symbol"]
+        )
+
+    df = normalize_cols(df)
+
+    rename_map = {}
+    for c in df.columns:
+        if c in ("symbol", "ticker_code"):
+            rename_map[c] = "ticker"
+        elif c in ("instrument_name", "company", "companyname", "security", "name"):
+            rename_map[c] = "name"
+
+    if rename_map:
+        df = df.rename(columns=rename_map)
+
+    if "ticker" not in df.columns and len(df.columns) > 0:
+        df = df.rename(columns={df.columns[0]: "ticker"})
+
+    for col in ("name", "country", "exchange", "type", "source", "yahoo_symbol"):
+        if col not in df.columns:
+            df[col] = ""
+
+    df["ticker"] = df["ticker"].astype(str).str.strip()
+    df["name"] = df["name"].astype(str).fillna("").str.strip()
+    df["country"] = df["country"].astype(str).fillna("").str.strip()
+    df["exchange"] = df["exchange"].astype(str).fillna("").str.strip()
+    df["type"] = df["type"].astype(str).fillna("").str.strip()
+    df["source"] = df["source"].astype(str).fillna("").str.strip()
+    df["yahoo_symbol"] = df["yahoo_symbol"].astype(str).fillna("").str.strip()
+
+    df = df[df["ticker"].str.len() > 0].drop_duplicates(subset=["ticker", "exchange"])
+    return df[["ticker", "name", "country", "exchange", "type", "source", "yahoo_symbol"]].reset_index(drop=True)
+
+
+def universe_file(key: str) -> str:
+    return os.path.join(UNIVERSE_DIR, f"{key}.csv")
+
+
+def make_yahoo_symbol(ticker: str, exchange: str) -> str:
+    t = str(ticker).strip().upper()
+    ex = str(exchange).strip().upper()
+
+    suffix = {
+        "XCSE": ".CO",
+        "XSTO": ".ST",
+        "XHEL": ".HE",
+        "XOSL": ".OL",
+        "XPAR": ".PA",
+        "XAMS": ".AS",
+        "XBRU": ".BR",
+        "XLON": ".L",
+        "XMIL": ".MI",
+        "XMAD": ".MC",
+        "XSWX": ".SW",
+        "XTKS": ".T",
+        "XHKG": ".HK",
+        "XNSE": ".NS",
+        "XBOM": ".BO",
+        "XTSE": ".TO",
+        "XTSX": ".V",
+        "XETRA": ".DE",
+        "FWB": ".DE",
+        "NASDAQ": "",
+        "NYSE": "",
+        "AMEX": "",
+    }
+
+    if ex in suffix:
+        return f"{t}{suffix[ex]}"
+    return t
+
+
+# =========================================================
+# BUILDERS
+# =========================================================
+def fetch_stocks(exchange: str = "", country: str = "") -> pd.DataFrame:
+    payload = {"format": "JSON"}
+    if exchange:
+        payload["exchange"] = exchange
+    if country:
+        payload["country"] = country
+
+    data = td_get("stocks", payload)
 
     rows = []
+    if isinstance(data, dict):
+        if isinstance(data.get("data"), list):
+            rows = data["data"]
+        elif isinstance(data.get("values"), list):
+            rows = data["values"]
 
-    if not df1.empty and "Symbol" in df1.columns:
-        for _, r in df1.iterrows():
-            sym = r.get("Symbol", "")
-            name = r.get("Security Name", "")
-            etf = (r.get("ETF", "") or "").strip().upper() == "Y"
+    if not rows:
+        return pd.DataFrame()
 
-            if (not include_etf) and etf:
-                continue
-
-            s = to_stooq_us(sym)
-            if s:
-                rows.append(
-                    {
-                        "ticker": s,
-                        "name": name,
-                        "sector": "",
-                        "country": "US",
-                    }
-                )
-
-    if not df2.empty and "ACT Symbol" in df2.columns:
-        for _, r in df2.iterrows():
-            sym = r.get("ACT Symbol", "")
-            name = r.get("Security Name", "")
-            etf = (r.get("ETF", "") or "").strip().upper() == "Y"
-
-            if (not include_etf) and etf:
-                continue
-
-            s = to_stooq_us(sym)
-            if s:
-                rows.append(
-                    {
-                        "ticker": s,
-                        "name": name,
-                        "sector": "",
-                        "country": "US",
-                    }
-                )
-
-    out = pd.DataFrame(rows)
-    if out.empty:
-        return pd.DataFrame(columns=["ticker", "name", "sector", "country"])
-
-    out = out.drop_duplicates(subset=["ticker"]).reset_index(drop=True)
-    return out
+    return pd.DataFrame(rows)
 
 
-def read_existing_universe(path: str) -> pd.DataFrame:
-    if not os.path.exists(path):
-        return pd.DataFrame(columns=["ticker", "name", "sector", "country"])
-    try:
-        df = pd.read_csv(path)
+def build_country_universe(country_name: str, exchanges: List[str]) -> pd.DataFrame:
+    frames = []
+
+    for ex in exchanges:
+        df = fetch_stocks(exchange=ex, country=country_name)
         if df.empty:
-            return pd.DataFrame(columns=["ticker", "name", "sector", "country"])
+            print(f"[WARN] Ingen data for {country_name} / {ex}")
+            continue
 
-        df.columns = [str(c).strip().lower() for c in df.columns]
+        df = normalize_cols(df)
 
-        rename_map = {}
-        if "symbol" in df.columns:
-            rename_map["symbol"] = "ticker"
-        if "security name" in df.columns:
-            rename_map["security name"] = "name"
-        if rename_map:
-            df = df.rename(columns=rename_map)
+        if "symbol" not in df.columns:
+            print(f"[WARN] Ingen symbol-kolonne for {country_name} / {ex}")
+            continue
 
-        for col in ["ticker", "name", "sector", "country"]:
-            if col not in df.columns:
-                df[col] = ""
+        if "name" not in df.columns:
+            for candidate in ["instrument_name", "company_name"]:
+                if candidate in df.columns:
+                    df["name"] = df[candidate]
+                    break
 
-        df["ticker"] = df["ticker"].astype(str).str.strip()
-        df = df[df["ticker"].str.len() > 0]
-        return df[["ticker", "name", "sector", "country"]].copy()
-    except Exception:
-        return pd.DataFrame(columns=["ticker", "name", "sector", "country"])
+        if "name" not in df.columns:
+            df["name"] = ""
+
+        if "country" not in df.columns:
+            df["country"] = country_name
+        if "exchange" not in df.columns:
+            df["exchange"] = ex
+        if "type" not in df.columns:
+            df["type"] = ""
+
+        df["source"] = "Twelve Data"
+        df["yahoo_symbol"] = df.apply(
+            lambda r: make_yahoo_symbol(r.get("symbol", ""), r.get("exchange", ex)),
+            axis=1,
+        )
+
+        keep = ["symbol", "name", "country", "exchange", "type", "source", "yahoo_symbol"]
+        df = df[keep].rename(columns={"symbol": "ticker"})
+        frames.append(df)
+
+        print(f"[OK] {country_name} / {ex}: {len(df)} symboler")
+
+    if not frames:
+        return pd.DataFrame(
+            columns=["ticker", "name", "country", "exchange", "type", "source", "yahoo_symbol"]
+        )
+
+    out = pd.concat(frames, ignore_index=True).drop_duplicates(subset=["ticker", "exchange"])
+    return ensure_schema(out)
 
 
-def build_global_all(us_df: pd.DataFrame) -> pd.DataFrame:
-    extra_files = [
-        os.path.join(OUT_DIR, "stoxx600.csv"),
-        os.path.join(OUT_DIR, "germany_de.csv"),
-        os.path.join(OUT_DIR, "nordics_dk.csv"),
-        os.path.join(OUT_DIR, "nordics_se.csv"),
-        os.path.join(OUT_DIR, "sp500.csv"),
-    ]
+def build_all_universes() -> None:
+    if not TD_API_KEY:
+        raise RuntimeError("TWELVE_DATA_API_KEY mangler som miljøvariabel.")
 
-    frames = [us_df]
+    all_frames = []
+    counts = {}
 
-    for f in extra_files:
-        df = read_existing_universe(f)
+    for country_name, exchanges in TD_EXCHANGES.items():
+        df = build_country_universe(country_name, exchanges)
+
+        key = country_name.lower().replace(" ", "_")
+        path = universe_file(key)
+        df.to_csv(path, index=False, encoding="utf-8")
+        counts[key] = len(df)
+
+        print(f"[SAVE] {path} ({len(df)} rækker)")
+
         if not df.empty:
-            frames.append(df)
+            all_frames.append(df)
 
-    out = pd.concat(frames, ignore_index=True)
-    out["ticker"] = out["ticker"].astype(str).str.strip()
-    out = out[out["ticker"].str.len() > 0].drop_duplicates(subset=["ticker"]).reset_index(drop=True)
-    return out
+    if all_frames:
+        global_df = pd.concat(all_frames, ignore_index=True).drop_duplicates(subset=["ticker", "exchange"])
+    else:
+        global_df = pd.DataFrame(
+            columns=["ticker", "name", "country", "exchange", "type", "source", "yahoo_symbol"]
+        )
 
+    global_df = ensure_schema(global_df)
+    global_df.to_csv(universe_file("global_all"), index=False, encoding="utf-8")
+    print(f"[SAVE] {universe_file('global_all')} ({len(global_df)} rækker)")
 
-def main():
-    os.makedirs(OUT_DIR, exist_ok=True)
+    usa_df = pd.read_csv(universe_file("usa")) if os.path.exists(universe_file("usa")) else pd.DataFrame()
+    if not usa_df.empty:
+        usa_df = ensure_schema(usa_df)
+        usa_df.to_csv(universe_file("us_all"), index=False, encoding="utf-8")
+        print(f"[SAVE] {universe_file('us_all')} ({len(usa_df)} rækker)")
 
-    print("Building US_ALL...")
-    us_all = build_us_all(include_etf=True)
-    us_all.to_csv(US_ALL_OUT, index=False, encoding="utf-8")
-    print(f"Wrote {len(us_all)} rows -> {US_ALL_OUT}")
-
-    print("Building GLOBAL_ALL...")
-    global_all = build_global_all(us_all)
-    global_all.to_csv(GLOBAL_ALL_OUT, index=False, encoding="utf-8")
-    print(f"Wrote {len(global_all)} rows -> {GLOBAL_ALL_OUT}")
+    print("\n=== SUMMARY ===")
+    for k, v in counts.items():
+        print(f"{k}: {v}")
+    print(f"global_all: {len(global_df)}")
 
 
 if __name__ == "__main__":
-    main()
+    build_all_universes()

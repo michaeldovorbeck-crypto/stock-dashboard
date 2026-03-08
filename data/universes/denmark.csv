@@ -1,0 +1,245 @@
+ticker,name,country,exchange,type,source,yahoo_symbol
+3212,Hvidbjerg Bank A/S,Denmark,OMXC,Common Stock,Twelve Data,3212
+AAB,Aalborg Boldspilklub A/S,Denmark,OMXC,Common Stock,Twelve Data,AAB
+AGAT,Agat Ejendomme A/S,Denmark,OMXC,Common Stock,Twelve Data,AGAT
+AGF.B,AGF A/S,Denmark,OMXC,Common Stock,Twelve Data,AGF.B
+AGILC,Agillic A/S,Denmark,OMXC,Common Stock,Twelve Data,AGILC
+ALEFRM,Alefarm Brewing A/S,Denmark,OMXC,Common Stock,Twelve Data,ALEFRM
+ALK.B,ALK-Abello A/S,Denmark,OMXC,Common Stock,Twelve Data,ALK.B
+ALMB,Alm. Brand A/S,Denmark,OMXC,Common Stock,Twelve Data,ALMB
+ALSYDB,AL Sydbank A/S,Denmark,OMXC,Common Stock,Twelve Data,ALSYDB
+AMBU.B,Ambu A/S,Denmark,OMXC,Common Stock,Twelve Data,AMBU.B
+AOJ.B,Brødrene A & O Johansen A/S,Denmark,OMXC,Common Stock,Twelve Data,AOJ.B
+ASTK,Asetek A/S,Denmark,OMXC,Common Stock,Twelve Data,ASTK
+ATLA.DKK,P/F Atlantic Petroleum,Denmark,OMXC,Common Stock,Twelve Data,ATLA.DKK
+BACTIQ,BactiQuant A/S,Denmark,OMXC,Common Stock,Twelve Data,BACTIQ
+BAIBDKAAUA,BankInvest BIX DK Akt Ansvarlig,Denmark,OMXC,Common Stock,Twelve Data,BAIBDKAAUA
+BAIBDKAAUAKKA,BankInv BIX DK Akt Ansvarl Udvi,Denmark,OMXC,Common Stock,Twelve Data,BAIBDKAAUAKKA
+BAIDKAIBA,Investeringsforeningen Bankinvest - Danske Aktier Indeks Bæredygtig Kl,Denmark,OMXC,Common Stock,Twelve Data,BAIDKAIBA
+BAIDKAIBAKKA,Investeringsforeningen Bankinvest - Danske Aktier Indeks Bæredygtig Akk A,Denmark,OMXC,Common Stock,Twelve Data,BAIDKAIBAKKA
+BAIEMMAAA,BankInvest Emerging Markets Akt,Denmark,OMXC,Common Stock,Twelve Data,BAIEMMAAA
+BAIEMMAVBIA,BankInvest EM Markets Akt Vonto,Denmark,OMXC,Common Stock,Twelve Data,BAIEMMAVBIA
+BAIGAAUA,Investeringsforeningen Bankinvest Globale Aktier Baeredygtig Udvikling A,Denmark,OMXC,Common Stock,Twelve Data,BAIGAAUA
+BAIGAAUAA,Investeringsforeningen Bankinvest Globale Aktier Baeredygtig Udvikling Akk.A,Denmark,OMXC,Common Stock,Twelve Data,BAIGAAUAA
+BAIGABUA,BankInvest Globale Aktier B&#195;&#166;redygtig Udvikling A,Denmark,OMXC,Common Stock,Twelve Data,BAIGABUA
+BAIGABUAKKA,BankInvest Globale Aktier B&#195;&#166;redygtig Udvikling Akk. A,Denmark,OMXC,Common Stock,Twelve Data,BAIGABUAKKA
+BAIGACTNA,BankInvest GlobAkColumbia Threa,Denmark,OMXC,Common Stock,Twelve Data,BAIGACTNA
+BAIGACTNAKKA,BankInvest GloAkColum Threadnee,Denmark,OMXC,Common Stock,Twelve Data,BAIGACTNAKKA
+BAIGASCTA,BankInvest Glb Akt Sel ColumThr,Denmark,OMXC,Common Stock,Twelve Data,BAIGASCTA
+BAIGASCTAA,BankInvest Global Equity Accumulation A,Denmark,OMXC,Common Stock,Twelve Data,BAIGASCTAA
+BAIGOA,BankInvest Globale Obligationer,Denmark,OMXC,Common Stock,Twelve Data,BAIGOA
+BAIGOAUA,BankInvest Glob Obl Ansvarlig U,Denmark,OMXC,Common Stock,Twelve Data,BAIGOAUA
+BAIGOAUAA,BankInvest Glob Obl Ansvarlig U,Denmark,OMXC,Common Stock,Twelve Data,BAIGOAUAA
+BAIKHYORLA,Royal London Asset Management - Korte High Yield Bond Fund,Denmark,OMXC,Common Stock,Twelve Data,BAIKHYORLA
+BAIMLDKOAA,BankInvest Mellemlange DK Obl A,Denmark,OMXC,Common Stock,Twelve Data,BAIMLDKOAA
+BAIVGABA,BankInvest Value Globale Aktier,Denmark,OMXC,Common Stock,Twelve Data,BAIVGABA
+BAIVOHYJYCAPA,BankInvest Virksomhedsobligationer,Denmark,OMXC,Common Stock,Twelve Data,BAIVOHYJYCAPA
+BAVA,Bavarian Nordic A/S,Denmark,OMXC,Common Stock,Twelve Data,BAVA
+BETCO.DKK,Better Collective A/S,Denmark,OMXC,Common Stock,Twelve Data,BETCO.DKK
+BIF,Brøndbyernes IF Fodbold A/S,Denmark,OMXC,Common Stock,Twelve Data,BIF
+BIOPOR,BioPorto A/S,Denmark,OMXC,Common Stock,Twelve Data,BIOPOR
+BO,Bang & Olufsen A/S,Denmark,OMXC,Common Stock,Twelve Data,BO
+BOOZT.DKK,Boozt AB,Denmark,OMXC,Common Stock,Twelve Data,BOOZT.DKK
+BRAINP,Brain+ A/S,Denmark,OMXC,Common Stock,Twelve Data,BRAINP
+BULL.RAAVAR.N,BULL.RAAVAR.N,Denmark,OMXC,Common Stock,Twelve Data,BULL.RAAVAR.N
+BXIGAI,BIX Globale Aktier Indeks,Denmark,OMXC,Common Stock,Twelve Data,BXIGAI
+CARL.A,Carlsberg A/S,Denmark,OMXC,Common Stock,Twelve Data,CARL.A
+CARL.B,Carlsberg A/S,Denmark,OMXC,Common Stock,Twelve Data,CARL.B
+CBRAIN,cBrain A/S,Denmark,OMXC,Common Stock,Twelve Data,CBRAIN
+CEMAT,Cemat A/S,Denmark,OMXC,Common Stock,Twelve Data,CEMAT
+CESSA,Cessatech A/S,Denmark,OMXC,Common Stock,Twelve Data,CESSA
+CHEMM,ChemoMetec A/S,Denmark,OMXC,Common Stock,Twelve Data,CHEMM
+COLO.B,Coloplast A/S,Denmark,OMXC,Common Stock,Twelve Data,COLO.B
+COLUM,Columbus A/S,Denmark,OMXC,Common Stock,Twelve Data,COLUM
+CPHCAP.PR.REF32,Copenhagen Capital A/S,Denmark,OMXC,Common Stock,Twelve Data,CPHCAP.PR.REF32
+CPHCAP.ST,Copenhagen Capital A/S,Denmark,OMXC,Common Stock,Twelve Data,CPHCAP.ST
+CURAS,Curasight A/S,Denmark,OMXC,Common Stock,Twelve Data,CURAS
+CWIGAEKLUDL,C WorldWide Globale Aktier Etik,Denmark,OMXC,Common Stock,Twelve Data,CWIGAEKLUDL
+DAB,Danske Andelskassers Bank A/S,Denmark,OMXC,Common Stock,Twelve Data,DAB
+DAC,Danish Aerospace Company A/S,Denmark,OMXC,Common Stock,Twelve Data,DAC
+DANSKE,Danske Bank A/S,Denmark,OMXC,Common Stock,Twelve Data,DANSKE
+DANT,Dantax A/S,Denmark,OMXC,Common Stock,Twelve Data,DANT
+DATA,Dataproces Group A/S,Denmark,OMXC,Common Stock,Twelve Data,DATA
+DEMANT,Demant A/S,Denmark,OMXC,Common Stock,Twelve Data,DEMANT
+DFDS,DFDS A/S,Denmark,OMXC,Common Stock,Twelve Data,DFDS
+DJUR,Djurslands Bank A/S,Denmark,OMXC,Common Stock,Twelve Data,DJUR
+DNORD,Dampskibsselskabet Norden A/S,Denmark,OMXC,Common Stock,Twelve Data,DNORD
+DONKEY,DonkeyRepublic Holding A/S,Denmark,OMXC,Common Stock,Twelve Data,DONKEY
+DSV,DSV A/S,Denmark,OMXC,Common Stock,Twelve Data,DSV
+EGNETY,EgnsINVEST Ejendomme Tyskland A/S,Denmark,OMXC,Common Stock,Twelve Data,EGNETY
+EMBLA,Embla Medical hf.,Denmark,OMXC,Common Stock,Twelve Data,EMBLA
+ERRIA,Erria A/S,Denmark,OMXC,Common Stock,Twelve Data,ERRIA
+ESG,Ennogie Solar Group A/S,Denmark,OMXC,Common Stock,Twelve Data,ESG
+FASTPC,FastPassCorp A/S,Denmark,OMXC,Common Stock,Twelve Data,FASTPC
+FED,Fast Ejendom Danmark A/S,Denmark,OMXC,Common Stock,Twelve Data,FED
+FFARMS,FirstFarms A/S,Denmark,OMXC,Common Stock,Twelve Data,FFARMS
+FLS,FLSmidth & Co. A/S,Denmark,OMXC,Common Stock,Twelve Data,FLS
+FLUG.B,Flügger group A/S,Denmark,OMXC,Common Stock,Twelve Data,FLUG.B
+FOBANK,Føroya Banki P/F,Denmark,OMXC,Common Stock,Twelve Data,FOBANK
+FOM,FOM Technologies A/S,Denmark,OMXC,Common Stock,Twelve Data,FOM
+FREETR,Freetrailer Group A/S,Denmark,OMXC,Common Stock,Twelve Data,FREETR
+FYNBK,Fynske Bank A/S,Denmark,OMXC,Common Stock,Twelve Data,FYNBK
+GABR,Gabriel Holding A/S,Denmark,OMXC,Common Stock,Twelve Data,GABR
+GERHSP,German High Street Properties AG,Denmark,OMXC,Common Stock,Twelve Data,GERHSP
+GJ,Glunz & Jensen Holding A/S,Denmark,OMXC,Common Stock,Twelve Data,GJ
+GMAB,Genmab A/S,Denmark,OMXC,Common Stock,Twelve Data,GMAB
+GN,GN Store Nord A/S,Denmark,OMXC,Common Stock,Twelve Data,GN
+GREENM,GreenMobility A/S,Denmark,OMXC,Common Stock,Twelve Data,GREENM
+GRLA,GrønlandsBANKEN A/S,Denmark,OMXC,Common Stock,Twelve Data,GRLA
+GUBRA,Gubra A/S,Denmark,OMXC,Common Stock,Twelve Data,GUBRA
+GYLD.A,Gyldendal A/S,Denmark,OMXC,Common Stock,Twelve Data,GYLD.A
+GYLD.B,Gyldendal A/S,Denmark,OMXC,Common Stock,Twelve Data,GYLD.B
+HAIDK,Handelsinvest Danmark,Denmark,OMXC,Common Stock,Twelve Data,HAIDK
+HAIDKOBL,Handelsinvest Danske Obligationer,Denmark,OMXC,Common Stock,Twelve Data,HAIDKOBL
+HARB.B,Harboes Bryggeri A/S,Denmark,OMXC,Common Stock,Twelve Data,HARB.B
+HH,H+H International A/S,Denmark,OMXC,Common Stock,Twelve Data,HH
+HLUN.A,H. Lundbeck A/S,Denmark,OMXC,Common Stock,Twelve Data,HLUN.A
+HLUN.B,H. Lundbeck A/S,Denmark,OMXC,Common Stock,Twelve Data,HLUN.B
+HOVE,Hove A/S,Denmark,OMXC,Common Stock,Twelve Data,HOVE
+HUSCO,HusCompagniet A/S,Denmark,OMXC,Common Stock,Twelve Data,HUSCO
+IAIACG,IA Invest Advice Capital Global,Denmark,OMXC,Common Stock,Twelve Data,IAIACG
+IAICBB,IA Invest Advice Cap Breakthrou,Denmark,OMXC,Common Stock,Twelve Data,IAICBB
+IIVBON,Independent Bond,Denmark,OMXC,Common Stock,Twelve Data,IIVBON
+IIVGENESG,Independent Generations,Denmark,OMXC,Common Stock,Twelve Data,IIVGENESG
+IMPERO,Impero A/S,Denmark,OMXC,Common Stock,Twelve Data,IMPERO
+INIITNAKTLC,Investeringsforeningen Investin - I&T Nordiske Aktier Large Cap,Denmark,OMXC,Common Stock,Twelve Data,INIITNAKTLC
+INIOAI,Investin Optimal Active and Ind,Denmark,OMXC,Common Stock,Twelve Data,INIOAI
+INIOEFKL,Investin - Othania Etisk Formuevækst KL,Denmark,OMXC,Common Stock,Twelve Data,INIOEFKL
+INIOPS,Investin Optimal Stabil,Denmark,OMXC,Common Stock,Twelve Data,INIOPS
+INIOVM,Investin Optimal VerdensIndex Moderat,Denmark,OMXC,Common Stock,Twelve Data,INIOVM
+ISS,ISS A/S,Denmark,OMXC,Common Stock,Twelve Data,ISS
+JDAN,Jeudan A/S,Denmark,OMXC,Common Stock,Twelve Data,JDAN
+JYIAAU,Jyske Invest Aktier Ansvarlig U,Denmark,OMXC,Common Stock,Twelve Data,JYIAAU
+JYSK,Jyske Bank AS,Denmark,OMXC,Common Stock,Twelve Data,JYSK
+KBHL,Københavns Lufthavne A/S,Denmark,OMXC,Common Stock,Twelve Data,KBHL
+KLEE.B,Brd. Klee A/S,Denmark,OMXC,Common Stock,Twelve Data,KLEE.B
+KONSOL,Konsolidator A/S,Denmark,OMXC,Common Stock,Twelve Data,KONSOL
+KRE,Kreditbanken A/S,Denmark,OMXC,Common Stock,Twelve Data,KRE
+LASP,Lån & Spar Bank A/S,Denmark,OMXC,Common Stock,Twelve Data,LASP
+LEDIBOND,LED iBond International A/S,Denmark,OMXC,Common Stock,Twelve Data,LEDIBOND
+LOLB,Lollands Bank A/S,Denmark,OMXC,Common Stock,Twelve Data,LOLB
+LUXOR.B,Investeringsselskabet Luxor A/S,Denmark,OMXC,Common Stock,Twelve Data,LUXOR.B
+MAERSK.A,AP Moller - Maersk A/S,Denmark,OMXC,Common Stock,Twelve Data,MAERSK.A
+MAERSK.B,AP Moller - Maersk A/S,Denmark,OMXC,Common Stock,Twelve Data,MAERSK.B
+MAJBPI,Maj Invest Big Picture Mutual Fund,Denmark,OMXC,Common Stock,Twelve Data,MAJBPI
+MAJGS,Maj Invest Global Sundhed,Denmark,OMXC,Common Stock,Twelve Data,MAJGS
+MAJMAK,Maj Invest Makro,Denmark,OMXC,Common Stock,Twelve Data,MAJMAK
+MAJPEN,Maj Invest Pension Fund,Denmark,OMXC,Common Stock,Twelve Data,MAJPEN
+MAJPP,Maj Invest Planet & People Fund,Denmark,OMXC,Common Stock,Twelve Data,MAJPP
+MATAS,Matas A/S,Denmark,OMXC,Common Stock,Twelve Data,MATAS
+MDUNDO,Mdundo.com A/S,Denmark,OMXC,Common Stock,Twelve Data,MDUNDO
+MENDO,MENDOLE A S,Denmark,OMXC,Common Stock,Twelve Data,MENDO
+MNBA,Møns Bank A/S,Denmark,OMXC,Common Stock,Twelve Data,MNBA
+MONSO,Monsenso A/S,Denmark,OMXC,Common Stock,Twelve Data,MONSO
+MOVINN,Movinn A/S,Denmark,OMXC,Common Stock,Twelve Data,MOVINN
+MTHH,MT Højgaard Holding A/S,Denmark,OMXC,Common Stock,Twelve Data,MTHH
+NBIAM,Nykredit Invest Ansvarlig Moder,Denmark,OMXC,Common Stock,Twelve Data,NBIAM
+NBIAO,Nykredit Inv Balance Ansvarlig,Denmark,OMXC,Common Stock,Twelve Data,NBIAO
+NDA.DK,Nordea Bank Abp,Denmark,OMXC,Common Stock,Twelve Data,NDA.DK
+NDIEUENHKL1,Nordea Invest Europe Enhanced,Denmark,OMXC,Common Stock,Twelve Data,NDIEUENHKL1
+NDIGLENHKL1,Investeringsforeningen Nordea Invest - Global Enhanced,Denmark,OMXC,Common Stock,Twelve Data,NDIGLENHKL1
+NDIGUAKL1,Nordea Invest Globale UdbytteAktier,Denmark,OMXC,Common Stock,Twelve Data,NDIGUAKL1
+NDIKOKL1,Nordea Invest - Korte obligationer Fund,Denmark,OMXC,Common Stock,Twelve Data,NDIKOKL1
+NDILAOKL1,Nordea Invest -  Lange obligationer Pension Fund,Denmark,OMXC,Common Stock,Twelve Data,NDILAOKL1
+NDINAEKL1,Nordea Invest - North America Enhanced,Denmark,OMXC,Common Stock,Twelve Data,NDINAEKL1
+NDISTAAKL1,Nordea Invest Stabile Aktier Akkumulerende,Denmark,OMXC,Common Stock,Twelve Data,NDISTAAKL1
+NDIVOBKL1,Nordea Invest - Virksomhedsobligationer,Denmark,OMXC,Common Stock,Twelve Data,NDIVOBKL1
+NETC,Netcompany Group A/S,Denmark,OMXC,Common Stock,Twelve Data,NETC
+NEWCAP,Newcap Holding A/S,Denmark,OMXC,Common Stock,Twelve Data,NEWCAP
+NEXCOM,Nexcom A/S,Denmark,OMXC,Common Stock,Twelve Data,NEXCOM
+NKT,NKT A/S,Denmark,OMXC,Common Stock,Twelve Data,NKT
+NLFSK,Nilfisk Holding A/S,Denmark,OMXC,Common Stock,Twelve Data,NLFSK
+NNIT,NNIT A/S,Denmark,OMXC,Common Stock,Twelve Data,NNIT
+NORD,NORD.investments A/S,Denmark,OMXC,Common Stock,Twelve Data,NORD
+NORTHM,North Media A/S,Denmark,OMXC,Common Stock,Twelve Data,NORTHM
+NOVO.B,Novo Nordisk A/S,Denmark,OMXC,Common Stock,Twelve Data,NOVO.B
+NSIS.B,Novonesis AS,Denmark,OMXC,Common Stock,Twelve Data,NSIS.B
+NTG,NTG Nordic Transport Group A/S,Denmark,OMXC,Common Stock,Twelve Data,NTG
+NYILOAKLA,Nykredit Invest Lange Obl Akk K,Denmark,OMXC,Common Stock,Twelve Data,NYILOAKLA
+NYILOKLA,Nykredit Invest Lange Obligatio,Denmark,OMXC,Common Stock,Twelve Data,NYILOKLA
+OKEAC,Det Østasiatiske Kompagni A/S,Denmark,OMXC,Common Stock,Twelve Data,OKEAC
+ORSTED,Ørsted A/S,Denmark,OMXC,Common Stock,Twelve Data,ORSTED
+PAAL.B,Per Aarsleff Holding A/S,Denmark,OMXC,Common Stock,Twelve Data,PAAL.B
+PARKEN,Parken Sport & Entertainment A/S,Denmark,OMXC,Common Stock,Twelve Data,PARKEN
+PARKST.A,Park Street A/S,Denmark,OMXC,Common Stock,Twelve Data,PARKST.A
+PEG,Pharma Equity Group A/S,Denmark,OMXC,Common Stock,Twelve Data,PEG
+PFIBAA,PFA Invest Balance A,Denmark,OMXC,Common Stock,Twelve Data,PFIBAA
+PFIBAB,PFA Invest Balance B,Denmark,OMXC,Common Stock,Twelve Data,PFIBAB
+PFIBAC,PFA Invest Balance C,Denmark,OMXC,Common Stock,Twelve Data,PFIBAC
+PFIDKA,PFA Invest Danske Aktier,Denmark,OMXC,Common Stock,Twelve Data,PFIDKA
+PFIGLA,PFA Invest Globale Aktier,Denmark,OMXC,Common Stock,Twelve Data,PFIGLA
+PFINV,Papirfabrikken Invest A/S,Denmark,OMXC,Common Stock,Twelve Data,PFINV
+PMIGAF,PortfolioMan P&P Glo Akt Future,Denmark,OMXC,Common Stock,Twelve Data,PMIGAF
+PMIH3IAKK,PortfolioMan Horizon3 Innovat A,Denmark,OMXC,Common Stock,Twelve Data,PMIH3IAKK
+PMIKGA,PortfolioManager ANNOX Kvant Gl,Denmark,OMXC,Common Stock,Twelve Data,PMIKGA
+PMINDIAKK,PortfolioMan NewDeal Invest Akk,Denmark,OMXC,Common Stock,Twelve Data,PMINDIAKK
+PMITECHWAVE,"PortfolioMan techwave, kl n",Denmark,OMXC,Common Stock,Twelve Data,PMITECHWAVE
+PNDORA,Pandora A/S,Denmark,OMXC,Common Stock,Twelve Data,PNDORA
+PRIMOF,Prime Office A/S,Denmark,OMXC,Common Stock,Twelve Data,PRIMOF
+QINTER,Q-Interline A/S,Denmark,OMXC,Common Stock,Twelve Data,QINTER
+RBLN.B,Roblon A/S,Denmark,OMXC,Common Stock,Twelve Data,RBLN.B
+RBREW,Royal Unibrew A/S,Denmark,OMXC,Common Stock,Twelve Data,RBREW
+RIAS.B,RIAS A/S,Denmark,OMXC,Common Stock,Twelve Data,RIAS.B
+RILBA,Ringkjøbing Landbobank A/S,Denmark,OMXC,Common Stock,Twelve Data,RILBA
+RISK,Risk Intelligence A/S,Denmark,OMXC,Common Stock,Twelve Data,RISK
+ROCK.A,Rockwool International A/S,Denmark,OMXC,Common Stock,Twelve Data,ROCK.A
+ROCK.B,Rockwool International A/S,Denmark,OMXC,Common Stock,Twelve Data,ROCK.B
+ROV,Rovsing A/S,Denmark,OMXC,Common Stock,Twelve Data,ROV
+RTX,RTX A/S,Denmark,OMXC,Common Stock,Twelve Data,RTX
+SAMPO.DKK,Sampo Plc A,Denmark,OMXC,Common Stock,Twelve Data,SAMPO.DKK
+SCHO,Aktieselskabet Schouw & Co.,Denmark,OMXC,Common Stock,Twelve Data,SCHO
+SEIDAAP,SEBinvest - Danske Aktier Akkumulerende AKL,Denmark,OMXC,Common Stock,Twelve Data,SEIDAAP
+SHAPE,Shape Robotics A/S,Denmark,OMXC,Common Stock,Twelve Data,SHAPE
+SIG,Scandinavian Investment Group AS,Denmark,OMXC,Common Stock,Twelve Data,SIG
+SKAKO,SKAKO A/S,Denmark,OMXC,Common Stock,Twelve Data,SKAKO
+SKJE,Skjern Bank A/S,Denmark,OMXC,Common Stock,Twelve Data,SKJE
+SMSMED,Scandinavian Medical Solutions ApS,Denmark,OMXC,Common Stock,Twelve Data,SMSMED
+SOLAR.B,Solar A/S,Denmark,OMXC,Common Stock,Twelve Data,SOLAR.B
+SPG,SP Group A/S,Denmark,OMXC,Common Stock,Twelve Data,SPG
+SPIAVA,Sparinvest Ansvarlige Value Akt,Denmark,OMXC,Common Stock,Twelve Data,SPIAVA
+SPIDJWKL,SPARINVEST Index - Dow Sustainability World,Denmark,OMXC,Common Stock,Twelve Data,SPIDJWKL
+SPIJAGKL,Sparinvest INDEX Japan Growth KL,Denmark,OMXC,Common Stock,Twelve Data,SPIJAGKL
+SPKSJF,Sparekassen Sjælland-Fyn A/S,Denmark,OMXC,Common Stock,Twelve Data,SPKSJF
+SPVIEMMBLV,Sparindex INDEX Em Market Bo Lo,Denmark,OMXC,Common Stock,Twelve Data,SPVIEMMBLV
+SSIBAEURR,Sparinvest SICAV - Balance,Denmark,OMXC,Common Stock,Twelve Data,SSIBAEURR
+SSIEGVEURR,Sparinv SICAV - Ethical Glob Va,Denmark,OMXC,Common Stock,Twelve Data,SSIEGVEURR
+SSIEUVEURR,Sparinv SICAV - European Value,Denmark,OMXC,Common Stock,Twelve Data,SSIEUVEURR
+SSIGCBDKKR,Sparinvest SICAV Global Conv Bo,Denmark,OMXC,Common Stock,Twelve Data,SSIGCBDKKR
+SSIGSDHYDKKR,Sparinvest SICAV GlobShortDated,Denmark,OMXC,Common Stock,Twelve Data,SSIGSDHYDKKR
+SSIPEURR,Sparinv SICAV - Procedo EUR R,Denmark,OMXC,Common Stock,Twelve Data,SSIPEURR
+SSISEURR,Sparinv SICAV - Securus EUR R,Denmark,OMXC,Common Stock,Twelve Data,SSISEURR
+STENO,Stenocare A/S,Denmark,OMXC,Common Stock,Twelve Data,STENO
+STG,Scandinavian Tobacco Group A/S,Denmark,OMXC,Common Stock,Twelve Data,STG
+STIGP,Storebrand Global Plus A5,Denmark,OMXC,Common Stock,Twelve Data,STIGP
+STRAP,Strategic Partners A/S,Denmark,OMXC,Common Stock,Twelve Data,STRAP
+STRINV,Strategic Investments A/S,Denmark,OMXC,Common Stock,Twelve Data,STRINV
+SWISS,Swiss Properties Invest A/S,Denmark,OMXC,Common Stock,Twelve Data,SWISS
+SYDB,Sydbank A/S,Denmark,OMXC,Common Stock,Twelve Data,SYDB
+SYIHRLADKK,Sydinvest HøjrenteLande Mix KL,Denmark,OMXC,Common Stock,Twelve Data,SYIHRLADKK
+SYIIDKADKK,Investeringsforeningen Sydinvest - Danmark Indeks Kl,Denmark,OMXC,Common Stock,Twelve Data,SYIIDKADKK
+SYIMSTARSULIKL,Sydinvest Morningstar Sustainability Leaders Index KL,Denmark,OMXC,Common Stock,Twelve Data,SYIMSTARSULIKL
+SYIVLVIKL,Sydinvest Verden Lav Volatilitet Indeks KL,Denmark,OMXC,Common Stock,Twelve Data,SYIVLVIKL
+SYVAUA,Sydinvest Aggressiv Udb A,Denmark,OMXC,Common Stock,Twelve Data,SYVAUA
+SYVFBAKKA,Sydinvest - Balanceret Udb,Denmark,OMXC,Common Stock,Twelve Data,SYVFBAKKA
+SYVVAA,Sydinvest V&#195;&#166;kstorienteret Akk A,Denmark,OMXC,Common Stock,Twelve Data,SYVVAA
+SYVVUA,Sydinvest V&#195;&#166;kstorienteret Udb A,Denmark,OMXC,Common Stock,Twelve Data,SYVVUA
+TCM,TCM Group A/S,Denmark,OMXC,Common Stock,Twelve Data,TCM
+TGAMES,TROPHY GAMES Development A/S,Denmark,OMXC,Common Stock,Twelve Data,TGAMES
+TIV,Tivoli A/S,Denmark,OMXC,Common Stock,Twelve Data,TIV
+TOIBO,TOBA Investments Bonds,Denmark,OMXC,Common Stock,Twelve Data,TOIBO
+TOIEQT,TOBA Investments Equities,Denmark,OMXC,Common Stock,Twelve Data,TOIEQT
+TRIFOR,Trifork Group AG,Denmark,OMXC,Common Stock,Twelve Data,TRIFOR
+TRMD.A,TORM PLC,Denmark,OMXC,Common Stock,Twelve Data,TRMD.A
+TRYG,Tryg A/S,Denmark,OMXC,Common Stock,Twelve Data,TRYG
+UIE,UIE Plc,Denmark,OMXC,Common Stock,Twelve Data,UIE
+UNLGRP,Unlimit Group A/S,Denmark,OMXC,Common Stock,Twelve Data,UNLGRP
+VIRO,ViroGates A/S,Denmark,OMXC,Common Stock,Twelve Data,VIRO
+VWS,Vestas Wind Systems A/S,Denmark,OMXC,Common Stock,Twelve Data,VWS
+WEIHBO,Wealth Invest HP Invest Bolig,Denmark,OMXC,Common Stock,Twelve Data,WEIHBO
+WEIHPIDKOAKKKL,Wealth Invest HP Invest Danske Obl Akk A,Denmark,OMXC,Common Stock,Twelve Data,WEIHPIDKOAKKKL
+WEIHPIGROBLKLA,Wealth Invest HP Invest Grønne Obl KL A,Denmark,OMXC,Common Stock,Twelve Data,WEIHPIGROBLKLA
+WEIHPILDKOAKKKL,WEIHPILDKOAKKKL,Denmark,OMXC,Common Stock,Twelve Data,WEIHPILDKOAKKKL
+WEIWCMUSSCA,Wealth Invest WCM US Small Cap,Denmark,OMXC,Common Stock,Twelve Data,WEIWCMUSSCA
+WIRTEK,WirTek A/S,Denmark,OMXC,Common Stock,Twelve Data,WIRTEK
+WMA,WindowMaster International A/S,Denmark,OMXC,Common Stock,Twelve Data,WMA
+ZEAL,Zealand Pharma A/S,Denmark,OMXC,Common Stock,Twelve Data,ZEAL

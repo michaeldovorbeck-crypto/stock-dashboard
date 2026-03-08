@@ -1,0 +1,229 @@
+ticker,name,country,exchange,type,source,yahoo_symbol
+ABI,Anheuser-Busch InBev SA/NV,Belgium,Euronext,Common Stock,Twelve Data,ABI
+ABO,ABO-Group Environment NV,Belgium,Euronext,Common Stock,Twelve Data,ABO
+ACCB,Accentis NV,Belgium,Euronext,Common Stock,Twelve Data,ACCB
+ACKB,Ackermans & van Haaren NV,Belgium,Euronext,Common Stock,Twelve Data,ACKB
+AED,Aedifica SA,Belgium,Euronext,REIT,Twelve Data,AED
+AGFB,Agfa-Gevaert NV,Belgium,Euronext,Common Stock,Twelve Data,AGFB
+AGS,ageas SA/NV,Belgium,Euronext,Common Stock,Twelve Data,AGS
+ALEMS,European Medical Solutions S.A.,Belgium,Euronext,Common Stock,Twelve Data,ALEMS
+ANT,Immo-Antares NV,Belgium,Euronext,Common Stock,Twelve Data,ANT
+ARGX,argenx SE,Belgium,Euronext,Common Stock,Twelve Data,ARGX
+ASCE,Ascencio SA,Belgium,Euronext,REIT,Twelve Data,ASCE
+ATEB,Atenor SA,Belgium,Euronext,Common Stock,Twelve Data,ATEB
+AZE,Azelis Group NV,Belgium,Euronext,Common Stock,Twelve Data,AZE
+B271,Belgium Government Bond,Belgium,Euronext,Common Stock,Twelve Data,B271
+B275,Belgium Government Retail Bond,Belgium,Euronext,Common Stock,Twelve Data,B275
+B280,Belgium Government Retail Bond,Belgium,Euronext,Common Stock,Twelve Data,B280
+B281,Belgium Government Retail Bond,Belgium,Euronext,Common Stock,Twelve Data,B281
+B284,Belgium Government Retail Bond,Belgium,Euronext,Common Stock,Twelve Data,B284
+B288,BELG3%4MAR2033,Belgium,Euronext,Common Stock,Twelve Data,B288
+B291,Kingdom of Belgium Bond 5.5% 2028,Belgium,Euronext,Common Stock,Twelve Data,B291
+B304,Kingdom of Belgium,Belgium,Euronext,Common Stock,Twelve Data,B304
+B320,"OLO4,25%28MAR41",Belgium,Euronext,Common Stock,Twelve Data,B320
+B324,Kingdom of Belgium,Belgium,Euronext,Common Stock,Twelve Data,B324
+B326,Kingdom of Belgium,Belgium,Euronext,Common Stock,Twelve Data,B326
+B331,Kingdom of Belgium Government Bond,Belgium,Euronext,Common Stock,Twelve Data,B331
+B333,Kingdom of Belgium Government Bond,Belgium,Euronext,Common Stock,Twelve Data,B333
+B335,Kingdom of Belgium,Belgium,Euronext,Common Stock,Twelve Data,B335
+B336,Kingdom of Belgium,Belgium,Euronext,Common Stock,Twelve Data,B336
+B337,Kingdom of Belgium,Belgium,Euronext,Common Stock,Twelve Data,B337
+B338,OLO1.6%22JUN47,Belgium,Euronext,Common Stock,Twelve Data,B338
+B340,Kingdom of Belgium,Belgium,Euronext,Common Stock,Twelve Data,B340
+B341,Kingdom of Belgium Government Bond,Belgium,Euronext,Common Stock,Twelve Data,B341
+B343,OLO2.25%22JUN2057,Belgium,Euronext,Common Stock,Twelve Data,B343
+B344,Belgium 1.45% BDS 22/06/2037 EUR0.01 '84' 'REGS',Belgium,Euronext,Common Stock,Twelve Data,B344
+B345,Belgium Kingdom Government Bond,Belgium,Euronext,Common Stock,Twelve Data,B345
+B346,Belgium Kingdom Government Bond 1.25% 04/22/2033,Belgium,Euronext,Common Stock,Twelve Data,B346
+B347,Kingdom of Belgium,Belgium,Euronext,Common Stock,Twelve Data,B347
+B348,OLO1.7%22JUN2050,Belgium,Euronext,Common Stock,Twelve Data,B348
+B349,Kingdom of Belgium,Belgium,Euronext,Common Stock,Twelve Data,B349
+B350,Kingdom of Belgium,Belgium,Euronext,Common Stock,Twelve Data,B350
+B351,Kingdom of Belgium,Belgium,Euronext,Common Stock,Twelve Data,B351
+B352,Belgium Kingdom Government Bond,Belgium,Euronext,Common Stock,Twelve Data,B352
+B353,Kingdom of Belgium,Belgium,Euronext,Common Stock,Twelve Data,B353
+B354,Kingdom of Belgium,Belgium,Euronext,Common Stock,Twelve Data,B354
+B355,Belgium Kingdom Bond,Belgium,Euronext,Common Stock,Twelve Data,B355
+B356,Belgium Kingdom Government Bond,Belgium,Euronext,Common Stock,Twelve Data,B356
+B357,OLO3%22JUN2033,Belgium,Euronext,Common Stock,Twelve Data,B357
+B358,OLO3.3%22JUN2054,Belgium,Euronext,Common Stock,Twelve Data,B358
+BALTA,Balta Group NV,Belgium,Euronext,Common Stock,Twelve Data,BALTA
+BANI,Banimmo SA,Belgium,Euronext,Common Stock,Twelve Data,BANI
+BANQ,Banqup Group SA,Belgium,Euronext,Common Stock,Twelve Data,BANQ
+BAR,Barco NV,Belgium,Euronext,Common Stock,Twelve Data,BAR
+BE0000359688,OLO3.45%22JUN2043,Belgium,Euronext,Common Stock,Twelve Data,BE0000359688
+BE0000360694,OLO2.85%22OCT2034,Belgium,Euronext,Common Stock,Twelve Data,BE0000360694
+BE0000361700,Kingdom of Belgium Bond,Belgium,Euronext,Common Stock,Twelve Data,BE0000361700
+BE0000362716,OLO2.7%22OCT2029,Belgium,Euronext,Common Stock,Twelve Data,BE0000362716
+BE0000363722,Kingdom of Belgium 3.1% OLO due 22 June 2035,Belgium,Euronext,Common Stock,Twelve Data,BE0000363722
+BE0000364738,Kingdom of Belgium 3.45% Government Bond due 22 June 2042,Belgium,Euronext,Common Stock,Twelve Data,BE0000364738
+BE0000365743,BE0000365743,Belgium,Euronext,Common Stock,Twelve Data,BE0000365743
+BE0000367764,BE0000367764,Belgium,Euronext,Common Stock,Twelve Data,BE0000367764
+BE0002654359,VRANKE3.75%19JUN26,Belgium,Euronext,Common Stock,Twelve Data,BE0002654359
+BE0002655364,SD Worx SA,Belgium,Euronext,Common Stock,Twelve Data,BE0002655364
+BE0002657386,Gimv N.V.,Belgium,Euronext,Common Stock,Twelve Data,BE0002657386
+BE0002658392,GIMV NV,Belgium,Euronext,Common Stock,Twelve Data,BE0002658392
+BE0002659408,De Persgroep N.V. 2.15% Corporate Bond due 2026,Belgium,Euronext,Common Stock,Twelve Data,BE0002659408
+BE0002669506,Belfius Bank SA/NV 0.01% Euro Medium Term Note due 1 October 2029,Belgium,Euronext,Common Stock,Twelve Data,BE0002669506
+BE0002673540,Bekaert SA,Belgium,Euronext,Common Stock,Twelve Data,BE0002673540
+BE0002684653,ING Belgium SA/NV 0.01% Notes due 20 February 2030,Belgium,Euronext,Common Stock,Twelve Data,BE0002684653
+BE0002735166,Bekaert SA 2.75% 23 October 2027 Bond,Belgium,Euronext,Common Stock,Twelve Data,BE0002735166
+BE0002737188,Atenor Group SA,Belgium,Euronext,Common Stock,Twelve Data,BE0002737188
+BE0002751320,La Lorraine Bakery Group N.V.,Belgium,Euronext,Common Stock,Twelve Data,BE0002751320
+BE0002775568,Atenor Group SA,Belgium,Euronext,Common Stock,Twelve Data,BE0002775568
+BE0002827088,Immobel S.A.,Belgium,Euronext,Common Stock,Twelve Data,BE0002827088
+BE0002867480,Vandemoortele NV,Belgium,Euronext,Common Stock,Twelve Data,BE0002867480
+BE0002920016,Colruyt Group N.V.,Belgium,Euronext,Common Stock,Twelve Data,BE0002920016
+BE0002924059,KBC Bank NV 3.125% Euro Medium Term Note due 22 February 2027,Belgium,Euronext,Common Stock,Twelve Data,BE0002924059
+BE0003527356,BE0003527356,Belgium,Euronext,Common Stock,Twelve Data,BE0003527356
+BE0010621481,BE0010621481,Belgium,Euronext,Common Stock,Twelve Data,BE0010621481
+BE0014199377,BE0014199377,Belgium,Euronext,Common Stock,Twelve Data,BE0014199377
+BE0014799556,BE0014799556,Belgium,Euronext,Common Stock,Twelve Data,BE0014799556
+BE0022780820,VDK BANK,Belgium,Euronext,Common Stock,Twelve Data,BE0022780820
+BE0107958945,BE0107958945,Belgium,Euronext,Common Stock,Twelve Data,BE0107958945
+BE0172505399,BNP PARIBAS FORTIS,Belgium,Euronext,Common Stock,Twelve Data,BE0172505399
+BE0312809818,Kingdom of Belgium Treasury Certificate 0% 2026-02-12,Belgium,Euronext,Common Stock,Twelve Data,BE0312809818
+BE0312810824,Kingdom of Belgium Treasury Certificate 0% 12 Mar 2026,Belgium,Euronext,Common Stock,Twelve Data,BE0312810824
+BE0312811830,Belgium Treasury Certificate 0% 9 April 2026,Belgium,Euronext,Common Stock,Twelve Data,BE0312811830
+BE0312813851,Kingdom of Belgium Treasury Bill 0% 11 June 2026,Belgium,Euronext,Common Stock,Twelve Data,BE0312813851
+BE0312814867,Belgium Treasury Certificate 0% 09 July 2026,Belgium,Euronext,Common Stock,Twelve Data,BE0312814867
+BE0312815872,BE0312815872,Belgium,Euronext,Common Stock,Twelve Data,BE0312815872
+BE0312816888,"Belgium Treasury Certificate 0% 364-day 10 Sept 2026, Government of Belgium",Belgium,Euronext,Common Stock,Twelve Data,BE0312816888
+BE0312817894,BE0312817894,Belgium,Euronext,Common Stock,Twelve Data,BE0312817894
+BE0390105683,Belfius Bank SA/NV 2.875% Euro Medium Term Note due 12 February 2031,Belgium,Euronext,Common Stock,Twelve Data,BE0390105683
+BE0390152180,KBC Group NV 6.25% Perpetual Subordinated Notes,Belgium,Euronext,Common Stock,Twelve Data,BE0390152180
+BE0390159250,Worxinvest S.A.,Belgium,Euronext,Common Stock,Twelve Data,BE0390159250
+BE0390219856,KBC Group NV 6% Perpetual Junior Subordinated Unsecured Bond,Belgium,Euronext,Common Stock,Twelve Data,BE0390219856
+BE0390245141,ING Belgium SA 2.75% Notes due 25 August 2032,Belgium,Euronext,Common Stock,Twelve Data,BE0390245141
+BE0390265347,BE0390265347,Belgium,Euronext,Common Stock,Twelve Data,BE0390265347
+BE0390267368,KINEPOLISGRO FX 5% DEC30 EUR,Belgium,Euronext,Common Stock,Twelve Data,BE0390267368
+BE0941243520,ALIAXIS,Belgium,Euronext,Common Stock,Twelve Data,BE0941243520
+BE0941244536,ETEX,Belgium,Euronext,Common Stock,Twelve Data,BE0941244536
+BE0944264663,SCR - SIBELCO,Belgium,Euronext,Common Stock,Twelve Data,BE0944264663
+BE0945331669,ARKIMEDES-FONDS,Belgium,Euronext,Common Stock,Twelve Data,BE0945331669
+BE0947790037,Volksvermogen,Belgium,Euronext,Common Stock,Twelve Data,BE0947790037
+BE3871289190,Belgium Government Retail Bond,Belgium,Euronext,Common Stock,Twelve Data,BE3871289190
+BE3871292228,BELG2.6%11DEC2028,Belgium,Euronext,Common Stock,Twelve Data,BE3871292228
+BE3871303330,"Belgium Government Bonds 2.9% Due March 4, 2035",Belgium,Euronext,Common Stock,Twelve Data,BE3871303330
+BE3871304346,Belgium Government Retail Bond 1.8% 2026,Belgium,Euronext,Common Stock,Twelve Data,BE3871304346
+BE3871306366,"Belgian Government Retail Bond 1.90% September 4, 2026",Belgium,Euronext,Common Stock,Twelve Data,BE3871306366
+BE3871307372,Kingdom of Belgium Government Retail Bond 3.20% 2035,Belgium,Euronext,Common Stock,Twelve Data,BE3871307372
+BE3871308388,Belgium Government Retail Bond 2% 4 December 2026,Belgium,Euronext,Common Stock,Twelve Data,BE3871308388
+BE6264882406,IMBAKIN HOLDING,Belgium,Euronext,Common Stock,Twelve Data,BE6264882406
+BE6265912038,BE6265912038,Belgium,Euronext,Common Stock,Twelve Data,BE6265912038
+BE6367654892,BE6367654892,Belgium,Euronext,Common Stock,Twelve Data,BE6367654892
+BEKB,NV Bekaert SA,Belgium,Euronext,Common Stock,Twelve Data,BEKB
+BELU,Beluga NV,Belgium,Euronext,Common Stock,Twelve Data,BELU
+BELYS,Belysse Group NV,Belgium,Euronext,Common Stock,Twelve Data,BELYS
+BER000042BP7,BER000042BP7,Belgium,Euronext,Common Stock,Twelve Data,BER000042BP7
+BIOS,BioSenic SA,Belgium,Euronext,Common Stock,Twelve Data,BIOS
+BNB,National Bank of Belgium,Belgium,Euronext,Common Stock,Twelve Data,BNB
+BOTHE,Bone Therapeutics SA,Belgium,Euronext,Common Stock,Twelve Data,BOTHE
+BPOST,bpost SA/NV,Belgium,Euronext,Common Stock,Twelve Data,BPOST
+BREB,Brederode SA,Belgium,Euronext,Common Stock,Twelve Data,BREB
+BTLS,Biotalys NV,Belgium,Euronext,Common Stock,Twelve Data,BTLS
+CAMB,Campine NV,Belgium,Euronext,Common Stock,Twelve Data,CAMB
+CAND,Candela Invest Inc.,Belgium,Euronext,Common Stock,Twelve Data,CAND
+CENER,Cenergy Holdings S.A.,Belgium,Euronext,Common Stock,Twelve Data,CENER
+CFEB,Compagnie d'Entreprises CFE SA,Belgium,Euronext,Common Stock,Twelve Data,CFEB
+CLEX,Cumulex Inc.,Belgium,Euronext,Common Stock,Twelve Data,CLEX
+CMBT,CMB.TECH NV,Belgium,Euronext,Common Stock,Twelve Data,CMBT
+COBH,Compagnie Bancaire Helvétiques S.A.,Belgium,Euronext,Common Stock,Twelve Data,COBH
+COFB,Cofinimmo SA,Belgium,Euronext,REIT,Twelve Data,COFB
+COLR,Colruyt Group N.V.,Belgium,Euronext,Common Stock,Twelve Data,COLR
+COMB,Compagnie du Bois Sauvage SA,Belgium,Euronext,Common Stock,Twelve Data,COMB
+CPINV,Care Property Invest NV,Belgium,Euronext,REIT,Twelve Data,CPINV
+CYAD,Celyad Oncology SA,Belgium,Euronext,Common Stock,Twelve Data,CYAD
+DECB,Deceuninck NV,Belgium,Euronext,Common Stock,Twelve Data,DECB
+DEME,DEME Group NV,Belgium,Euronext,Common Stock,Twelve Data,DEME
+DEXB,Dexia SA,Belgium,Euronext,Common Stock,Twelve Data,DEXB
+DIE,D'Ieteren Group SA/NV,Belgium,Euronext,Common Stock,Twelve Data,DIE
+DIEG,Diegem Kennedycert,Belgium,Euronext,Common Stock,Twelve Data,DIEG
+DISL,Distri-Land S.A.,Belgium,Euronext,Common Stock,Twelve Data,DISL
+ECONB,Econocom Group SE,Belgium,Euronext,Common Stock,Twelve Data,ECONB
+EKOP,Ekopak NV,Belgium,Euronext,Common Stock,Twelve Data,EKOP
+ELI,Elia Group SA/NV,Belgium,Euronext,Common Stock,Twelve Data,ELI
+EMD,EMD Music S.A.,Belgium,Euronext,Common Stock,Twelve Data,EMD
+ENRGY,ENRGY,Belgium,Euronext,Common Stock,Twelve Data,ENRGY
+EURN,Euronav NV,Belgium,Euronext,Common Stock,Twelve Data,EURN
+EVS,EVS Broadcast Equipment S.A.,Belgium,Euronext,Common Stock,Twelve Data,EVS
+EXM,Exmar NV,Belgium,Euronext,Common Stock,Twelve Data,EXM
+FAGR,Fagron NV,Belgium,Euronext,Common Stock,Twelve Data,FAGR
+FLOB,Floridienne S.A.,Belgium,Euronext,Common Stock,Twelve Data,FLOB
+FLSP,Flowsparks,Belgium,Euronext,Common Stock,Twelve Data,FLSP
+FLUX,Fluxys Belgium SA,Belgium,Euronext,Common Stock,Twelve Data,FLUX
+FOU,Fountain S.A.,Belgium,Euronext,Common Stock,Twelve Data,FOU
+GBLB,Groupe Bruxelles Lambert SA,Belgium,Euronext,Common Stock,Twelve Data,GBLB
+GIMB,Gimv NV,Belgium,Euronext,Common Stock,Twelve Data,GIMB
+HOMI,Home Invest Belgium S.A.,Belgium,Euronext,REIT,Twelve Data,HOMI
+HYL,Hyloris Pharmaceuticals SA,Belgium,Euronext,Common Stock,Twelve Data,HYL
+HYSG,Hybrid Software Group PLC,Belgium,Euronext,Common Stock,Twelve Data,HYSG
+IBAB,Ion Beam Applications SA,Belgium,Euronext,Common Stock,Twelve Data,IBAB
+IEP,Iep Invest NV,Belgium,Euronext,Common Stock,Twelve Data,IEP
+IMMO,Immobel SA,Belgium,Euronext,Common Stock,Twelve Data,IMMO
+IMMOU,Immo Moury SCA,Belgium,Euronext,REIT,Twelve Data,IMMOU
+INCLU,Inclusio SA,Belgium,Euronext,Common Stock,Twelve Data,INCLU
+JEN,Jensen-Group NV,Belgium,Euronext,Common Stock,Twelve Data,JEN
+KBC,KBC Group NV,Belgium,Euronext,Common Stock,Twelve Data,KBC
+KBCA,KBC Ancora SA,Belgium,Euronext,Common Stock,Twelve Data,KBCA
+KEYW,Keyware Technologies NV,Belgium,Euronext,Common Stock,Twelve Data,KEYW
+KIN,Kinepolis Group NV,Belgium,Euronext,Common Stock,Twelve Data,KIN
+KIN25,KIN25,Belgium,Euronext,Common Stock,Twelve Data,KIN25
+LOTB,Lotus Bakeries NV,Belgium,Euronext,Common Stock,Twelve Data,LOTB
+MCC,Immobel NV,Belgium,Euronext,REIT,Twelve Data,MCC
+MELE,Melexis NV,Belgium,Euronext,Common Stock,Twelve Data,MELE
+MIKO,Miko NV,Belgium,Euronext,Common Stock,Twelve Data,MIKO
+MLMAZ,Mazaro S.A.,Belgium,Euronext,Common Stock,Twelve Data,MLMAZ
+MLNEU,Société Financière de Neufcour,Belgium,Euronext,Common Stock,Twelve Data,MLNEU
+MLTV,Choice N.V.,Belgium,Euronext,Common Stock,Twelve Data,MLTV
+MONT,Montea NV,Belgium,Euronext,REIT,Twelve Data,MONT
+MOP,Palmboomen Cultuur Maatschappij Mopoli,Belgium,Euronext,Common Stock,Twelve Data,MOP
+MOPF,Mopoli Parts des Fondateurs,Belgium,Euronext,Common Stock,Twelve Data,MOPF
+MOUR,Moury Construct SA,Belgium,Euronext,Common Stock,Twelve Data,MOUR
+MTLS,Materialise NV,Belgium,Euronext,Common Stock,Twelve Data,MTLS
+NEWT,"NewtekOne, Inc.",Belgium,Euronext,Common Stock,Twelve Data,NEWT
+NEXTA,Nextensa SA,Belgium,Euronext,REIT,Twelve Data,NEXTA
+NYR,Nyrstar NV,Belgium,Euronext,Common Stock,Twelve Data,NYR
+NYXH,Nyxoah SA,Belgium,Euronext,Common Stock,Twelve Data,NYXH
+OBEL,Orange Belgium S.A.,Belgium,Euronext,Common Stock,Twelve Data,OBEL
+ONTEX,Ontex Group NV,Belgium,Euronext,Common Stock,Twelve Data,ONTEX
+ONWD,Onward Medical,Belgium,Euronext,Common Stock,Twelve Data,ONWD
+OPTI,"Optec International, Inc.",Belgium,Euronext,Common Stock,Twelve Data,OPTI
+OXUR,Oxurion NV,Belgium,Euronext,Common Stock,Twelve Data,OXUR
+PAY,Payton Planar Magnetics Ltd,Belgium,Euronext,Common Stock,Twelve Data,PAY
+PROX,Proximus SA,Belgium,Euronext,Common Stock,Twelve Data,PROX
+QFG,Quest for Growth NV,Belgium,Euronext,Common Stock,Twelve Data,QFG
+QRF,Qrf Comm. VA,Belgium,Euronext,REIT,Twelve Data,QRF
+REAL,Realco S.A.,Belgium,Euronext,Common Stock,Twelve Data,REAL
+RECT,Recticel SA,Belgium,Euronext,Common Stock,Twelve Data,RECT
+REI,Reibel S.A.,Belgium,Euronext,Common Stock,Twelve Data,REI
+RET,Retail Estates NV,Belgium,Euronext,REIT,Twelve Data,RET
+ROCK,Whitestone Group Inc.,Belgium,Euronext,Common Stock,Twelve Data,ROCK
+ROU,Roularta Media Group NV,Belgium,Euronext,Common Stock,Twelve Data,ROU
+SEQUA,Sequana Medical NV,Belgium,Euronext,Common Stock,Twelve Data,SEQUA
+SHUR,Shurgard Self-Storage Ltd.,Belgium,Euronext,REIT,Twelve Data,SHUR
+SIP,Sipef NV,Belgium,Euronext,Common Stock,Twelve Data,SIP
+SOF,Sofina,Belgium,Euronext,Common Stock,Twelve Data,SOF
+SOFT,Softimat S.A.,Belgium,Euronext,Common Stock,Twelve Data,SOFT
+SOLB,Solvay SA,Belgium,Euronext,Common Stock,Twelve Data,SOLB
+SOLV,Solvac S.A.,Belgium,Euronext,Common Stock,Twelve Data,SOLV
+SPA,Spadel SA,Belgium,Euronext,Common Stock,Twelve Data,SPA
+SYENS,Syensqo SA/NV,Belgium,Euronext,Common Stock,Twelve Data,SYENS
+TESB,Tessenderlo Group NV,Belgium,Euronext,Common Stock,Twelve Data,TESB
+TEXF,Texaf S.A.,Belgium,Euronext,Common Stock,Twelve Data,TEXF
+TINC,TINC Comm VA,Belgium,Euronext,Common Stock,Twelve Data,TINC
+TITC,Titan S.A.,Belgium,Euronext,Common Stock,Twelve Data,TITC
+TUB,Financière de Tubize SA,Belgium,Euronext,Common Stock,Twelve Data,TUB
+UCB,UCB SA,Belgium,Euronext,Common Stock,Twelve Data,UCB
+UMI,Umicore SA,Belgium,Euronext,Common Stock,Twelve Data,UMI
+VAN,Van de Velde NV,Belgium,Euronext,Common Stock,Twelve Data,VAN
+VASTB,Vastned NV,Belgium,Euronext,REIT,Twelve Data,VASTB
+VGP,VGP NV,Belgium,Euronext,Common Stock,Twelve Data,VGP
+VGP26,VGP N.V.,Belgium,Euronext,Common Stock,Twelve Data,VGP26
+VIO,Viohalco S.A.,Belgium,Euronext,Common Stock,Twelve Data,VIO
+WDP,Warehouses De Pauw NV/SA,Belgium,Euronext,REIT,Twelve Data,WDP
+WEB,Warehouses Estates Belgium SA,Belgium,Euronext,REIT,Twelve Data,WEB
+WEHB,Wereldhave Belgium NV,Belgium,Euronext,REIT,Twelve Data,WEHB
+WHATS,What's Cooking,Belgium,Euronext,Common Stock,Twelve Data,WHATS
+XIOR,Xior Student Housing NV,Belgium,Euronext,REIT,Twelve Data,XIOR
+ZEN,Zenobe Gramme S.A.,Belgium,Euronext,Common Stock,Twelve Data,ZEN

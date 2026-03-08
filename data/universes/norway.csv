@@ -1,0 +1,795 @@
+ticker,name,country,exchange,type,source,yahoo_symbol
+2020,2020 Bulkers Ltd.,Norway,OSE,Common Stock,Twelve Data,2020
+2020O,2020 Bulkers Ltd.,Norway,OSE,Common Stock,Twelve Data,2020O
+5PG,5th Planet Games A/S,Norway,OSE,Common Stock,Twelve Data,5PG
+AASB,Aasen Sparebank,Norway,OSE,Common Stock,Twelve Data,AASB
+AASB27.PR.RO,Aasen Spb 21/26 FRN,Norway,OSE,Common Stock,Twelve Data,AASB27.PR.RO
+AASB41.PR.RO,AASB41.PR.RO,Norway,OSE,Common Stock,Twelve Data,AASB41.PR.RO
+ABG,ABG Sundal Collier Holding ASA,Norway,OSE,Common Stock,Twelve Data,ABG
+ABGO,ABG Sundal Collier ASA,Norway,OSE,Common Stock,Twelve Data,ABGO
+ABL,ABL Group ASA,Norway,OSE,Common Stock,Twelve Data,ABL
+ABLO,ABL Group ASA,Norway,OSE,Common Stock,Twelve Data,ABLO
+ABS,Arctic Bioscience ASA,Norway,OSE,Common Stock,Twelve Data,ABS
+ABTEC,Aqua Bio Technology ASA,Norway,OSE,Common Stock,Twelve Data,ABTEC
+ABTECO,Aqua Bio Technology ASA,Norway,OSE,Common Stock,Twelve Data,ABTECO
+ACED,Ace Digital AS,Norway,OSE,Common Stock,Twelve Data,ACED
+ACR,Axactor ASA,Norway,OSE,Common Stock,Twelve Data,ACR
+ACRO,Axactor ASA,Norway,OSE,Common Stock,Twelve Data,ACRO
+ADBA08.PR.RO,ADBA08.PR.RO,Norway,OSE,Common Stock,Twelve Data,ADBA08.PR.RO
+ADS,Ads Maritime Holding Plc,Norway,OSE,Common Stock,Twelve Data,ADS
+AFG,AF Gruppen ASA,Norway,OSE,Common Stock,Twelve Data,AFG
+AFGO,AF Gruppen ASA,Norway,OSE,Common Stock,Twelve Data,AFGO
+AFISH,Arctic Fish Holding AS,Norway,OSE,Common Stock,Twelve Data,AFISH
+AFK,Arendals Fossekompani ASA,Norway,OSE,Common Stock,Twelve Data,AFK
+AFKO,Arendals Fossekompani ASA,Norway,OSE,Common Stock,Twelve Data,AFKO
+AGDER07.PR.RO,Ostre Agder Spb 21/31 FRN C SUB,Norway,OSE,Common Stock,Twelve Data,AGDER07.PR.RO
+AGDER14.PR.RO,Arendal og Omegns Spb 21/26 FRN,Norway,OSE,Common Stock,Twelve Data,AGDER14.PR.RO
+AGDER24.PR.RO,Agder Spb 25/30 FRN,Norway,OSE,Common Stock,Twelve Data,AGDER24.PR.RO
+AGDER25.PR.RO,AGDER25.PR.RO,Norway,OSE,Common Stock,Twelve Data,AGDER25.PR.RO
+AGLX,Agilyx ASA,Norway,OSE,Common Stock,Twelve Data,AGLX
+AGLXO,Agilyx ASA,Norway,OSE,Common Stock,Twelve Data,AGLXO
+AIRX,Airthings ASA,Norway,OSE,Common Stock,Twelve Data,AIRX
+AIX,Ayfie Group AS,Norway,OSE,Common Stock,Twelve Data,AIX
+AKAST,Akastor ASA,Norway,OSE,Common Stock,Twelve Data,AKAST
+AKASTO,Akastor ASA,Norway,OSE,Common Stock,Twelve Data,AKASTO
+AKBM,Aker BioMarine ASA,Norway,OSE,Common Stock,Twelve Data,AKBM
+AKBMO,Aker BioMarine ASA,Norway,OSE,Common Stock,Twelve Data,AKBMO
+AKER,Aker ASA Series A Shares,Norway,OSE,Common Stock,Twelve Data,AKER
+AKERO,Aker,Norway,OSE,Common Stock,Twelve Data,AKERO
+AKH,Aker Horizons ASA,Norway,OSE,Common Stock,Twelve Data,AKH
+AKHO,Aker Horizons ASA,Norway,OSE,Common Stock,Twelve Data,AKHO
+AKOBO,Akobo Minerals AB,Norway,OSE,Common Stock,Twelve Data,AKOBO
+AKRBP,Aker BP ASA,Norway,OSE,Common Stock,Twelve Data,AKRBP
+AKRBPO,Aker BP ASA,Norway,OSE,Common Stock,Twelve Data,AKRBPO
+AKSO,Aker Solutions ASA,Norway,OSE,Common Stock,Twelve Data,AKSO
+AKSOO,Aker Solutions ASA,Norway,OSE,Common Stock,Twelve Data,AKSOO
+AKVA,Akva Group ASA,Norway,OSE,Common Stock,Twelve Data,AKVA
+AKVAO,AKVA Group ASA,Norway,OSE,Common Stock,Twelve Data,AKVAO
+ALNG,Awilco LNG ASA,Norway,OSE,Common Stock,Twelve Data,ALNG
+ALNGO,Awilco LNG ASA,Norway,OSE,Common Stock,Twelve Data,ALNGO
+ANDF,Andfjord Salmon Group AS,Norway,OSE,Common Stock,Twelve Data,ANDF
+APR,Appear ASA,Norway,OSE,Common Stock,Twelve Data,APR
+ARCH,Archer Limited,Norway,OSE,Common Stock,Twelve Data,ARCH
+ARCHO,Archer Limited,Norway,OSE,Common Stock,Twelve Data,ARCHO
+ARNO02.PR.RO,ARNO02.PR.RO,Norway,OSE,Common Stock,Twelve Data,ARNO02.PR.RO
+ARR,Arribatec Group ASA,Norway,OSE,Common Stock,Twelve Data,ARR
+ASA,Atlantic Sapphire ASA,Norway,OSE,Common Stock,Twelve Data,ASA
+ASAS,Atlantic Sapphire ASA,Norway,OSE,Warrant,Twelve Data,ASAS
+ASKSB28.PR.RO,Askim & Spydeberg Spb 22/27 FRN,Norway,OSE,Common Stock,Twelve Data,ASKSB28.PR.RO
+ATEA,Atea ASA,Norway,OSE,Common Stock,Twelve Data,ATEA
+ATEAO,Atea,Norway,OSE,Common Stock,Twelve Data,ATEAO
+AURG,Aurskog Sparebank,Norway,OSE,Common Stock,Twelve Data,AURG
+AURG56.PR.RO,Aurskog Spb 23/27 FRN,Norway,OSE,Common Stock,Twelve Data,AURG56.PR.RO
+AURG60.PR.RO,AURG60-PRO.OL,Norway,OSE,Common Stock,Twelve Data,AURG60.PR.RO
+AURG62.PR.RO,Aurskog Spb 24/27 FRN,Norway,OSE,Common Stock,Twelve Data,AURG62.PR.RO
+AURG67.PR.RO,Aurskog Spb 24/30 FRN,Norway,OSE,Common Stock,Twelve Data,AURG67.PR.RO
+AUSS,Austevoll Seafood ASA,Norway,OSE,Common Stock,Twelve Data,AUSS
+AUSSO,Austevoll Seafood ASA,Norway,OSE,Common Stock,Twelve Data,AUSSO
+AUTO,AutoStore Holdings Ltd,Norway,OSE,Common Stock,Twelve Data,AUTO
+AUTOOO,AutoStore Holdings Ltd.,Norway,OSE,Common Stock,Twelve Data,AUTOOO
+AZT,ArcticZymes Technologies ASA,Norway,OSE,Common Stock,Twelve Data,AZT
+AZTO,ArcticZymes Technologies ASA,Norway,OSE,Common Stock,Twelve Data,AZTO
+B2I,B2 Impact ASA,Norway,OSE,Common Stock,Twelve Data,B2I
+B2IO,B2 Impact ASA,Norway,OSE,Common Stock,Twelve Data,B2IO
+BAKKA,P/F Bakkafrost,Norway,OSE,Common Stock,Twelve Data,BAKKA
+BAKKAO,Bakkafrost P/f,Norway,OSE,Common Stock,Twelve Data,BAKKAO
+BALT,Baltic Sea Properties AS,Norway,OSE,Common Stock,Twelve Data,BALT
+BARRA,Barramundi Group Ltd.,Norway,OSE,Common Stock,Twelve Data,BARRA
+BCS,Bergen Carbon Solutions AS,Norway,OSE,Common Stock,Twelve Data,BCS
+BEWI,BEWI ASA,Norway,OSE,Common Stock,Twelve Data,BEWI
+BEWIO,BEWi ASA,Norway,OSE,Common Stock,Twelve Data,BEWIO
+BIEN,Bien Sparebank ASA,Norway,OSE,Common Stock,Twelve Data,BIEN
+BINT02.PR.RO.FE,BINT02.PR.RO.FE,Norway,OSE,Common Stock,Twelve Data,BINT02.PR.RO.FE
+BJSP07.PR.RO,Bjugn Spb 23/26 FRN,Norway,OSE,Common Stock,Twelve Data,BJSP07.PR.RO
+BJSP11.PR.RO,Bjugn Spb 25/29 FRN,Norway,OSE,Common Stock,Twelve Data,BJSP11.PR.RO
+BMA,Byggma ASA,Norway,OSE,Common Stock,Twelve Data,BMA
+BNB101.PR.RO.ESG,BN Bank ASA 22/27 FRN,Norway,OSE,Common Stock,Twelve Data,BNB101.PR.RO.ESG
+BNB102.PR.RO,BN Bank ASA 23/PERP FRN C HYBRI,Norway,OSE,Common Stock,Twelve Data,BNB102.PR.RO
+BNB103.PR.RO,"BN Bank ASA 23/30 4,50%",Norway,OSE,Common Stock,Twelve Data,BNB103.PR.RO
+BNB108.PR.RO,BN Bank ASA 24/27 FRN,Norway,OSE,Common Stock,Twelve Data,BNB108.PR.RO
+BNB111.PR.RO,"BN Bank ASA 24/31 4,23%",Norway,OSE,Common Stock,Twelve Data,BNB111.PR.RO
+BNB114.PR.RO,BN Bank ASA 24/28 FRN,Norway,OSE,Common Stock,Twelve Data,BNB114.PR.RO
+BNB96.PR.RO,"BN Bank ASA 21/28 2,30pct",Norway,OSE,Common Stock,Twelve Data,BNB96.PR.RO
+BNOR,BlueNord ASA,Norway,OSE,Common Stock,Twelve Data,BNOR
+BNORE23.PR.RO,"Bane NOR Eiendom AS 22/27 2,92%",Norway,OSE,Common Stock,Twelve Data,BNORE23.PR.RO
+BNORO,BlueNord ASA,Norway,OSE,Common Stock,Twelve Data,BNORO
+BONHR,Bonheur ASA,Norway,OSE,Common Stock,Twelve Data,BONHR
+BONHRO,Bonheur ASA,Norway,OSE,Common Stock,Twelve Data,BONHRO
+BOR,Borgestad ASA,Norway,OSE,Common Stock,Twelve Data,BOR
+BORR,Borr Drilling Ltd.,Norway,OSE,Common Stock,Twelve Data,BORR
+BOUV,Bouvet ASA,Norway,OSE,Common Stock,Twelve Data,BOUV
+BOUVO,Bouvet ASA,Norway,OSE,Common Stock,Twelve Data,BOUVO
+BRFI51.PR.RO,Brage Finans AS 22/26 FRN,Norway,OSE,Common Stock,Twelve Data,BRFI51.PR.RO
+BRFI52.PR.RO,Brage Finans AS 22/PERP FRN C H,Norway,OSE,Common Stock,Twelve Data,BRFI52.PR.RO
+BRFI54.PR.RO.ESG,Brage Finans AS 22/27 FRN,Norway,OSE,Common Stock,Twelve Data,BRFI54.PR.RO.ESG
+BRFI58.PR.RO.ESG,Brage Finans AS 23/28 FRN,Norway,OSE,Common Stock,Twelve Data,BRFI58.PR.RO.ESG
+BRFI60.PR.RO,Brage Finans AS 23/33 ADJ C SUB,Norway,OSE,Common Stock,Twelve Data,BRFI60.PR.RO
+BRFI63.PR.RO,Brage Finans AS 23/27 FRN,Norway,OSE,Common Stock,Twelve Data,BRFI63.PR.RO
+BRFI64.PR.RO,Brage Finans AS 24/29 FRN,Norway,OSE,Common Stock,Twelve Data,BRFI64.PR.RO
+BRFI67.PR.RO,Brage Finans AS 24/27 FRN,Norway,OSE,Common Stock,Twelve Data,BRFI67.PR.RO
+BRFI68.PR.RO,Brage Finans AS 24/27 FRN,Norway,OSE,Common Stock,Twelve Data,BRFI68.PR.RO
+BRFI70.PR.RO,BRFI70.PR.RO,Norway,OSE,Common Stock,Twelve Data,BRFI70.PR.RO
+BRG,Borregaard ASA,Norway,OSE,Common Stock,Twelve Data,BRG
+BRGO,Borregaard ASA,Norway,OSE,Common Stock,Twelve Data,BRGO
+BRUT,Bruton Ltd.,Norway,OSE,Common Stock,Twelve Data,BRUT
+BSP,Black Sea Property PLC,Norway,OSE,Common Stock,Twelve Data,BSP
+BULL.BRENT.X2ND1,BULL-BRENT-X2ND1.OL,Norway,OSE,Common Stock,Twelve Data,BULL.BRENT.X2ND1
+BULL.DNB.X3.ND1,BULL.DNB.X3.ND1,Norway,OSE,Common Stock,Twelve Data,BULL.DNB.X3.ND1
+BWE,BW Energy Limited,Norway,OSE,Common Stock,Twelve Data,BWE
+BWEO,BW Energy Limited,Norway,OSE,Common Stock,Twelve Data,BWEO
+BWLPG,BW LPG Limited,Norway,OSE,Common Stock,Twelve Data,BWLPG
+BWLPGO,BW LPG Limited,Norway,OSE,Common Stock,Twelve Data,BWLPGO
+BWO,BW Offshore Limited,Norway,OSE,Common Stock,Twelve Data,BWO
+BWOO,BW Offshore Limited,Norway,OSE,Common Stock,Twelve Data,BWOO
+CADLR,Cadeler A/S,Norway,OSE,Common Stock,Twelve Data,CADLR
+CADLRO,Cadeler A/S,Norway,OSE,Common Stock,Twelve Data,CADLRO
+CAMBI,Cambi ASA,Norway,OSE,Common Stock,Twelve Data,CAMBI
+CAPSL,Capsol Technologies ASA,Norway,OSE,Common Stock,Twelve Data,CAPSL
+CAPSLO,Capsol Technologies ASA,Norway,OSE,Common Stock,Twelve Data,CAPSLO
+CAVEN,Cavendish Hydrogen ASA,Norway,OSE,Common Stock,Twelve Data,CAVEN
+CAVENO,Cavendish Hydrogen ASA,Norway,OSE,Common Stock,Twelve Data,CAVENO
+CLOUD,Cloudberry Clean Energy ASA,Norway,OSE,Common Stock,Twelve Data,CLOUD
+CMBTO,CMB.TECH NV,Norway,OSE,Common Stock,Twelve Data,CMBTO
+CMBTOO,CMBTOO,Norway,OSE,Common Stock,Twelve Data,CMBTOO
+CODE,CodeLab Capital AS,Norway,OSE,Common Stock,Twelve Data,CODE
+COGLD.NOK,EDR Certified Origin Physical G,Norway,OSE,Common Stock,Twelve Data,COGLD.NOK
+CONTX,ContextVision AB (publ),Norway,OSE,Common Stock,Twelve Data,CONTX
+CONTXO,Contextvision AB,Norway,OSE,Common Stock,Twelve Data,CONTXO
+COSH,Constellation Oil Services Holding S.A.,Norway,OSE,Depositary Receipt,Twelve Data,COSH
+CRNA,Circio Holding ASA,Norway,OSE,Common Stock,Twelve Data,CRNA
+CRNAS,CRNAS,Norway,OSE,Common Stock,Twelve Data,CRNAS
+CYVIZ,Cyviz AS,Norway,OSE,Common Stock,Twelve Data,CYVIZ
+DDRIL,Dolphin Drilling AS,Norway,OSE,Common Stock,Twelve Data,DDRIL
+DELIA,Dellia Group ASA,Norway,OSE,Common Stock,Twelve Data,DELIA
+DFENS,Fjord Defence Group ASA,Norway,OSE,Common Stock,Twelve Data,DFENS
+DFENSO,DFENSO,Norway,OSE,Common Stock,Twelve Data,DFENSO
+DNB,DNB Bank ASA,Norway,OSE,Common Stock,Twelve Data,DNB
+DNBO,DNB ASA,Norway,OSE,Common Stock,Twelve Data,DNBO
+DNO,DNO ASA,Norway,OSE,Common Stock,Twelve Data,DNO
+DNOO,DNO ASA,Norway,OSE,Common Stock,Twelve Data,DNOO
+DOFG,DOF Group ASA,Norway,OSE,Common Stock,Twelve Data,DOFG
+DOFGO,DOF Group ASA,Norway,OSE,Common Stock,Twelve Data,DOFGO
+DSRT,Desert Control AS,Norway,OSE,Common Stock,Twelve Data,DSRT
+DVD,Deep Value Driller A.S.,Norway,OSE,Common Stock,Twelve Data,DVD
+EAM,EAM Solar ASA,Norway,OSE,Common Stock,Twelve Data,EAM
+EIKRN25.PR.RO,Eiendomskreditt AS 22/28 FRN CO,Norway,OSE,Common Stock,Twelve Data,EIKRN25.PR.RO
+EIKRN29.PR.RO,Eiendomskreditt AS 25/30 ADJ C,Norway,OSE,Common Stock,Twelve Data,EIKRN29.PR.RO
+EIKRN31.PR.RO,EIKRN31.PR.RO,Norway,OSE,Common Stock,Twelve Data,EIKRN31.PR.RO
+EIOF,Eidesvik Offshore ASA,Norway,OSE,Common Stock,Twelve Data,EIOF
+EIOFO,Eidesvik Offshore ASA,Norway,OSE,Common Stock,Twelve Data,EIOFO
+ELABS,Elliptic Laboratories ASA,Norway,OSE,Common Stock,Twelve Data,ELABS
+ELABSO,Elliptic Laboratories ASA,Norway,OSE,Common Stock,Twelve Data,ELABSO
+ELIMP,Elektro Importoren AS,Norway,OSE,Common Stock,Twelve Data,ELIMP
+ELK,Elkem ASA,Norway,OSE,Common Stock,Twelve Data,ELK
+ELKO,Elkem ASA,Norway,OSE,Common Stock,Twelve Data,ELKO
+ELMRA,Elmera Group ASA,Norway,OSE,Common Stock,Twelve Data,ELMRA
+ELMRAO,Elmera Group ASA,Norway,OSE,Common Stock,Twelve Data,ELMRAO
+ELO,Elopak ASA,Norway,OSE,Common Stock,Twelve Data,ELO
+ELO04.PR.RO.ESG,Elopak ASA 25/30 FRN,Norway,OSE,Common Stock,Twelve Data,ELO04.PR.RO.ESG
+ELOO,Elopak ASA,Norway,OSE,Common Stock,Twelve Data,ELOO
+EMGS,Electromagnetic Geoservices ASA,Norway,OSE,Common Stock,Twelve Data,EMGS
+ENDUR,Endur ASA,Norway,OSE,Common Stock,Twelve Data,ENDUR
+ENDURO,ENDURO,Norway,OSE,Common Stock,Twelve Data,ENDURO
+ENERG,Energeia AS,Norway,OSE,Common Stock,Twelve Data,ENERG
+ENH,SED Energy Holdings Plc,Norway,OSE,Common Stock,Twelve Data,ENH
+ENHO,ENHO,Norway,OSE,Common Stock,Twelve Data,ENHO
+ENSU,Ensurge Micropower ASA,Norway,OSE,Common Stock,Twelve Data,ENSU
+ENSUO,Ensurge Micropower ASA,Norway,OSE,Common Stock,Twelve Data,ENSUO
+ENTRA,Entra ASA,Norway,OSE,Common Stock,Twelve Data,ENTRA
+ENTRAO,Entra ASA,Norway,OSE,Common Stock,Twelve Data,ENTRAO
+ENVIP,Envipco Holding N.V.,Norway,OSE,Common Stock,Twelve Data,ENVIP
+ENVIPO,Envipco Holding N.V,Norway,OSE,Common Stock,Twelve Data,ENVIPO
+EPR,Europris ASA,Norway,OSE,Common Stock,Twelve Data,EPR
+EPRO,Europris ASA,Norway,OSE,Common Stock,Twelve Data,EPRO
+EQNR,Equinor ASA,Norway,OSE,Common Stock,Twelve Data,EQNR
+EQNRO,Equinor ASA,Norway,OSE,Common Stock,Twelve Data,EQNRO
+EQVA,Eqva ASA,Norway,OSE,Common Stock,Twelve Data,EQVA
+EQVAO,Eqva ASA,Norway,OSE,Common Stock,Twelve Data,EQVAO
+EVINY01.PR.RO.ESG,Eviny AS 23/28 FRN,Norway,OSE,Common Stock,Twelve Data,EVINY01.PR.RO.ESG
+EVINY02.PR.RO,"Eviny AS 23/28 5,13%",Norway,OSE,Common Stock,Twelve Data,EVINY02.PR.RO
+EVINY04.PR.RO,"Eviny AS 24/34 4,47%",Norway,OSE,Common Stock,Twelve Data,EVINY04.PR.RO
+EVINY05.PR.RO,Eviny AS 24/29 FRN,Norway,OSE,Common Stock,Twelve Data,EVINY05.PR.RO
+EVINY06.PR.RO,Eviny AS 24/27 FRN,Norway,OSE,Common Stock,Twelve Data,EVINY06.PR.RO
+EVINY12.PR.RO.ESG,EVINY12.PR.RO.ESG,Norway,OSE,Common Stock,Twelve Data,EVINY12.PR.RO.ESG
+EXTX,Exact Therapeutics A.S.,Norway,OSE,Common Stock,Twelve Data,EXTX
+FAMK01.PR.RO,FAMK01.PR.RO,Norway,OSE,Common Stock,Twelve Data,FAMK01.PR.RO
+FERDE03.PR.RO,"Ferde AS 19/26 2,36%",Norway,OSE,Common Stock,Twelve Data,FERDE03.PR.RO
+FERDE11.PR.RO,Bergen-Os Bompengeselskap AS 17,Norway,OSE,Common Stock,Twelve Data,FERDE11.PR.RO
+FERDE23.PR.RO,Ferde AS 21/26 1.65 pct,Norway,OSE,Common Stock,Twelve Data,FERDE23.PR.RO
+FERDE24.PR.RO.ESG,Ferde AS 22/27 FRN,Norway,OSE,Common Stock,Twelve Data,FERDE24.PR.RO.ESG
+FERDE25.PR.RO,Ferde AS 22/29 FRN,Norway,OSE,Common Stock,Twelve Data,FERDE25.PR.RO
+FERDE36.PR.RO,Ferde AS 21/26 FRN,Norway,OSE,Common Stock,Twelve Data,FERDE36.PR.RO
+FERDE44.PR.RO,FERDE44.PR.RO,Norway,OSE,Common Stock,Twelve Data,FERDE44.PR.RO
+FERDE46.PR.RO,FERDE46.PR.RO,Norway,OSE,Common Stock,Twelve Data,FERDE46.PR.RO
+FFSB,Flekkefjord Sparebank,Norway,OSE,Common Stock,Twelve Data,FFSB
+FFSB13.PR.RO,Flekkefjord Spb 22/26 FRN,Norway,OSE,Common Stock,Twelve Data,FFSB13.PR.RO
+FFSB17.PR.RO,Flekkefjord Spb 24/27 FRN,Norway,OSE,Common Stock,Twelve Data,FFSB17.PR.RO
+FFSB20.PR.RO.ESG,Flekkefjord Spb 25/30 FRN,Norway,OSE,Common Stock,Twelve Data,FFSB20.PR.RO.ESG
+FJELL65.PR.RO.ESG,FJELL65.PR.RO.ESG,Norway,OSE,Common Stock,Twelve Data,FJELL65.PR.RO.ESG
+FJELL66.PR.RO.ESG,FJELL66.PR.RO.ESG,Norway,OSE,Common Stock,Twelve Data,FJELL66.PR.RO.ESG
+FOSB33.PR.RO,FOSB33.PR.RO,Norway,OSE,Common Stock,Twelve Data,FOSB33.PR.RO
+FRO,Frontline plc,Norway,OSE,Common Stock,Twelve Data,FRO
+FROO,Frontline,Norway,OSE,Common Stock,Twelve Data,FROO
+FSB43.PR.RO.ESG,Fana Spb 21/26 FRN,Norway,OSE,Common Stock,Twelve Data,FSB43.PR.RO.ESG
+FSBKR25.PR.RO,Fana Spb Boligkredit AS 20/26 F,Norway,OSE,Common Stock,Twelve Data,FSBKR25.PR.RO
+FSBKR26.PR.RO,Fana Spb Boligkredit AS 22/27 F,Norway,OSE,Common Stock,Twelve Data,FSBKR26.PR.RO
+FSBKR27.PR.RO,Fana Spb Boligkreditt AS 23/28,Norway,OSE,Common Stock,Twelve Data,FSBKR27.PR.RO
+FSBKR29.PR.RO,FSBKR29.PR.RO,Norway,OSE,Common Stock,Twelve Data,FSBKR29.PR.RO
+GEAN,Genetic Analysis AS,Norway,OSE,Common Stock,Twelve Data,GEAN
+GEM,Green Minerals A.S.,Norway,OSE,Common Stock,Twelve Data,GEM
+GENEF02.PR.RO,GENEF02.PR.RO,Norway,OSE,Common Stock,Twelve Data,GENEF02.PR.RO
+GENT,Gentian Diagnostics ASA,Norway,OSE,Common Stock,Twelve Data,GENT
+GENTO,Gentian Diagnostics ASA,Norway,OSE,Common Stock,Twelve Data,GENTO
+GEOS,Golden Energy Offshore Services AS,Norway,OSE,Common Stock,Twelve Data,GEOS
+GIGA,Gigante Salmon AS,Norway,OSE,Common Stock,Twelve Data,GIGA
+GJF,Gjensidige Forsikring ASA,Norway,OSE,Common Stock,Twelve Data,GJF
+GJFO,Gjensidige Forsikring ASA,Norway,OSE,Common Stock,Twelve Data,GJFO
+GKP,Gulf Keystone Petroleum Limited,Norway,OSE,Common Stock,Twelve Data,GKP
+GOD,Goodtech ASA,Norway,OSE,Common Stock,Twelve Data,GOD
+GRONG,Grong Sparebank,Norway,OSE,Common Stock,Twelve Data,GRONG
+GRONG27.PR.RO,Grong Spb 21/26 FRN,Norway,OSE,Common Stock,Twelve Data,GRONG27.PR.RO
+GRONG38.PR.RO,GRONG38.PR.RO,Norway,OSE,Common Stock,Twelve Data,GRONG38.PR.RO
+GSF,Grieg Seafood ASA,Norway,OSE,Common Stock,Twelve Data,GSF
+GSFO,Grieg Seafood ASA,Norway,OSE,Common Stock,Twelve Data,GSFO
+GYL,Gyldendal ASA,Norway,OSE,Common Stock,Twelve Data,GYL
+HAFNI,Hafnia Ltd,Norway,OSE,Common Stock,Twelve Data,HAFNI
+HAFNIO,Hafnia Limited,Norway,OSE,Common Stock,Twelve Data,HAFNIO
+HAKR04.PR.RO.ESG,Haugaland Kraft AS 22/27 FRN,Norway,OSE,Common Stock,Twelve Data,HAKR04.PR.RO.ESG
+HAKR06.PR.RO.ESG,HAKR06.PR.RO.ESG,Norway,OSE,Common Stock,Twelve Data,HAKR06.PR.RO.ESG
+HAUTO,Höegh Autoliners ASA,Norway,OSE,Common Stock,Twelve Data,HAUTO
+HAUTOO,HAUTOO.OL,Norway,OSE,Common Stock,Twelve Data,HAUTOO
+HAV,Hav Group ASA,Norway,OSE,Common Stock,Twelve Data,HAV
+HAVI,Havila Shipping ASA,Norway,OSE,Common Stock,Twelve Data,HAVI
+HAVIO,Havila Shipping ASA,Norway,OSE,Common Stock,Twelve Data,HAVIO
+HBC,Hofseth BioCare ASA,Norway,OSE,Common Stock,Twelve Data,HBC
+HBCO,Hofseth BioCare ASA,Norway,OSE,Common Stock,Twelve Data,HBCO
+HDLY,Huddly AS,Norway,OSE,Common Stock,Twelve Data,HDLY
+HDSB17.PR.RO,Haltdalen Spb 22/26 FRN,Norway,OSE,Common Stock,Twelve Data,HDSB17.PR.RO
+HDSB21.PR.RO,Haltdalen Spb 24/28 FRN,Norway,OSE,Common Stock,Twelve Data,HDSB21.PR.RO
+HDSB23.PR.RO,Haltdalen Spb 25/29 FRN,Norway,OSE,Common Stock,Twelve Data,HDSB23.PR.RO
+HDSB25.PR.RO,HDSB25.PR.RO,Norway,OSE,Common Stock,Twelve Data,HDSB25.PR.RO
+HDSB26.PR.RO,Haltdalen Spb 26/31 FRN,Norway,OSE,Common Stock,Twelve Data,HDSB26.PR.RO
+HELG,SpareBank 1 Helgeland,Norway,OSE,Common Stock,Twelve Data,HELG
+HELG56.PR.RO.ESG,Spb 1 Helgeland 21/27 FRN,Norway,OSE,Common Stock,Twelve Data,HELG56.PR.RO.ESG
+HELG65.PR.RO.ESG,Spb 1 Helgeland 25/29 FRN,Norway,OSE,Common Stock,Twelve Data,HELG65.PR.RO.ESG
+HELK19.PR.RO,"Helgeland Kraft AS 19/26 2,75%",Norway,OSE,Common Stock,Twelve Data,HELK19.PR.RO
+HERMA,Hermana Holding ASA,Norway,OSE,Common Stock,Twelve Data,HERMA
+HERMAO,Hermana Holding ASA,Norway,OSE,Common Stock,Twelve Data,HERMAO
+HEX,Hexagon Composites ASA,Norway,OSE,Common Stock,Twelve Data,HEX
+HEXO,Hexagon Composites ASA,Norway,OSE,Common Stock,Twelve Data,HEXO
+HGSB,Haugesund Sparebank,Norway,OSE,Common Stock,Twelve Data,HGSB
+HGSB30.PR.RO,Haugesund Spb 22/27 FRN,Norway,OSE,Common Stock,Twelve Data,HGSB30.PR.RO
+HGSB31.PR.RO.ESG,Haugesund Spb 22/28 FRN,Norway,OSE,Common Stock,Twelve Data,HGSB31.PR.RO.ESG
+HGSB32.PR.RO,Haugesund Spb 23/27 FRN,Norway,OSE,Common Stock,Twelve Data,HGSB32.PR.RO
+HGSB47.PR.RO,HGSB47.PR.RO,Norway,OSE,Common Stock,Twelve Data,HGSB47.PR.RO
+HGSB48.PR.RO,HGSB48.PR.RO,Norway,OSE,Common Stock,Twelve Data,HGSB48.PR.RO
+HKY,Havila Kystruten AS,Norway,OSE,Common Stock,Twelve Data,HKY
+HLNG,Hoegh LNG Holdings Ltd,Norway,OSE,Common Stock,Twelve Data,HLNG
+HOFIN02.PR.RO.ESG,HOFIN02.PR.RO.ESG,Norway,OSE,Common Stock,Twelve Data,HOFIN02.PR.RO.ESG
+HOIN04.PR.RO,HOIN04.PR.RO,Norway,OSE,Common Stock,Twelve Data,HOIN04.PR.RO
+HPUR,Hexagon Purus ASA,Norway,OSE,Common Stock,Twelve Data,HPUR
+HPURO,Hexagon Purus ASA,Norway,OSE,Common Stock,Twelve Data,HPURO
+HRGI,Horisont Energi AS,Norway,OSE,Common Stock,Twelve Data,HRGI
+HSHP,Himalaya Shipping Ltd.,Norway,OSE,Common Stock,Twelve Data,HSHP
+HSHPO,Himalaya Shipping Ltd.,Norway,OSE,Common Stock,Twelve Data,HSHPO
+HSPG,Holand og Setskog Sparebank,Norway,OSE,Common Stock,Twelve Data,HSPG
+HSPG38.PR.RO,Holand og Setskog Spb 21/26 FRN,Norway,OSE,Common Stock,Twelve Data,HSPG38.PR.RO
+HSPG39.PR.RO,Holand og Setskog Spb 21/26 FRN,Norway,OSE,Common Stock,Twelve Data,HSPG39.PR.RO
+HSPG40.PR.RO,Holand og Setskog Spb 21/26 FRN,Norway,OSE,Common Stock,Twelve Data,HSPG40.PR.RO
+HSPG47.PR.RO,HSPG47.PR.RO,Norway,OSE,Common Stock,Twelve Data,HSPG47.PR.RO
+HSPG50.PR.RO,HSPG50.PR.RO,Norway,OSE,Common Stock,Twelve Data,HSPG50.PR.RO
+HSPG53.PR.RO,HSPG53.PR.RO,Norway,OSE,Common Stock,Twelve Data,HSPG53.PR.RO
+HSPG55.PR.RO,HSPG55.PR.RO,Norway,OSE,Common Stock,Twelve Data,HSPG55.PR.RO
+HUDL,Huddlestock Fintech AS,Norway,OSE,Common Stock,Twelve Data,HUDL
+HUNT,Hunter Group ASA,Norway,OSE,Common Stock,Twelve Data,HUNT
+HUNTO,Hunter Group ASA,Norway,OSE,Common Stock,Twelve Data,HUNTO
+HYN,Hynion AS,Norway,OSE,Common Stock,Twelve Data,HYN
+HYPRO,HydrogenPro ASA,Norway,OSE,Common Stock,Twelve Data,HYPRO
+HYPROO,HydrogenPro ASA,Norway,OSE,Common Stock,Twelve Data,HYPROO
+IDEX,IDEX Biometrics ASA,Norway,OSE,Common Stock,Twelve Data,IDEX
+IFISH,Ice Fish Farm AS,Norway,OSE,Common Stock,Twelve Data,IFISH
+INDCT,Induct AS,Norway,OSE,Common Stock,Twelve Data,INDCT
+INIFY,Inify Laboratories AB,Norway,OSE,Common Stock,Twelve Data,INIFY
+ININ,Inin Group AS,Norway,OSE,Common Stock,Twelve Data,ININ
+INSTA,Instabank ASA,Norway,OSE,Common Stock,Twelve Data,INSTA
+IOX,Interoil Exploration and Production ASA,Norway,OSE,Common Stock,Twelve Data,IOX
+ISLAX,Icelandic Salmon AS,Norway,OSE,Common Stock,Twelve Data,ISLAX
+ITERA,Itera ASA,Norway,OSE,Common Stock,Twelve Data,ITERA
+ITERAO,Itera ASA,Norway,OSE,Common Stock,Twelve Data,ITERAO
+IWS,Integrated Wind Solutions ASA,Norway,OSE,Common Stock,Twelve Data,IWS
+IWSO,Integrated Wind Solutions ASA,Norway,OSE,Common Stock,Twelve Data,IWSO
+JAREN,Jæren Sparebank,Norway,OSE,Common Stock,Twelve Data,JAREN
+JAREN18.PR.RO,JAREN18.PR.RO,Norway,OSE,Common Stock,Twelve Data,JAREN18.PR.RO
+JAREN26.PR.RO,JAREN26.PR.RO,Norway,OSE,Common Stock,Twelve Data,JAREN26.PR.RO
+JESB31.PR.RO,JESB31.PR.RO,Norway,OSE,Common Stock,Twelve Data,JESB31.PR.RO
+JIN,Jinhui Shipping and Transportation Ltd.,Norway,OSE,Common Stock,Twelve Data,JIN
+JINO,Jinhui Shipping and Transportat,Norway,OSE,Common Stock,Twelve Data,JINO
+KARBE01.PR.RO,Karbon Equity AS 24/27 FRN FLOO,Norway,OSE,Common Stock,Twelve Data,KARBE01.PR.RO
+KCC,Klaveness Combination Carriers ASA,Norway,OSE,Common Stock,Twelve Data,KCC
+KCCO,Klaveness Combination Carriers,Norway,OSE,Common Stock,Twelve Data,KCCO
+KDSB33.PR.RO,Kvinesdal Spb 22/26 FRN,Norway,OSE,Common Stock,Twelve Data,KDSB33.PR.RO
+KDSB40.PR.RO,KDSB40.PR.RO,Norway,OSE,Common Stock,Twelve Data,KDSB40.PR.RO
+KFS69.PR.RO,Kredittforeningen for Spb 24/27,Norway,OSE,Common Stock,Twelve Data,KFS69.PR.RO
+KFS71.PR.RO.ESG,KFS71.PR.RO.ESG,Norway,OSE,Common Stock,Twelve Data,KFS71.PR.RO.ESG
+KID,Kid ASA,Norway,OSE,Common Stock,Twelve Data,KID
+KIDO,Kid ASA,Norway,OSE,Common Stock,Twelve Data,KIDO
+KING,Kingfish Company N.V.,Norway,OSE,Common Stock,Twelve Data,KING
+KIST10.PR.RO,Kistefos AS 23/27 FRN FLOOR C,Norway,OSE,Common Stock,Twelve Data,KIST10.PR.RO
+KIST11.PR.RO,Kistefos AS 23/28 FRN FLOOR C,Norway,OSE,Common Stock,Twelve Data,KIST11.PR.RO
+KIST12.PR.RO,KIST12.PR.RO,Norway,OSE,Common Stock,Twelve Data,KIST12.PR.RO
+KIST13.PR.RO,KIST13.PR.RO,Norway,OSE,Common Stock,Twelve Data,KIST13.PR.RO
+KIT,Kitron ASA,Norway,OSE,Common Stock,Twelve Data,KIT
+KITO,Kitron ASA,Norway,OSE,Common Stock,Twelve Data,KITO
+KLDVK,Kaldvik AS,Norway,OSE,Common Stock,Twelve Data,KLDVK
+KLPBK11.PR.RO,KLP Boligkreditt AS 21/27 FRN C,Norway,OSE,Common Stock,Twelve Data,KLPBK11.PR.RO
+KLPBK13.PR.RO,KLP Boligkreditt AS 24/28 FRN C,Norway,OSE,Common Stock,Twelve Data,KLPBK13.PR.RO
+KLPBK14.PR.RO,KLPBK14.PR.RO,Norway,OSE,Common Stock,Twelve Data,KLPBK14.PR.RO
+KLPBK15.PR.RO,KLPBK15.PR.RO,Norway,OSE,Common Stock,Twelve Data,KLPBK15.PR.RO
+KLPBK16.PR.RO,KLPBK16.PR.RO,Norway,OSE,Common Stock,Twelve Data,KLPBK16.PR.RO
+KLPKK28.PR.RO,KLP kommkreditt AS 22/27 4.40pc,Norway,OSE,Common Stock,Twelve Data,KLPKK28.PR.RO
+KLPKK29.PR.RO,KLP kommkreditt AS 23/27 FRN CO,Norway,OSE,Common Stock,Twelve Data,KLPKK29.PR.RO
+KLPKK30.PR.RO,KLP kommkreditt AS 24/28 FRN C,Norway,OSE,Common Stock,Twelve Data,KLPKK30.PR.RO
+KMCP,KMC Properties ASA,Norway,OSE,Common Stock,Twelve Data,KMCP
+KOA,Kongsberg Automotive ASA,Norway,OSE,Common Stock,Twelve Data,KOA
+KOAO,Kongsberg Automotive ASA,Norway,OSE,Common Stock,Twelve Data,KOAO
+KOG,Kongsberg Gruppen ASA,Norway,OSE,Common Stock,Twelve Data,KOG
+KOGO,Kongsberg Gruppen ASA,Norway,OSE,Common Stock,Twelve Data,KOGO
+KOMP06.PR.RO,KOMP06.PR.RO,Norway,OSE,Common Stock,Twelve Data,KOMP06.PR.RO
+KOMPL,Komplett ASA,Norway,OSE,Common Stock,Twelve Data,KOMPL
+KRAB,Kraft Bank ASA,Norway,OSE,Common Stock,Twelve Data,KRAB
+LANBK24.PR.RO,LANBK24.PR.RO,Norway,OSE,Common Stock,Twelve Data,LANBK24.PR.RO
+LANDK56.PR.RO,Landkreditt Bank AS 23/PERP FRN,Norway,OSE,Common Stock,Twelve Data,LANDK56.PR.RO
+LANDK57.PR.RO,Landkreditt Bank AS 22/PERP FRN,Norway,OSE,Common Stock,Twelve Data,LANDK57.PR.RO
+LIFE,Lifecare ASA,Norway,OSE,Common Stock,Twelve Data,LIFE
+LIFEJ,Lifecare ASA Warrant (LIFEJ),Norway,OSE,Warrant,Twelve Data,LIFEJ
+LIFEO,LIFEO,Norway,OSE,Common Stock,Twelve Data,LIFEO
+LIFES,Lifecare AS,Norway,OSE,Warrant,Twelve Data,LIFES
+LIMPH01.PR.RO,Lime Petroleum Hold AS 24/27 FR,Norway,OSE,Common Stock,Twelve Data,LIMPH01.PR.RO
+LINK,Link Mobility Group Holding ASA,Norway,OSE,Common Stock,Twelve Data,LINK
+LINKO,Link Mobility Group Holding ASA,Norway,OSE,Common Stock,Twelve Data,LINKO
+LOKO,Lokotech Group AS,Norway,OSE,Common Stock,Twelve Data,LOKO
+LOKOS,Lokotech Group A.S.,Norway,OSE,Warrant,Twelve Data,LOKOS
+LSG,Lerøy Seafood Group ASA,Norway,OSE,Common Stock,Twelve Data,LSG
+LSGO,Lerøy Seafood Group ASA,Norway,OSE,Common Stock,Twelve Data,LSGO
+LSSB27.PR.RO,Spb 1 Lom og Skjaak 22/25 FRN,Norway,OSE,Common Stock,Twelve Data,LSSB27.PR.RO
+LUMI,Lumi Gruppen AS,Norway,OSE,Common Stock,Twelve Data,LUMI
+LUSB13.PR.RO,Luster Spb 21/26 FRN,Norway,OSE,Common Stock,Twelve Data,LUSB13.PR.RO
+LUSB17.PR.RO,Luster Spb 26/29 FRN,Norway,OSE,Common Stock,Twelve Data,LUSB17.PR.RO
+LYTIX,Lytix Biopharma AS,Norway,OSE,Common Stock,Twelve Data,LYTIX
+MAS,Maasoeval AS,Norway,OSE,Common Stock,Twelve Data,MAS
+MEDI,Medistim ASA,Norway,OSE,Common Stock,Twelve Data,MEDI
+MEDIO,Medistim ASA,Norway,OSE,Common Stock,Twelve Data,MEDIO
+MELG,Melhus Sparebank,Norway,OSE,Common Stock,Twelve Data,MELG
+MGN,Magnora ASA,Norway,OSE,Common Stock,Twelve Data,MGN
+MING,SpareBank 1 SMN,Norway,OSE,Common Stock,Twelve Data,MING
+MING101.PR.RO,Spb 1 SMN 21/27 FRN C,Norway,OSE,Common Stock,Twelve Data,MING101.PR.RO
+MING106.PR.RO,Spb 1 SMN 22/28 FRN,Norway,OSE,Common Stock,Twelve Data,MING106.PR.RO
+MING108.PR.RO,Spb 1 SMN 22/27 3.97 pct,Norway,OSE,Common Stock,Twelve Data,MING108.PR.RO
+MING112.PR.RO,Spb 1 SMN 22/28 4.95pct,Norway,OSE,Common Stock,Twelve Data,MING112.PR.RO
+MING120.PR.RO,Spb 1 SMN 23/26 FRN,Norway,OSE,Common Stock,Twelve Data,MING120.PR.RO
+MING122.PR.RO,Spb 1 SMN 23/PERP FRN FLOOR C H,Norway,OSE,Common Stock,Twelve Data,MING122.PR.RO
+MING129.PR.RO,Spb 1 SMN 24/PERP ADJ FLOOR C H,Norway,OSE,Common Stock,Twelve Data,MING129.PR.RO
+MING131.PR.RO,"Spb 1 SMN 25/30 4,885%",Norway,OSE,Common Stock,Twelve Data,MING131.PR.RO
+MING136.PR.RO,MING136.PR.RO,Norway,OSE,Common Stock,Twelve Data,MING136.PR.RO
+MING99.PR.RO.ESG,Spb 1 SMN 20/26 FRN,Norway,OSE,Common Stock,Twelve Data,MING99.PR.RO.ESG
+MOBA02.PR.RO,MOBA02.PR.RO,Norway,OSE,Common Stock,Twelve Data,MOBA02.PR.RO
+MORG,Sparebanken Møre,Norway,OSE,Common Stock,Twelve Data,MORG
+MORG61.PR.RO,Spb More 23/27 FRN,Norway,OSE,Common Stock,Twelve Data,MORG61.PR.RO
+MORG62.PR.RO,"Spb More 23/27 5,06%",Norway,OSE,Common Stock,Twelve Data,MORG62.PR.RO
+MORG65.PR.RO,MORG65.PR.RO,Norway,OSE,Common Stock,Twelve Data,MORG65.PR.RO
+MORLD,Moreld ASA,Norway,OSE,Common Stock,Twelve Data,MORLD
+MOWI,Mowi ASA,Norway,OSE,Common Stock,Twelve Data,MOWI
+MOWIO,Mowi ASA,Norway,OSE,Common Stock,Twelve Data,MOWIO
+MPCC,MPC Container Ships ASA,Norway,OSE,Common Stock,Twelve Data,MPCC
+MPCCO,MPC Container Ships ASA,Norway,OSE,Common Stock,Twelve Data,MPCCO
+MPCES,MPC Energy Solutions N.V.,Norway,OSE,Common Stock,Twelve Data,MPCES
+MTRS03.PR.RO,Mutares SE & Co. K 24/29 FRN EU,Norway,OSE,Common Stock,Twelve Data,MTRS03.PR.RO
+MULTI,Multiconsult ASA,Norway,OSE,Common Stock,Twelve Data,MULTI
+MULTIO,Multiconsult ASA,Norway,OSE,Common Stock,Twelve Data,MULTIO
+MVE,Matvareexpressen AS,Norway,OSE,Common Stock,Twelve Data,MVE
+MVW,M Vest Water AS,Norway,OSE,Common Stock,Twelve Data,MVW
+NAPA,Napatech A/S,Norway,OSE,Common Stock,Twelve Data,NAPA
+NAPAO,Napatech A/S,Norway,OSE,Common Stock,Twelve Data,NAPAO
+NAS,Norwegian Air Shuttle ASA,Norway,OSE,Common Stock,Twelve Data,NAS
+NASB27.PR.RO,NASB27.PR.RO,Norway,OSE,Common Stock,Twelve Data,NASB27.PR.RO
+NASO,Norwegian Air Shuttle ASA,Norway,OSE,Common Stock,Twelve Data,NASO
+NAVA,Navamedic ASA,Norway,OSE,Common Stock,Twelve Data,NAVA
+NBX,Norwegian Block Exchange AS,Norway,OSE,Common Stock,Twelve Data,NBX
+NCOD,Norcod AS,Norway,OSE,Common Stock,Twelve Data,NCOD
+NEL,Nel ASA,Norway,OSE,Common Stock,Twelve Data,NEL
+NELO,NEL ASA,Norway,OSE,Common Stock,Twelve Data,NELO
+NEXT,Next Biometrics Group ASA,Norway,OSE,Common Stock,Twelve Data,NEXT
+NHY,Norsk Hydro ASA,Norway,OSE,Common Stock,Twelve Data,NHY
+NHYO,Norsk Hydro,Norway,OSE,Common Stock,Twelve Data,NHYO
+NISB,Nidaros Sparebank,Norway,OSE,Common Stock,Twelve Data,NISB
+NKR,Nekkar ASA,Norway,OSE,Common Stock,Twelve Data,NKR
+NKRO,Nekkar ASA,Norway,OSE,Common Stock,Twelve Data,NKRO
+NOAP,Nordic Aqua Partners A/S,Norway,OSE,Common Stock,Twelve Data,NOAP
+NOD,Nordic Semiconductor ASA,Norway,OSE,Common Stock,Twelve Data,NOD
+NODO,Nordic Semiconductor ASA,Norway,OSE,Common Stock,Twelve Data,NODO
+NOFIN,Nordic Financials ASA,Norway,OSE,Common Stock,Twelve Data,NOFIN
+NOFIT,Nordic Financials ASA,Norway,OSE,Common Stock,Twelve Data,NOFIT
+NOHAL,Nordic Halibut AS,Norway,OSE,Common Stock,Twelve Data,NOHAL
+NOL,Northern Ocean Ltd.,Norway,OSE,Common Stock,Twelve Data,NOL
+NOLO,Northern Ocean Ltd.,Norway,OSE,Common Stock,Twelve Data,NOLO
+NOM,Nordic Mining ASA,Norway,OSE,Common Stock,Twelve Data,NOM
+NOMO,Nordic Mining ASA,Norway,OSE,Common Stock,Twelve Data,NOMO
+NONG,SpareBank 1 Nord-Norge,Norway,OSE,Common Stock,Twelve Data,NONG
+NONG108.PR.RO,Spb 1 Nord-Norge 23/PERP FRN C,Norway,OSE,Common Stock,Twelve Data,NONG108.PR.RO
+NONG111.PR.RO.ESG,Spb 1 Nord-Norge 22/27 3.695pct,Norway,OSE,Common Stock,Twelve Data,NONG111.PR.RO.ESG
+NONG114.PR.RO,Spb 1 Nord-Norge 23/PERP ADJ C,Norway,OSE,Common Stock,Twelve Data,NONG114.PR.RO
+NONG115.PR.RO,Spb 1 Nord-Norge 23/26 FRN,Norway,OSE,Common Stock,Twelve Data,NONG115.PR.RO
+NONG117.PR.RO,Spb 1 Nord-Norge 23/PERP FRN C,Norway,OSE,Common Stock,Twelve Data,NONG117.PR.RO
+NONG129.PR.RO,NONG129.PR.RO,Norway,OSE,Common Stock,Twelve Data,NONG129.PR.RO
+NONG131.PR.RO,NONG131.PR.RO,Norway,OSE,Common Stock,Twelve Data,NONG131.PR.RO
+NORAM,NorAm Drilling AS,Norway,OSE,Common Stock,Twelve Data,NORAM
+NORBT,Norbit ASA,Norway,OSE,Common Stock,Twelve Data,NORBT
+NORBTO,NORBIT ASA,Norway,OSE,Common Stock,Twelve Data,NORBTO
+NORCO,Norconsult ASA,Norway,OSE,Common Stock,Twelve Data,NORCO
+NORDH,Nordhealth AS,Norway,OSE,Common Stock,Twelve Data,NORDH
+NORSE,Norse Atlantic ASA,Norway,OSE,Common Stock,Twelve Data,NORSE
+NORSEO,Norse Atlantic ASA,Norway,OSE,Common Stock,Twelve Data,NORSEO
+NORT31.PR.RO,Nortura SA 20/27 FRN,Norway,OSE,Common Stock,Twelve Data,NORT31.PR.RO
+NORT32.PR.RO,"Nortura SA 20/27 3,95%",Norway,OSE,Common Stock,Twelve Data,NORT32.PR.RO
+NORT33.PR.RO,Nortura SA 22/47 ADJ FLOOR C SU,Norway,OSE,Common Stock,Twelve Data,NORT33.PR.RO
+NORTH,North Energy ASA,Norway,OSE,Common Stock,Twelve Data,NORTH
+NOSN,NOSN,Norway,OSE,Common Stock,Twelve Data,NOSN
+NRC,NRC Group ASA,Norway,OSE,Common Stock,Twelve Data,NRC
+NRCO,NRC Group ASA,Norway,OSE,Common Stock,Twelve Data,NRCO
+NSKOG,Norske Skog ASA,Norway,OSE,Common Stock,Twelve Data,NSKOG
+NSKOGO,Norske Skog ASA,Norway,OSE,Common Stock,Twelve Data,NSKOGO
+NTG,Nordic Technology Group AS,Norway,OSE,Common Stock,Twelve Data,NTG
+NTI,Norsk Titanium AS,Norway,OSE,Common Stock,Twelve Data,NTI
+NYKD,Nykode Therapeutics ASA,Norway,OSE,Common Stock,Twelve Data,NYKD
+NYKDO,Nykode Therapeutics ASA,Norway,OSE,Common Stock,Twelve Data,NYKDO
+OBBK09.PR.RO.ESG,OBOS Boligkreditt AS 21/26 FRN,Norway,OSE,Common Stock,Twelve Data,OBBK09.PR.RO.ESG
+OBBK10.PR.RO,OBOS Boligkred AS 22/27 ADJ FLO,Norway,OSE,Common Stock,Twelve Data,OBBK10.PR.RO
+OBBK11.PR.RO,OBOS Boligkreditt AS 23/28 COVD,Norway,OSE,Common Stock,Twelve Data,OBBK11.PR.RO
+OBBK13.PR.RO,OBOS Boligkreditt AS 24/29 FRN,Norway,OSE,Common Stock,Twelve Data,OBBK13.PR.RO
+OBBK14.PR.RO,OBBK14.PR.RO,Norway,OSE,Common Stock,Twelve Data,OBBK14.PR.RO
+OBFB08.PR.RO,OBOS Eiendom AS 23/28 FRN,Norway,OSE,Common Stock,Twelve Data,OBFB08.PR.RO
+OBOBA41.PR.RO,OBOS-banken AS 22/26 FRN,Norway,OSE,Common Stock,Twelve Data,OBOBA41.PR.RO
+OBOBA42.PR.RO,OBOS-banken AS 23/28 FRN,Norway,OSE,Common Stock,Twelve Data,OBOBA42.PR.RO
+OBOBA43.PR.RO,OBOS-banken AS 23/26 FRN,Norway,OSE,Common Stock,Twelve Data,OBOBA43.PR.RO
+OBOBA47.PR.RO.ESG,OBOBA47.PR.RO.ESG,Norway,OSE,Common Stock,Twelve Data,OBOBA47.PR.RO.ESG
+OBOBA48.PR.RO.ESG,OBOS-banken AS 24/29 FRN,Norway,OSE,Common Stock,Twelve Data,OBOBA48.PR.RO.ESG
+OBOBA54.PR.RO,OBOBA54.PR.RO,Norway,OSE,Common Stock,Twelve Data,OBOBA54.PR.RO
+OBOS21.PR.RO,OBOS21.PR.RO,Norway,OSE,Common Stock,Twelve Data,OBOS21.PR.RO
+OBOS32.PR.RO,OBOS BBL 24/29 FRN,Norway,OSE,Common Stock,Twelve Data,OBOS32.PR.RO
+OBOS33.PR.RO,OBOS33.PR.RO,Norway,OSE,Common Stock,Twelve Data,OBOS33.PR.RO
+OBSRV,Observe Medical ASA,Norway,OSE,Common Stock,Twelve Data,OBSRV
+OCEAN,Ocean Geoloop AS,Norway,OSE,Common Stock,Twelve Data,OCEAN
+ODAL28.PR.RO,Odal Spb 21/27 FRN,Norway,OSE,Common Stock,Twelve Data,ODAL28.PR.RO
+ODF,Odfjell SE Class A,Norway,OSE,Common Stock,Twelve Data,ODF
+ODFB,Odfjell SE Class B Shares,Norway,OSE,Common Stock,Twelve Data,ODFB
+ODFBO,Odfjell SE B,Norway,OSE,Common Stock,Twelve Data,ODFBO
+ODFO,Odfjell SE A,Norway,OSE,Common Stock,Twelve Data,ODFO
+ODL,Odfjell Drilling Ltd.,Norway,OSE,Common Stock,Twelve Data,ODL
+ODLO,Odfjell Drilling Ltd,Norway,OSE,Common Stock,Twelve Data,ODLO
+OET,Okeanis Eco Tankers Corp.,Norway,OSE,Common Stock,Twelve Data,OET
+OETO,Okeanis Eco Tankers Corp,Norway,OSE,Common Stock,Twelve Data,OETO
+OKEA,OKEA ASA,Norway,OSE,Common Stock,Twelve Data,OKEA
+OKEAO,Okea ASA,Norway,OSE,Common Stock,Twelve Data,OKEAO
+OLT,Olav Thon Eiendomsselskap ASA,Norway,OSE,Common Stock,Twelve Data,OLT
+OMDA,Omda A/S,Norway,OSE,Common Stock,Twelve Data,OMDA
+OMDA02.PR.RO,Omda AS 23/28 FRN FLOOR C,Norway,OSE,Common Stock,Twelve Data,OMDA02.PR.RO
+ONCIN,Oncoinvent ASA,Norway,OSE,Common Stock,Twelve Data,ONCIN
+OPSB31.PR.RO,Opdals Spb 21/26 FRN,Norway,OSE,Common Stock,Twelve Data,OPSB31.PR.RO
+OPSB34.PR.RO,Opdals Spb 23/27 FRN,Norway,OSE,Common Stock,Twelve Data,OPSB34.PR.RO
+ORK,Orkla ASA,Norway,OSE,Common Stock,Twelve Data,ORK
+ORKO,Orkla,Norway,OSE,Common Stock,Twelve Data,ORKO
+ORLSB23.PR.RO,Orland Spb 22/27 FRN,Norway,OSE,Common Stock,Twelve Data,ORLSB23.PR.RO
+ORLSB27.PR.RO,ORLSB27.PR.RO,Norway,OSE,Common Stock,Twelve Data,ORLSB27.PR.RO
+ORLSB31.PR.RO,ORLSB31.PR.RO,Norway,OSE,Common Stock,Twelve Data,ORLSB31.PR.RO
+OSPA38.PR.RO,Orkla Spb 22/26 FRN,Norway,OSE,Common Stock,Twelve Data,OSPA38.PR.RO
+OSPA45.PR.RO,OSPA45.PR.RO,Norway,OSE,Common Stock,Twelve Data,OSPA45.PR.RO
+OSPA48.PR.RO,OSPA48.PR.RO,Norway,OSE,Common Stock,Twelve Data,OSPA48.PR.RO
+OSPA50.PR.RO,OSPA50.PR.RO,Norway,OSE,Common Stock,Twelve Data,OSPA50.PR.RO
+OSPA53.PR.RO,OSPA53.PR.RO,Norway,OSE,Common Stock,Twelve Data,OSPA53.PR.RO
+OSPA54.PR.RO,OSPA54.PR.RO,Norway,OSE,Common Stock,Twelve Data,OSPA54.PR.RO
+OSUN,Ocean Sun AS,Norway,OSE,Common Stock,Twelve Data,OSUN
+OTEC,Otello Corporation ASA,Norway,OSE,Common Stock,Twelve Data,OTEC
+OTECO,Otello Corporation ASA,Norway,OSE,Common Stock,Twelve Data,OTECO
+OTL,Odfjell Technology Ltd,Norway,OSE,Common Stock,Twelve Data,OTL
+OTLO,Odfjell Technology Ltd,Norway,OSE,Common Stock,Twelve Data,OTLO
+OTOVO,Otovo ASA,Norway,OSE,Common Stock,Twelve Data,OTOVO
+PANE02.PR.RO,Pandion Energy AS 22/26 9.75pct,Norway,OSE,Common Stock,Twelve Data,PANE02.PR.RO
+PARB,Pareto Bank ASA,Norway,OSE,Common Stock,Twelve Data,PARB
+PARB43.PR.RO,Pareto Bank ASA 22/26 2.70 pct,Norway,OSE,Common Stock,Twelve Data,PARB43.PR.RO
+PARB53.PR.RO,Pareto Bank ASA 24/PERP FRN C H,Norway,OSE,Common Stock,Twelve Data,PARB53.PR.RO
+PARBO,Pareto Bank ASA,Norway,OSE,Common Stock,Twelve Data,PARBO
+PCIB,PCI Biotech Holding ASA,Norway,OSE,Common Stock,Twelve Data,PCIB
+PCIBO,PCI Biotech Holding ASA,Norway,OSE,Common Stock,Twelve Data,PCIBO
+PEN,Panoro Energy ASA,Norway,OSE,Common Stock,Twelve Data,PEN
+PEN01.PR.RO,"Panoro Energy ASA 24/29 10,25%",Norway,OSE,Common Stock,Twelve Data,PEN01.PR.RO
+PENO,Panoro Energy ASA,Norway,OSE,Common Stock,Twelve Data,PENO
+PEXIP,Pexip Holding ASA,Norway,OSE,Common Stock,Twelve Data,PEXIP
+PEXIPO,Pexip Holding ASA,Norway,OSE,Common Stock,Twelve Data,PEXIPO
+PHO,Photocure ASA,Norway,OSE,Common Stock,Twelve Data,PHO
+PHOO,Photocure ASA,Norway,OSE,Common Stock,Twelve Data,PHOO
+PLSV,Paratus Energy Services Ltd.,Norway,OSE,Common Stock,Twelve Data,PLSV
+PLSVO,Paratus Energy Services Ltd,Norway,OSE,Common Stock,Twelve Data,PLSVO
+PLT,poLight ASA,Norway,OSE,Common Stock,Twelve Data,PLT
+PNOR,PetroNor E&P ASA,Norway,OSE,Common Stock,Twelve Data,PNOR
+PNORO,PetroNor E&P ASA,Norway,OSE,Common Stock,Twelve Data,PNORO
+PNTBD01.PR.RO,PNTBD01.PR.RO,Norway,OSE,Common Stock,Twelve Data,PNTBD01.PR.RO
+POL,Polaris Media ASA,Norway,OSE,Common Stock,Twelve Data,POL
+POLO,POLO,Norway,OSE,Common Stock,Twelve Data,POLO
+PPCL01.PR.RO,"Pearl Petroleum Compa 24/28 13,",Norway,OSE,Common Stock,Twelve Data,PPCL01.PR.RO
+PPG,"Pioneer Property Group ASA preference shares, 9.80% dividend yield (PPG)",Norway,OSE,Preferred Stock,Twelve Data,PPG
+PROT,Protector Forsikring ASA,Norway,OSE,Common Stock,Twelve Data,PROT
+PROTO,Protector Forsikring ASA,Norway,OSE,Common Stock,Twelve Data,PROTO
+PROXI,Proximar Seafood AS,Norway,OSE,Common Stock,Twelve Data,PROXI
+PRS,Prosafe SE,Norway,OSE,Common Stock,Twelve Data,PRS
+PRSO,Prosafe,Norway,OSE,Common Stock,Twelve Data,PRSO
+PRWE01.PR.RO.ESG,PRWE01.PR.RO.ESG,Norway,OSE,Common Stock,Twelve Data,PRWE01.PR.RO.ESG
+PRYME,Pryme N.V.,Norway,OSE,Common Stock,Twelve Data,PRYME
+PSE,Petrolia SE,Norway,OSE,Common Stock,Twelve Data,PSE
+PUBLI,Public Property Invest ASA,Norway,OSE,Common Stock,Twelve Data,PUBLI
+PUBLIO,PUBLIO,Norway,OSE,Common Stock,Twelve Data,PUBLIO
+PYRUM,Pyrum Innovations AG,Norway,OSE,Common Stock,Twelve Data,PYRUM
+QEC,Questerre Energy Corporation,Norway,OSE,Common Stock,Twelve Data,QEC
+RANA,Rana Gruber ASA,Norway,OSE,Common Stock,Twelve Data,RANA
+RANAO,Rana Gruber ASA,Norway,OSE,Common Stock,Twelve Data,RANAO
+REACH,Reach Subsea ASA,Norway,OSE,Common Stock,Twelve Data,REACH
+REACHO,Reach Subsea ASA,Norway,OSE,Common Stock,Twelve Data,REACHO
+RECSI,REC Silicon ASA,Norway,OSE,Common Stock,Twelve Data,RECSI
+RECSIO,REC Silicon ASA,Norway,OSE,Common Stock,Twelve Data,RECSIO
+REFL,Refuels N.V.,Norway,OSE,Common Stock,Twelve Data,REFL
+RING,SpareBank 1 Ringerike Hadeland,Norway,OSE,Common Stock,Twelve Data,RING
+RING37.PR.RO,Spb 1 Ringerike Hadeland 18/28,Norway,OSE,Common Stock,Twelve Data,RING37.PR.RO
+RING47.PR.RO,Spb 1 Ringerike Hadeland 20/27,Norway,OSE,Common Stock,Twelve Data,RING47.PR.RO
+RING49.PR.RO.ESG,Spb 1 Ringerike Hadeland 22/27,Norway,OSE,Common Stock,Twelve Data,RING49.PR.RO.ESG
+RING50.PR.RO,Spb 1 Ringerike Hadeland 22/29,Norway,OSE,Common Stock,Twelve Data,RING50.PR.RO
+RIVER,River Tech Plc,Norway,OSE,Common Stock,Twelve Data,RIVER
+ROGBO21.PR.RO,ROGBO21.PR.RO,Norway,OSE,Common Stock,Twelve Data,ROGBO21.PR.RO
+ROGBO25.PR.RO,ROGBO25.PR.RO,Norway,OSE,Common Stock,Twelve Data,ROGBO25.PR.RO
+ROGBO27.PR.RO,ROGBO27.PR.RO,Norway,OSE,Common Stock,Twelve Data,ROGBO27.PR.RO
+ROGS,Rogaland Sparebank,Norway,OSE,Common Stock,Twelve Data,ROGS
+ROGS91.PR.RO,ROGS91.PR.RO,Norway,OSE,Common Stock,Twelve Data,ROGS91.PR.RO
+ROM,RomReal Ltd.,Norway,OSE,Common Stock,Twelve Data,ROM
+ROMER,Romerike Sparebank,Norway,OSE,Common Stock,Twelve Data,ROMER
+ROMER34.PR.RO,Romerike Spb 22/27 FRN,Norway,OSE,Common Stock,Twelve Data,ROMER34.PR.RO
+ROMER36.PR.RO,Romerike Spb 22/28 FRN,Norway,OSE,Common Stock,Twelve Data,ROMER36.PR.RO
+ROMER38.PR.RO,Romerike Spb 23/27 FRN,Norway,OSE,Common Stock,Twelve Data,ROMER38.PR.RO
+ROMER39.PR.RO,ROMER39.PR.RO,Norway,OSE,Common Stock,Twelve Data,ROMER39.PR.RO
+ROMER40.PR.RO,Romerike Spb 23/26 FRN,Norway,OSE,Common Stock,Twelve Data,ROMER40.PR.RO
+ROMER41.PR.RO,Romerike Spb 24/PERP FRN C HYBR,Norway,OSE,Common Stock,Twelve Data,ROMER41.PR.RO
+ROMER43.ESG.PR.RO,Romerike Spb 24/29 FRN,Norway,OSE,Common Stock,Twelve Data,ROMER43.ESG.PR.RO
+ROSB24.PR.RO,Rorosbanken Roros Spb 23/27 FRN,Norway,OSE,Common Stock,Twelve Data,ROSB24.PR.RO
+SAGA,Saga Pure ASA,Norway,OSE,Common Stock,Twelve Data,SAGA
+SAGAO,Saga Pure ASA,Norway,OSE,Common Stock,Twelve Data,SAGAO
+SALM,SalMar ASA,Norway,OSE,Common Stock,Twelve Data,SALM
+SALME,Salmon Evolution ASA,Norway,OSE,Common Stock,Twelve Data,SALME
+SALMO,SalMar ASA,Norway,OSE,Common Stock,Twelve Data,SALMO
+SANC50.PR.RO.ESG,SANC50.PR.RO.ESG,Norway,OSE,Common Stock,Twelve Data,SANC50.PR.RO.ESG
+SATS,SATS ASA,Norway,OSE,Common Stock,Twelve Data,SATS
+SATSO,SATS ASA,Norway,OSE,Common Stock,Twelve Data,SATSO
+SB1NO,SpareBank 1 Sør-Norge ASA,Norway,OSE,Common Stock,Twelve Data,SB1NO
+SB1NO105.PR.RO,SB1NO105.PR.RO,Norway,OSE,Common Stock,Twelve Data,SB1NO105.PR.RO
+SB1NO111.PR.RO,SB1NO111.PR.RO,Norway,OSE,Common Stock,Twelve Data,SB1NO111.PR.RO
+SB1NO112.PR.RO,SB1NO112.PR.RO,Norway,OSE,Common Stock,Twelve Data,SB1NO112.PR.RO
+SB1NO113.PR.RO,SB1NO113.PR.RO,Norway,OSE,Common Stock,Twelve Data,SB1NO113.PR.RO
+SB1NO114.PR.RO,SB1NO114.PR.RO,Norway,OSE,Common Stock,Twelve Data,SB1NO114.PR.RO
+SB1NO43.PR.RO,SB1NO43.PR.RO,Norway,OSE,Common Stock,Twelve Data,SB1NO43.PR.RO
+SB1NO44.PR.RO,SB1NO44.PR.RO,Norway,OSE,Common Stock,Twelve Data,SB1NO44.PR.RO
+SB1NO47.PR.RO,Spb 1 SR-Bank ASA 22/27 3.90pct,Norway,OSE,Common Stock,Twelve Data,SB1NO47.PR.RO
+SB1NO50.PR.RO,SB1NO50.PR.RO,Norway,OSE,Common Stock,Twelve Data,SB1NO50.PR.RO
+SB1NO52.PR.RO,SB1NO52.PR.RO,Norway,OSE,Common Stock,Twelve Data,SB1NO52.PR.RO
+SB1NO57.PR.RO,SB1NO57.PR.RO,Norway,OSE,Common Stock,Twelve Data,SB1NO57.PR.RO
+SB1NO60.PR.RO,SB1NO60.PR.RO,Norway,OSE,Common Stock,Twelve Data,SB1NO60.PR.RO
+SB1NO67.PR.RO,SB1NO67.PR.RO,Norway,OSE,Common Stock,Twelve Data,SB1NO67.PR.RO
+SB1NO71.PR.RO,SB1NO71.PR.RO,Norway,OSE,Common Stock,Twelve Data,SB1NO71.PR.RO
+SB1NO82.PR.RO,SB1NO82.PR.RO,Norway,OSE,Common Stock,Twelve Data,SB1NO82.PR.RO
+SB1NO87.PR.RO,SB1NO87.PR.RO,Norway,OSE,Common Stock,Twelve Data,SB1NO87.PR.RO
+SB1NO88.PR.RO.ESG,SB1NO88.PR.RO.ESG,Norway,OSE,Common Stock,Twelve Data,SB1NO88.PR.RO.ESG
+SB1NO90.PR.RO,SB1NO90.PR.RO,Norway,OSE,Common Stock,Twelve Data,SB1NO90.PR.RO
+SB1NO96.PR.RO,SB1NO96.PR.RO,Norway,OSE,Common Stock,Twelve Data,SB1NO96.PR.RO
+SB1NO99.PR.RO.ESG,SB1NO99.PR.RO.ESG,Norway,OSE,Common Stock,Twelve Data,SB1NO99.PR.RO.ESG
+SB1NOO,SB1NOO,Norway,OSE,Common Stock,Twelve Data,SB1NOO
+SB68,SpareBank 68 Grader Nord,Norway,OSE,Common Stock,Twelve Data,SB68
+SBDIN22.PR.RO,Spb DIN 24/27 FRN,Norway,OSE,Common Stock,Twelve Data,SBDIN22.PR.RO
+SBHA23.PR.RO.ESG,Spb 1 Hallingdal Valdres 20/26,Norway,OSE,Common Stock,Twelve Data,SBHA23.PR.RO.ESG
+SBHA25.PR.RO,Spb 1 Hallingdal Valdres 21/28,Norway,OSE,Common Stock,Twelve Data,SBHA25.PR.RO
+SBHA30.PR.RO,Spb 1 Hallingdal Valdres 23/26,Norway,OSE,Common Stock,Twelve Data,SBHA30.PR.RO
+SBHA35.PR.RO,Spb 1 Hallingdal Va 24/PERP ADJ,Norway,OSE,Common Stock,Twelve Data,SBHA35.PR.RO
+SBNK07.PR.RO,SBNK07.PR.RO,Norway,OSE,Common Stock,Twelve Data,SBNK07.PR.RO
+SBNK21.PR.RO,Spb 1 Naeringskreditt AS 23/27,Norway,OSE,Common Stock,Twelve Data,SBNK21.PR.RO
+SBNOR,Sparebanken Norge,Norway,OSE,Common Stock,Twelve Data,SBNOR
+SBNOR112.PR.RO.ESG,SBNOR112.PR.RO.ESG,Norway,OSE,Common Stock,Twelve Data,SBNOR112.PR.RO.ESG
+SBNOR113.PR.RO,SBNOR113.PR.RO,Norway,OSE,Common Stock,Twelve Data,SBNOR113.PR.RO
+SBNOR117.PR.RO.ESG,SBNOR117.PR.RO.ESG,Norway,OSE,Common Stock,Twelve Data,SBNOR117.PR.RO.ESG
+SBNOR118.PR.RO.ESG,SBNOR118.PR.RO.ESG,Norway,OSE,Common Stock,Twelve Data,SBNOR118.PR.RO.ESG
+SBNOR125.PR.RO,SBNOR125.PR.RO,Norway,OSE,Common Stock,Twelve Data,SBNOR125.PR.RO
+SBNOR126.PR.RO,SBNOR126.PR.RO,Norway,OSE,Common Stock,Twelve Data,SBNOR126.PR.RO
+SBNOR127.PR.RO,SBNOR127.PR.RO,Norway,OSE,Common Stock,Twelve Data,SBNOR127.PR.RO
+SBNOR129.PR.RO,SBNOR129.PR.RO,Norway,OSE,Common Stock,Twelve Data,SBNOR129.PR.RO
+SBNOR130.PR.RO,SBNOR130.PR.RO,Norway,OSE,Common Stock,Twelve Data,SBNOR130.PR.RO
+SBNOR133.PR.RO,SBNOR133.PR.RO,Norway,OSE,Common Stock,Twelve Data,SBNOR133.PR.RO
+SBNOR135.PR.RO,"Spb Vest 24/29 4,14%",Norway,OSE,Common Stock,Twelve Data,SBNOR135.PR.RO
+SBNOR139.PR.RO,SBNOR139.PR.RO,Norway,OSE,Common Stock,Twelve Data,SBNOR139.PR.RO
+SBNOR142.PR.RO,SBNOR142.PR.RO,Norway,OSE,Common Stock,Twelve Data,SBNOR142.PR.RO
+SBNOR144.PR.RO,SBNOR144.PR.RO,Norway,OSE,Common Stock,Twelve Data,SBNOR144.PR.RO
+SBNOR150.PR.RO,Spb Norge 25/28 FRN,Norway,OSE,Common Stock,Twelve Data,SBNOR150.PR.RO
+SBNOR151.PR.RO,SBNOR151.PR.RO,Norway,OSE,Common Stock,Twelve Data,SBNOR151.PR.RO
+SBNOR153.PR.RO,SBNOR153.PR.RO,Norway,OSE,Common Stock,Twelve Data,SBNOR153.PR.RO
+SBNOR157.PR.RO,Spb Norge 25/30 FRN,Norway,OSE,Common Stock,Twelve Data,SBNOR157.PR.RO
+SBNOR159.PR.RO,SBNOR159.PR.RO,Norway,OSE,Common Stock,Twelve Data,SBNOR159.PR.RO
+SBNOR161.PR.RO,SBNOR161.PR.RO,Norway,OSE,Common Stock,Twelve Data,SBNOR161.PR.RO
+SBNOR172.PR.RO,SBNOR172.PR.RO,Norway,OSE,Common Stock,Twelve Data,SBNOR172.PR.RO
+SBNOR174.PR.RO,SBNOR174.PR.RO,Norway,OSE,Common Stock,Twelve Data,SBNOR174.PR.RO
+SBNOR175.PR.RO,SBNOR175.PR.RO,Norway,OSE,Common Stock,Twelve Data,SBNOR175.PR.RO
+SBNOR64.PR.RO,SBNOR64.PR.RO,Norway,OSE,Common Stock,Twelve Data,SBNOR64.PR.RO
+SBNOR66.PR.RO,SBNOR66.PR.RO,Norway,OSE,Common Stock,Twelve Data,SBNOR66.PR.RO
+SBNOR67.PR.RO.ESG,SBNOR67.PR.RO.ESG,Norway,OSE,Common Stock,Twelve Data,SBNOR67.PR.RO.ESG
+SBNOR68.PR.RO.ESG,SBNOR68.PR.RO.ESG,Norway,OSE,Common Stock,Twelve Data,SBNOR68.PR.RO.ESG
+SBNOR71.PR.RO,SBNOR71.PR.RO,Norway,OSE,Common Stock,Twelve Data,SBNOR71.PR.RO
+SBNOR72.PR.RO,SBNOR72.PR.RO,Norway,OSE,Common Stock,Twelve Data,SBNOR72.PR.RO
+SBNOR76.PR.RO,SBNOR76.PR.RO,Norway,OSE,Common Stock,Twelve Data,SBNOR76.PR.RO
+SBNOR84.PR.RO,SBNOR84.PR.RO,Norway,OSE,Common Stock,Twelve Data,SBNOR84.PR.RO
+SBNOR87.PR.RO,SBNOR87.PR.RO,Norway,OSE,Common Stock,Twelve Data,SBNOR87.PR.RO
+SBO,Selvaag Bolig ASA,Norway,OSE,Common Stock,Twelve Data,SBO
+SCANA,Scana ASA,Norway,OSE,Common Stock,Twelve Data,SCANA
+SCANAO,Scana ASA,Norway,OSE,Common Stock,Twelve Data,SCANAO
+SCATC,Scatec ASA,Norway,OSE,Common Stock,Twelve Data,SCATC
+SCATCO,Scatec ASA,Norway,OSE,Common Stock,Twelve Data,SCATCO
+SCOIN,StandardCoin AS,Norway,OSE,Common Stock,Twelve Data,SCOIN
+SDSD,S.D. Standard ETC Plc,Norway,OSE,Common Stock,Twelve Data,SDSD
+SEA1,Sea1 Offshore Inc.,Norway,OSE,Common Stock,Twelve Data,SEA1
+SEA1O,Sea1 Offshore Inc.,Norway,OSE,Common Stock,Twelve Data,SEA1O
+SFSB80.PR.RO,Spb Sogn og Fjordane 21/28 2.15,Norway,OSE,Common Stock,Twelve Data,SFSB80.PR.RO
+SFSB83.PR.RO,Spb Sogn og Fjordan 21/PERP FRN,Norway,OSE,Common Stock,Twelve Data,SFSB83.PR.RO
+SFSB88.PR.RO,SFSB88.PR.RO,Norway,OSE,Common Stock,Twelve Data,SFSB88.PR.RO
+SFSB89.PR.RO.ESG,Spb Sogn og Fjordane 23/27 FRN,Norway,OSE,Common Stock,Twelve Data,SFSB89.PR.RO.ESG
+SKAND,Skandia Greenpower AS,Norway,OSE,Common Stock,Twelve Data,SKAND
+SKASB24.PR.RO,Skudenes & Aakr Spb 21/PERP FRN,Norway,OSE,Common Stock,Twelve Data,SKASB24.PR.RO
+SKASB26.PR.RO,Skudenes & Aakra Spb 23/27 FRN,Norway,OSE,Common Stock,Twelve Data,SKASB26.PR.RO
+SKASB29.PR.RO,SKASB29.PR.RO,Norway,OSE,Common Stock,Twelve Data,SKASB29.PR.RO
+SKASB31.PR.RO,Skudenes & Aakra Spb 25/30 FRN,Norway,OSE,Common Stock,Twelve Data,SKASB31.PR.RO
+SKUE,Skue Sparebank,Norway,OSE,Common Stock,Twelve Data,SKUE
+SKUE28.PR.RO,Skue Spb 21/PERP FRN C HYBRID,Norway,OSE,Common Stock,Twelve Data,SKUE28.PR.RO
+SKUE30.PR.RO,Skue Spb 21/26 FRN,Norway,OSE,Common Stock,Twelve Data,SKUE30.PR.RO
+SKUE36.PR.RO,Skue Spb 23/27 FRN,Norway,OSE,Common Stock,Twelve Data,SKUE36.PR.RO
+SKUE38.PR.RO,Skue Spb 24/29 FRN,Norway,OSE,Common Stock,Twelve Data,SKUE38.PR.RO
+SMCRT,SmartCraft ASA,Norway,OSE,Common Stock,Twelve Data,SMCRT
+SMCRTO,SmartCraft ASA,Norway,OSE,Common Stock,Twelve Data,SMCRTO
+SMOP,Smartoptics Group ASA,Norway,OSE,Common Stock,Twelve Data,SMOP
+SNI,Stolt-Nielsen Limited,Norway,OSE,Common Stock,Twelve Data,SNI
+SNIO,Stolt-Nielsen Ltd.,Norway,OSE,Common Stock,Twelve Data,SNIO
+SNOR,SpareBank 1 Nordmøre,Norway,OSE,Common Stock,Twelve Data,SNOR
+SNOR12.PR.RO,Spb 1 Nordvest 21/PERP FRN C HY,Norway,OSE,Common Stock,Twelve Data,SNOR12.PR.RO
+SNOR33.PR.RO,Spb 1 Nordmore 21/26 FRN,Norway,OSE,Common Stock,Twelve Data,SNOR33.PR.RO
+SNOR35.PR.RO.ESG,Spb 1 Nordmore 21/27 FRN,Norway,OSE,Common Stock,Twelve Data,SNOR35.PR.RO.ESG
+SNOR37.PR.RO,Spb 1 Nordmore 22/27 FRN,Norway,OSE,Common Stock,Twelve Data,SNOR37.PR.RO
+SNTIA,Sentia ASA,Norway,OSE,Common Stock,Twelve Data,SNTIA
+SOAG,SpareBank 1 Østfold Akershus,Norway,OSE,Common Stock,Twelve Data,SOAG
+SOAG26.PR.RO,SOAG26.PR.RO,Norway,OSE,Common Stock,Twelve Data,SOAG26.PR.RO
+SOAG35.PR.RO,Spb 1 Ostfold Akershus 23/27 FR,Norway,OSE,Common Stock,Twelve Data,SOAG35.PR.RO
+SOAG40.PR.RO,SOAG40.PR.RO,Norway,OSE,Common Stock,Twelve Data,SOAG40.PR.RO
+SOAG41.PR.RO,SOAG41.PR.RO,Norway,OSE,Common Stock,Twelve Data,SOAG41.PR.RO
+SOAG43.PR.RO,SOAG43.PR.RO,Norway,OSE,Common Stock,Twelve Data,SOAG43.PR.RO
+SOFF,Solstad Offshore ASA,Norway,OSE,Common Stock,Twelve Data,SOFF
+SOFFO,Solstad Offshore ASA,Norway,OSE,Common Stock,Twelve Data,SOFFO
+SOFTX,SoftOx Solutions AS,Norway,OSE,Common Stock,Twelve Data,SOFTX
+SOGN,Sogn Sparebank,Norway,OSE,Common Stock,Twelve Data,SOGN
+SOGN20.PR.RO,Sogn Spb 24/26 FRN,Norway,OSE,Common Stock,Twelve Data,SOGN20.PR.RO
+SOGSB21.PR.RO,Sogne og Greipstad Spb 23/26 FR,Norway,OSE,Common Stock,Twelve Data,SOGSB21.PR.RO
+SOGSB23.PR.RO,SOGSB23.PR.RO,Norway,OSE,Common Stock,Twelve Data,SOGSB23.PR.RO
+SOMA,Solstad Maritime ASA,Norway,OSE,Common Stock,Twelve Data,SOMA
+SOMAO,Solstad Maritime ASA,Norway,OSE,Common Stock,Twelve Data,SOMAO
+SOR66.PR.RO,Spb Sor 21/PERP FRN C HYBRID,Norway,OSE,Common Stock,Twelve Data,SOR66.PR.RO
+SPBKR104.PR.RO,Spb 1 Boligkredi AS 24/PERP ADJ,Norway,OSE,Common Stock,Twelve Data,SPBKR104.PR.RO
+SPIR,Spir Group ASA,Norway,OSE,Common Stock,Twelve Data,SPIR
+SPOBK18.PR.RO,SPOBK18-PRO.OL,Norway,OSE,Common Stock,Twelve Data,SPOBK18.PR.RO
+SPOBK20.PR.RO.ESG,Spb Ost Boligkreditt AS 23/28 F,Norway,OSE,Common Stock,Twelve Data,SPOBK20.PR.RO.ESG
+SPOBK21.PR.RO,SPOBK21.PR.RO,Norway,OSE,Common Stock,Twelve Data,SPOBK21.PR.RO
+SPOG,Sparebanken Øst,Norway,OSE,Common Stock,Twelve Data,SPOG
+SPOG88.PR.RO,Spb Ost 22/29 4.30pct,Norway,OSE,Common Stock,Twelve Data,SPOG88.PR.RO
+SPOL,SpareBank 1 Østlandet,Norway,OSE,Common Stock,Twelve Data,SPOL
+SPOL101.PR.RO,SPOL101.PR.RO,Norway,OSE,Common Stock,Twelve Data,SPOL101.PR.RO
+SPOL105.PR.RO,SPOL105.PR.RO,Norway,OSE,Common Stock,Twelve Data,SPOL105.PR.RO
+SPOL106.PR.RO,SPOL106.PR.RO,Norway,OSE,Common Stock,Twelve Data,SPOL106.PR.RO
+SPOL65.PR.RO,Spb 1 Ostlandet 21/PERP FRN C H,Norway,OSE,Common Stock,Twelve Data,SPOL65.PR.RO
+SPOL69.PR.RO,Spb 1 Ostlandet 22/27 FRN,Norway,OSE,Common Stock,Twelve Data,SPOL69.PR.RO
+SPOL71.PR.RO.ESG,Spb 1 Ostlandet 22/27 4.50pct,Norway,OSE,Common Stock,Twelve Data,SPOL71.PR.RO.ESG
+SPOL75.PR.RO,Spb 1 Ostlandet 23/28 FRN,Norway,OSE,Common Stock,Twelve Data,SPOL75.PR.RO
+SPOL86.PR.RO,SPOL86.PR.RO,Norway,OSE,Common Stock,Twelve Data,SPOL86.PR.RO
+SPOL92.PR.RO,SPOL92.PR.RO,Norway,OSE,Common Stock,Twelve Data,SPOL92.PR.RO
+SPOL94.PR.RO,SPOL94.PR.RO,Norway,OSE,Common Stock,Twelve Data,SPOL94.PR.RO
+SPOL97.PR.RO,SPOL97.PR.RO,Norway,OSE,Common Stock,Twelve Data,SPOL97.PR.RO
+SPOL99.PR.RO,SPOL99.PR.RO,Norway,OSE,Common Stock,Twelve Data,SPOL99.PR.RO
+SPSK21.PR.RO,Spareskillingsbanken 23/28 FRN,Norway,OSE,Common Stock,Twelve Data,SPSK21.PR.RO
+SRBNK47.PR.RO,Spb 1 SR-Bank ASA 22/27 3.90pct,Norway,OSE,Common Stock,Twelve Data,SRBNK47.PR.RO
+SRSB16.PR.RO,Skagerrak Spb 21/26 FRN,Norway,OSE,Common Stock,Twelve Data,SRSB16.PR.RO
+SRSB21.PR.RO,Skagerrak Spb 23/PERP FRN C HYB,Norway,OSE,Common Stock,Twelve Data,SRSB21.PR.RO
+SRSB23.PR.RO,Skagerrak Spb 23/27 FRN,Norway,OSE,Common Stock,Twelve Data,SRSB23.PR.RO
+SRSB25.PR.RO,Skagerrak Spb 24/28 FRN,Norway,OSE,Common Stock,Twelve Data,SRSB25.PR.RO
+SRSB28.PR.RO,SRSB28.PR.RO,Norway,OSE,Common Stock,Twelve Data,SRSB28.PR.RO
+SRSB38.PR.RO,SRSB38.PR.RO,Norway,OSE,Common Stock,Twelve Data,SRSB38.PR.RO
+SRSB40.PR.RO,SRSB40.PR.RO,Norway,OSE,Common Stock,Twelve Data,SRSB40.PR.RO
+SRSB42.PR.RO,SRSB42.PR.RO,Norway,OSE,Common Stock,Twelve Data,SRSB42.PR.RO
+SSFBK21.PR.RO,Bustadkreditt Sogn o AS 21/27 F,Norway,OSE,Common Stock,Twelve Data,SSFBK21.PR.RO
+STB,Storebrand ASA,Norway,OSE,Common Stock,Twelve Data,STB
+STBO,Storebrand,Norway,OSE,Common Stock,Twelve Data,STBO
+STECH,Soiltech ASA,Norway,OSE,Common Stock,Twelve Data,STECH
+STORB76.PR.RO.ESG,Storebrand Bank ASA 24/28 FRN,Norway,OSE,Common Stock,Twelve Data,STORB76.PR.RO.ESG
+STORB77.PR.RO.ESG,STORB77.PR.RO.ESG,Norway,OSE,Common Stock,Twelve Data,STORB77.PR.RO.ESG
+STRO,StrongPoint ASA,Norway,OSE,Common Stock,Twelve Data,STRO
+STROO,StrongPoint ASA,Norway,OSE,Common Stock,Twelve Data,STROO
+STSB31.PR.RO,STSB31.PR.RO,Norway,OSE,Common Stock,Twelve Data,STSB31.PR.RO
+STSSB26.PR.RO,STSSB26.PR.RO,Norway,OSE,Common Stock,Twelve Data,STSSB26.PR.RO
+STST,Stainless Tankers ASA,Norway,OSE,Common Stock,Twelve Data,STST
+SUBC,Subsea 7 S.A.,Norway,OSE,Common Stock,Twelve Data,SUBC
+SUBCO,Subsea 7 S.A.,Norway,OSE,Common Stock,Twelve Data,SUBCO
+SVEG118.PR.RO.ESG,Spb Vest 22/26 3.515pct,Norway,OSE,Common Stock,Twelve Data,SVEG118.PR.RO.ESG
+SWON,SoftwareOne Holding AG,Norway,OSE,Common Stock,Twelve Data,SWON
+TECH,Techstep ASA,Norway,OSE,Common Stock,Twelve Data,TECH
+TEKNA,Tekna Holding ASA,Norway,OSE,Common Stock,Twelve Data,TEKNA
+TEKNAO,Tekna Holding ASA,Norway,OSE,Common Stock,Twelve Data,TEKNAO
+TEL,Telenor ASA,Norway,OSE,Common Stock,Twelve Data,TEL
+TELO,Telenor,Norway,OSE,Common Stock,Twelve Data,TELO
+TEN05.PR.RO.ESG,TEN05.PR.RO.ESG,Norway,OSE,Common Stock,Twelve Data,TEN05.PR.RO.ESG
+TGS,TGS ASA,Norway,OSE,Common Stock,Twelve Data,TGS
+TGSO,TGS-NOPEC Geophysical Company,Norway,OSE,Common Stock,Twelve Data,TGSO
+TIETO,Tietoevry Oyj,Norway,OSE,Common Stock,Twelve Data,TIETO
+TIETOO,TietoEVRY Oyj,Norway,OSE,Common Stock,Twelve Data,TIETOO
+TINDE,Tinde Sparebank,Norway,OSE,Common Stock,Twelve Data,TINDE
+TINDE20.PR.RO,TINDE20.PR.RO,Norway,OSE,Common Stock,Twelve Data,TINDE20.PR.RO
+TINE33.PR.RO,Tine SA 21/26 FRN,Norway,OSE,Common Stock,Twelve Data,TINE33.PR.RO
+TOM,Tomra Systems ASA,Norway,OSE,Common Stock,Twelve Data,TOM
+TOMO,Tomra Systems,Norway,OSE,Common Stock,Twelve Data,TOMO
+TOSB20.PR.RO,TOSB20.PR.RO,Norway,OSE,Common Stock,Twelve Data,TOSB20.PR.RO
+TOSB25.PR.RO,TOSB25.PR.RO,Norway,OSE,Common Stock,Twelve Data,TOSB25.PR.RO
+TOSB27.PR.RO,Tolga-Os Spb 25/30 FRN,Norway,OSE,Common Stock,Twelve Data,TOSB27.PR.RO
+TRMED,Thor Medical ASA,Norway,OSE,Common Stock,Twelve Data,TRMED
+TRMEDO,Thor Medical ASA,Norway,OSE,Common Stock,Twelve Data,TRMEDO
+TROBO12.PR.RO,TROBO12.PR.RO,Norway,OSE,Common Stock,Twelve Data,TROBO12.PR.RO
+TROBO14.PR.RO,Vegamot AS 21/28 1.653 pct,Norway,OSE,Common Stock,Twelve Data,TROBO14.PR.RO
+TRSB,Trøndelag Sparebank,Norway,OSE,Common Stock,Twelve Data,TRSB
+TRSB02.PR.RO,Trondelag Spb 23/26 FRN,Norway,OSE,Common Stock,Twelve Data,TRSB02.PR.RO
+TRSB03.PR.RO,TRSB03.PR.RO,Norway,OSE,Common Stock,Twelve Data,TRSB03.PR.RO
+VAR,Vår Energi ASA,Norway,OSE,Common Stock,Twelve Data,VAR
+VARO,VARO.OL,Norway,OSE,Common Stock,Twelve Data,VARO
+VDI,Vantage Drilling International,Norway,OSE,Common Stock,Twelve Data,VDI
+VEBK23.PR.RO,Verd Boligkreditt AS 22/27 FRN,Norway,OSE,Common Stock,Twelve Data,VEBK23.PR.RO
+VEBK24.PR.RO,VEBK24.PR.RO,Norway,OSE,Common Stock,Twelve Data,VEBK24.PR.RO
+VEBK25.PR.RO,Verd Boligkreditt AS 22/32 FRN,Norway,OSE,Common Stock,Twelve Data,VEBK25.PR.RO
+VEBK26.PR.RO,Verd Boligkreditt AS 23/28 FRN,Norway,OSE,Common Stock,Twelve Data,VEBK26.PR.RO
+VEBK31.PR.RO,VEBK31.PR.RO,Norway,OSE,Common Stock,Twelve Data,VEBK31.PR.RO
+VEI,Veidekke ASA,Norway,OSE,Common Stock,Twelve Data,VEI
+VEIO,Veidekke ASA,Norway,OSE,Common Stock,Twelve Data,VEIO
+VEND,Vend Marketplaces ASA,Norway,OSE,Common Stock,Twelve Data,VEND
+VENDO,Vend Marketplaces ASA,Norway,OSE,Common Stock,Twelve Data,VENDO
+VEOFF01.PR.RO,"Ventura Offshore Ltd 24/27 10,0",Norway,OSE,Common Stock,Twelve Data,VEOFF01.PR.RO
+VGFI03.PR.RO,Vegfinans Innlandet AS 21/28 FR,Norway,OSE,Common Stock,Twelve Data,VGFI03.PR.RO
+VGFT05.PR.RO.ESG,Vegfinans Vestfold og Telem AS,Norway,OSE,Common Stock,Twelve Data,VGFT05.PR.RO.ESG
+VGFV02.PR.RO,"Vegfinans Viken AS 20/27 1,25%",Norway,OSE,Common Stock,Twelve Data,VGFV02.PR.RO
+VGFV03.PR.RO,Vegfinans Viken AS 22/27 3.35pc,Norway,OSE,Common Stock,Twelve Data,VGFV03.PR.RO
+VGFV04.PR.RO,Vegfinans Viken AS 22/26 FRN,Norway,OSE,Common Stock,Twelve Data,VGFV04.PR.RO
+VGFV05.PR.RO,Vegfinans Viken AS 23/27 FRN,Norway,OSE,Common Stock,Twelve Data,VGFV05.PR.RO
+VGFV11.PR.RO,VGFV11.PR.RO,Norway,OSE,Common Stock,Twelve Data,VGFV11.PR.RO
+VISTN,Vistin Pharma ASA,Norway,OSE,Common Stock,Twelve Data,VISTN
+VOW,Vow ASA,Norway,OSE,Common Stock,Twelve Data,VOW
+VOWO,Vow ASA,Norway,OSE,Common Stock,Twelve Data,VOWO
+VTURA,Ventura Offshore Holding Ltd.,Norway,OSE,Common Stock,Twelve Data,VTURA
+VVL,Voss Veksel- og Landmandsbank ASA,Norway,OSE,Common Stock,Twelve Data,VVL
+WAWI,Wallenius Wilhelmsen ASA,Norway,OSE,Common Stock,Twelve Data,WAWI
+WAWIO,Wallenius Wilhelmsen ASA,Norway,OSE,Common Stock,Twelve Data,WAWIO
+WEST,Western Bulk Chartering AS,Norway,OSE,Common Stock,Twelve Data,WEST
+WISP01.PR.RO,"Wellbore Integrity So 25/29 12,",Norway,OSE,Common Stock,Twelve Data,WISP01.PR.RO
+WSTEP,Webstep ASA,Norway,OSE,Common Stock,Twelve Data,WSTEP
+WSTEPO,Webstep ASA,Norway,OSE,Common Stock,Twelve Data,WSTEPO
+WWI,Wilh. Wilhelmsen Holding ASA,Norway,OSE,Common Stock,Twelve Data,WWI
+WWIB,Wilh. Wilhelmsen Holding ASA Class B,Norway,OSE,Common Stock,Twelve Data,WWIB
+WWIBO,Wilh. Wilhelmsen Holding ASA B,Norway,OSE,Common Stock,Twelve Data,WWIBO
+WWIO,Wilh. Wilhelmsen Holding ASA A,Norway,OSE,Common Stock,Twelve Data,WWIO
+XPLRA,Xplora Technologies AS,Norway,OSE,Common Stock,Twelve Data,XPLRA
+YAR,Yara International ASA,Norway,OSE,Common Stock,Twelve Data,YAR
+YARO,Yara International,Norway,OSE,Common Stock,Twelve Data,YARO
+ZAL,Zalaris ASA,Norway,OSE,Common Stock,Twelve Data,ZAL
+ZALO,Zalaris ASA,Norway,OSE,Common Stock,Twelve Data,ZALO
+ZAP,Zaptec ASA,Norway,OSE,Common Stock,Twelve Data,ZAP
+ZAPO,Zaptec ASA,Norway,OSE,Common Stock,Twelve Data,ZAPO
+ZENA,Zenith Energy Ltd.,Norway,OSE,Common Stock,Twelve Data,ZENA
+ZLNA,Zelluna ASA,Norway,OSE,Common Stock,Twelve Data,ZLNA
+ZLNAO,Zelluna ASA,Norway,OSE,Common Stock,Twelve Data,ZLNAO

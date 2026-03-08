@@ -1,0 +1,266 @@
+ticker,name,country,exchange,type,source,yahoo_symbol
+480S,Soluciones Cuatroochenta S.A.,Spain,BME,Common Stock,Twelve Data,480S
+A3M,"Atresmedia Corporación de Medios de Comunicación, S.A.",Spain,BME,Common Stock,Twelve Data,A3M
+ACS,"ACS, Actividades de Construcción y Servicios, S.A.",Spain,BME,Common Stock,Twelve Data,ACS
+ACX,"Acerinox, S.A.",Spain,BME,Common Stock,Twelve Data,ACX
+ADX,"Audax Renovables, S.A.",Spain,BME,Common Stock,Twelve Data,ADX
+ADZ,"Adolfo Domínguez, S.A.",Spain,BME,Common Stock,Twelve Data,ADZ
+AEDAS,"Aedas Homes, S.A.",Spain,BME,Common Stock,Twelve Data,AEDAS
+AENA,Aena SME SA,Spain,BME,Common Stock,Twelve Data,AENA
+AGIL,Agile Content S.A.,Spain,BME,Common Stock,Twelve Data,AGIL
+AI,Airtificial Intelligence Structures SA,Spain,BME,Common Stock,Twelve Data,AI
+AIR,Airbus SE,Spain,BME,Common Stock,Twelve Data,AIR
+ALC,Altia Consultores S.A.,Spain,BME,Common Stock,Twelve Data,ALC
+ALM,"Almirall, S.A.",Spain,BME,Common Stock,Twelve Data,ALM
+ALNT,"Alantra Partners, S.A.",Spain,BME,Common Stock,Twelve Data,ALNT
+ALQ,"Alquiber Quality, S.A.",Spain,BME,Common Stock,Twelve Data,ALQ
+AMEN,Aeternal Mentis Inc.,Spain,BME,Common Stock,Twelve Data,AMEN
+AMP,"Amper, S.A.",Spain,BME,Common Stock,Twelve Data,AMP
+AMS,"Amadeus IT Group, S.A.",Spain,BME,Common Stock,Twelve Data,AMS
+ANA,"Acciona, S.A.",Spain,BME,Common Stock,Twelve Data,ANA
+ANE,"Corporación Acciona Energías Renovables, S.A.",Spain,BME,Common Stock,Twelve Data,ANE
+APAM,Aperam S.A.,Spain,BME,Common Stock,Twelve Data,APAM
+APG,Axon Partners Group S.A.,Spain,BME,Common Stock,Twelve Data,APG
+ARM,"Árima Real Estate SOCIMI, S.A.",Spain,BME,REIT,Twelve Data,ARM
+ART,"Arteche Lantegi Elkartea, S.A.",Spain,BME,Common Stock,Twelve Data,ART
+ATRY,"Atrys Health, S.A.",Spain,BME,Common Stock,Twelve Data,ATRY
+ATSI,Aplicaciones y Tratamientos S.A.,Spain,BME,Common Stock,Twelve Data,ATSI
+AZK,"Azkoyen, S.A.",Spain,BME,Common Stock,Twelve Data,AZK
+BBVA,"Banco Bilbao Vizcaya Argentaria, S.A.",Spain,BME,Common Stock,Twelve Data,BBVA
+BKT,"Bankinter, S.A.",Spain,BME,Common Stock,Twelve Data,BKT
+BKY,Berkeley Energia Limited,Spain,BME,Common Stock,Twelve Data,BKY
+BST,Biotechnology Assets S.A.,Spain,BME,Common Stock,Twelve Data,BST
+CABK,"CaixaBank, S.A.",Spain,BME,Common Stock,Twelve Data,CABK
+CAF,"Construcciones y Auxiliar de Ferrocarriles, S.A.",Spain,BME,Common Stock,Twelve Data,CAF
+CASH,"Prosegur Cash, S.A.",Spain,BME,Common Stock,Twelve Data,CASH
+CBAV,"Clínica Baviera, S.A.",Spain,BME,Common Stock,Twelve Data,CBAV
+CCEP,Coca-Cola Europacific Partners PLC,Spain,BME,Common Stock,Twelve Data,CCEP
+CEV,Cía Española de Viviendas en Alquiler S.A.,Spain,BME,Common Stock,Twelve Data,CEV
+CIE,"CIE Automotive, S.A.",Spain,BME,Common Stock,Twelve Data,CIE
+CIRSA,"Cirsa Enterprises, S.A.",Spain,BME,Common Stock,Twelve Data,CIRSA
+CITY,Club de Fútbol Intercity SAD,Spain,BME,Common Stock,Twelve Data,CITY
+CLNX,"Cellnex Telecom, S.A.",Spain,BME,Common Stock,Twelve Data,CLNX
+CLR,Clerhp Estructuras S.A.,Spain,BME,Common Stock,Twelve Data,CLR
+COL,"Colonial SFL, SOCIMI, S.A.",Spain,BME,REIT,Twelve Data,COL
+COM,Catenon S.A.,Spain,BME,Common Stock,Twelve Data,COM
+COXE,Cox Energy América S.A.B. de C.V.,Spain,BME,Common Stock,Twelve Data,COXE
+COXG,"Cox ABG Group, S.A.",Spain,BME,Common Stock,Twelve Data,COXG
+DESA,Desa S.A.,Spain,BME,Common Stock,Twelve Data,DESA
+DIA,"Distribuidora Internacional de Alimentación, S.A.",Spain,BME,Common Stock,Twelve Data,DIA
+DOM,Global Dominion Access S.A.,Spain,BME,Common Stock,Twelve Data,DOM
+DOMO,Domo Activos S.A.,Spain,BME,Common Stock,Twelve Data,DOMO
+EAT,AmRest Holdings SE,Spain,BME,Common Stock,Twelve Data,EAT
+EBRO,"Ebro Foods, S.A.",Spain,BME,Common Stock,Twelve Data,EBRO
+EBROM,Ev Motors S.A.,Spain,BME,Common Stock,Twelve Data,EBROM
+ECR,"Ercros, S.A.",Spain,BME,Common Stock,Twelve Data,ECR
+EDR,eDreams ODIGEO S.A.,Spain,BME,Common Stock,Twelve Data,EDR
+EEP,EuroEspes S.A.,Spain,BME,Common Stock,Twelve Data,EEP
+EIDF,Energia Innovacion y Desarrollo Fotovoltaico S.A.,Spain,BME,Common Stock,Twelve Data,EIDF
+ELE,"Endesa, S.A.",Spain,BME,Common Stock,Twelve Data,ELE
+ELZ,Asturiana de Laminados S.A.,Spain,BME,Common Stock,Twelve Data,ELZ
+ENC,"ENCE Energía y Celulosa, S.A.",Spain,BME,Common Stock,Twelve Data,ENC
+END,Endurance Motive S.A.,Spain,BME,Common Stock,Twelve Data,END
+ENER,"Ecoener, S.A.",Spain,BME,Common Stock,Twelve Data,ENER
+ENG,"Enagás, S.A.",Spain,BME,Common Stock,Twelve Data,ENG
+ENO,"Elecnor, S.A.",Spain,BME,Common Stock,Twelve Data,ENO
+ENRS,Enerside Energy S.A.,Spain,BME,Common Stock,Twelve Data,ENRS
+ETC,Energy Solar Tech S.A.,Spain,BME,Common Stock,Twelve Data,ETC
+EZE,Grupo Ezentis S.A.,Spain,BME,Common Stock,Twelve Data,EZE
+FACE,Facephi Biometria S.A.,Spain,BME,Common Stock,Twelve Data,FACE
+FAE,"Faes Farma, S.A.",Spain,BME,Common Stock,Twelve Data,FAE
+FCC,Fomento de Construcciones y Contratas S.A.,Spain,BME,Common Stock,Twelve Data,FCC
+FDR,"Fluidra, S.A.",Spain,BME,Common Stock,Twelve Data,FDR
+FER,Ferrovial SE,Spain,BME,Common Stock,Twelve Data,FER
+GAM,"General American Investors Company, Inc.",Spain,BME,Common Stock,Twelve Data,GAM
+GEST,"Gestamp Automoción, S.A.",Spain,BME,Common Stock,Twelve Data,GEST
+GGC,General de Galerías Comerciales S.A.,Spain,BME,REIT,Twelve Data,GGC
+GGR,Greening Group Global S.A.,Spain,BME,Common Stock,Twelve Data,GGR
+GIGA,Gigas Hosting S.A.,Spain,BME,Common Stock,Twelve Data,GIGA
+GRE,"Grenergy Renovables, S.A.",Spain,BME,Common Stock,Twelve Data,GRE
+GRF,"Grifols, S.A.",Spain,BME,Common Stock,Twelve Data,GRF
+GRF.PR.,GRIFOLS S.A. CLASE B,Spain,BME,Preferred Stock,Twelve Data,GRF.PR.
+GRI,Grino Ecologic S.A.,Spain,BME,Common Stock,Twelve Data,GRI
+GSJ,"Grupo Empresarial San José, S.A.",Spain,BME,Common Stock,Twelve Data,GSJ
+HAN,Hannun S.A.,Spain,BME,Common Stock,Twelve Data,HAN
+HBX,HBX Group International Plc,Spain,BME,Common Stock,Twelve Data,HBX
+HLZ,Holaluz-Clidom S.A.,Spain,BME,Common Stock,Twelve Data,HLZ
+HOME,Neinor Homes SA,Spain,BME,Common Stock,Twelve Data,HOME
+IAG,International Consolidated Airlines Group S.A.,Spain,BME,Common Stock,Twelve Data,IAG
+IBE,"Iberdrola, S.A.",Spain,BME,Common Stock,Twelve Data,IBE
+IBG,"Iberpapel Gestión, S.A.",Spain,BME,Common Stock,Twelve Data,IBG
+IDR,"Indra Sistemas, S.A.",Spain,BME,Common Stock,Twelve Data,IDR
+IFLEX,Iflex Flexible Packaging S.A.,Spain,BME,Common Stock,Twelve Data,IFLEX
+IMC,"Inmocemento, S.A.",Spain,BME,Common Stock,Twelve Data,IMC
+INDXA,Indexa Capital Group S.A.,Spain,BME,Common Stock,Twelve Data,INDXA
+ISUR,"Inmobiliaria del Sur, S.A.",Spain,BME,Common Stock,Twelve Data,ISUR
+ITX,"Industria de Diseño Textil, S.A.",Spain,BME,Common Stock,Twelve Data,ITX
+IZER,"Izertis, S.A.",Spain,BME,Common Stock,Twelve Data,IZER
+KOM,Plasticos Compuestos S.A.,Spain,BME,Common Stock,Twelve Data,KOM
+KOM.D,KOM.D,Spain,BME,Common Stock,Twelve Data,KOM.D
+LAB,Labiana Health S.A.,Spain,BME,Common Stock,Twelve Data,LAB
+LAB.D,Labiana Health S.A. Rights,Spain,BME,Common Stock,Twelve Data,LAB.D
+LDA,"Línea Directa Aseguradora, S.A.",Spain,BME,Common Stock,Twelve Data,LDA
+LGT,"Lingotes Especiales, S.A.",Spain,BME,Common Stock,Twelve Data,LGT
+LIB,Libertas Siete S.A.,Spain,BME,Common Stock,Twelve Data,LIB
+LLN,Lleidanetworks Serveis Telemàtics S.A.,Spain,BME,Common Stock,Twelve Data,LLN
+LLYC,Llorente Y Cuenca S.A.,Spain,BME,Common Stock,Twelve Data,LLYC
+LOG,"Logista Integral, S.A.",Spain,BME,Common Stock,Twelve Data,LOG
+MAKS,Making Science Group S.A.,Spain,BME,Common Stock,Twelve Data,MAKS
+MAP,Mapfre S.A.,Spain,BME,Common Stock,Twelve Data,MAP
+MCM,"Miquel y Costas & Miquel, S.A.",Spain,BME,Common Stock,Twelve Data,MCM
+MDF,"Duro Felguera, SA",Spain,BME,Common Stock,Twelve Data,MDF
+MEL,"Meliá Hotels International, S.A.",Spain,BME,Common Stock,Twelve Data,MEL
+MFEA,MFE-MediaForEurope N.V.,Spain,BME,Common Stock,Twelve Data,MFEA
+MRL,"Merlin Properties SOCIMI, S.A.",Spain,BME,REIT,Twelve Data,MRL
+MTB,Montebalito S.A.,Spain,BME,Common Stock,Twelve Data,MTB
+MTS,ArcelorMittal S.A.,Spain,BME,Common Stock,Twelve Data,MTS
+MVC,Metrovacesa S.A.,Spain,BME,Common Stock,Twelve Data,MVC
+NAT,Natac Natural Ingredients S.A.,Spain,BME,REIT,Twelve Data,NAT
+NBI,NBI Bearings Europe S.A.,Spain,BME,Common Stock,Twelve Data,NBI
+NEA,"Nicolás Correa, S.A.",Spain,BME,Common Stock,Twelve Data,NEA
+NTGY,"Naturgy Energy Group, S.A.",Spain,BME,Common Stock,Twelve Data,NTGY
+NTH,"Naturhouse Health, S.A.",Spain,BME,Common Stock,Twelve Data,NTH
+NXT,"Nueva Expresión Textil, S.A.",Spain,BME,Common Stock,Twelve Data,NXT
+NYE,"Nyesa Valores Corporación, S.A.",Spain,BME,Common Stock,Twelve Data,NYE
+NZI,NZI Technical Protection S.L.,Spain,BME,Common Stock,Twelve Data,NZI
+OHLA,"Obrascón Huarte Lain, S.A.",Spain,BME,Common Stock,Twelve Data,OHLA
+OLE,"Deoleo, S.A.",Spain,BME,Common Stock,Twelve Data,OLE
+OPTS,Optare Solutions S.A.,Spain,BME,Common Stock,Twelve Data,OPTS
+ORY,Oryzon Genomics S.A.,Spain,BME,Common Stock,Twelve Data,ORY
+PANG,Pangaea Oncology S.A.,Spain,BME,Common Stock,Twelve Data,PANG
+PAR,"Parlem Telecom Company de Telecomunicacions, S.A.",Spain,BME,Common Stock,Twelve Data,PAR
+PHM,"Pharma Mar, S.A.",Spain,BME,Common Stock,Twelve Data,PHM
+PRM,"Prim, S.A.",Spain,BME,Common Stock,Twelve Data,PRM
+PRS,Promotora de Informaciones S.A.,Spain,BME,Common Stock,Twelve Data,PRS
+PSG,"Prosegur Compañía de Seguridad, S.A.",Spain,BME,Common Stock,Twelve Data,PSG
+PUIG,Puig Brands SA,Spain,BME,Common Stock,Twelve Data,PUIG
+PVA,Pescanova S.A.,Spain,BME,Common Stock,Twelve Data,PVA
+R4,Renta 4 Banco SA,Spain,BME,Common Stock,Twelve Data,R4
+RBT,Robot S.A.,Spain,BME,Common Stock,Twelve Data,RBT
+RDG,Redegal S.A.,Spain,BME,Common Stock,Twelve Data,RDG
+RDG.D,RDG.D,Spain,BME,Common Stock,Twelve Data,RDG.D
+RED,"Redeia Corporación, S.A.",Spain,BME,Common Stock,Twelve Data,RED
+REN,Renta Corporacion Real Estate SA,Spain,BME,Common Stock,Twelve Data,REN
+REP,Repsol S.A.,Spain,BME,Common Stock,Twelve Data,REP
+RIO,Bodegas Riojanas S.A.,Spain,BME,Common Stock,Twelve Data,RIO
+RJF,Laboratorio Reig Jofre SA,Spain,BME,Common Stock,Twelve Data,RJF
+RLIA,"Realia Business, S.A.",Spain,BME,Common Stock,Twelve Data,RLIA
+ROVI,Laboratorios Farmacéuticos Rovi SA,Spain,BME,Common Stock,Twelve Data,ROVI
+RSS,Revenga Ingenieros S.A.,Spain,BME,Common Stock,Twelve Data,RSS
+SAB,"Banco de Sabadell, S.A.",Spain,BME,Common Stock,Twelve Data,SAB
+SAI,Substrate Artificial Intelligence S.A.,Spain,BME,Common Stock,Twelve Data,SAI
+SAI.B,SUBSTRATE ARTIFICIAL INTELLIGEN,Spain,BME,Common Stock,Twelve Data,SAI.B
+SAN,"Banco Santander, S.A.",Spain,BME,Common Stock,Twelve Data,SAN
+SCAML,"Am Locales Property Socimi, S.A.",Spain,BME,REIT,Twelve Data,SCAML
+SCAP7,"AP67 Socimi, S.A.",Spain,BME,REIT,Twelve Data,SCAP7
+SCBTT,Better Consultants S.A.,Spain,BME,Common Stock,Twelve Data,SCBTT
+SCBYT,Bytetravel S.A.,Spain,BME,Common Stock,Twelve Data,SCBYT
+SCGRM,"GreyMile SOCIMI, S.A.",Spain,BME,REIT,Twelve Data,SCGRM
+SCGV,"Grandvoyage Travel, S.A.",Spain,BME,Common Stock,Twelve Data,SCGV
+SCHI,St Croix Holding Immobilier Inc.,Spain,BME,Common Stock,Twelve Data,SCHI
+SCIG4,"Inbest GPF Multi Asset Class Prime IV SOCIMI, S.A.",Spain,BME,REIT,Twelve Data,SCIG4
+SCIPP,"Inhome Prime Properties Socimi, S.A.",Spain,BME,Common Stock,Twelve Data,SCIPP
+SCO,Seresco S.A.,Spain,BME,Common Stock,Twelve Data,SCO
+SCSS,Innovative Simply Solar S.A.,Spain,BME,Common Stock,Twelve Data,SCSS
+SCYR,Sacyr S.A.,Spain,BME,Common Stock,Twelve Data,SCYR
+SEC,Secuoya Grupo de Comunicación S.A.,Spain,BME,Common Stock,Twelve Data,SEC
+SLR,"Solaria Energía y Medio Ambiente, S.A.",Spain,BME,Common Stock,Twelve Data,SLR
+SNG,Singular People Inc.,Spain,BME,Common Stock,Twelve Data,SNG
+SOL,"Soltec Power Holdings, S.A.",Spain,BME,Common Stock,Twelve Data,SOL
+SPH,Profithol S.A.,Spain,BME,Common Stock,Twelve Data,SPH
+SQRL,"Squirrel Media, S.A.",Spain,BME,Common Stock,Twelve Data,SQRL
+STNA,Santa Ana Global Enterprises Inc.,Spain,BME,Common Stock,Twelve Data,STNA
+TEF,Telefónica S.A.,Spain,BME,Common Stock,Twelve Data,TEF
+TLGO,Talgo S.A.,Spain,BME,Common Stock,Twelve Data,TLGO
+TRA,"Trajano Iberia, S.A.",Spain,BME,REIT,Twelve Data,TRA
+TRE,"Técnicas Reunidas, S.A.",Spain,BME,Common Stock,Twelve Data,TRE
+TRG,"Tubos Reunidos, S.A.",Spain,BME,Common Stock,Twelve Data,TRG
+TRTK,Tree Technology S.A.,Spain,BME,Common Stock,Twelve Data,TRTK
+TUB,"Tubacex, S.A.",Spain,BME,Common Stock,Twelve Data,TUB
+UBS,Urbas Grupo Financiero S.A.,Spain,BME,Common Stock,Twelve Data,UBS
+UMB,Umbrella Global Energy S.A.,Spain,BME,Common Stock,Twelve Data,UMB
+UNI,"Unicaja Banco, S.A.",Spain,BME,Common Stock,Twelve Data,UNI
+VANA,Vanadi Coffee S.A.,Spain,BME,Common Stock,Twelve Data,VANA
+VID,Vidrala S.A.,Spain,BME,Common Stock,Twelve Data,VID
+VIS,Viscofan SA,Spain,BME,Common Stock,Twelve Data,VIS
+VOC,"Vocento, S.A.",Spain,BME,Common Stock,Twelve Data,VOC
+VYT,Vytrus Biotech S.A.,Spain,BME,Common Stock,Twelve Data,VYT
+XALFA,"Sigma Foods, S.A.B. de C.V.",Spain,BME,Common Stock,Twelve Data,XALFA
+XAXIA,AXIA Energia S.A.,Spain,BME,Common Stock,Twelve Data,XAXIA
+XAXIC,XAXIC,Spain,BME,Preferred Stock,Twelve Data,XAXIC
+XBBAR,Banco BBVA Argentina S.A.,Spain,BME,Common Stock,Twelve Data,XBBAR
+XBBDC,Banco Bradesco S.A. Preferred Stock,Spain,BME,Preferred Stock,Twelve Data,XBBDC
+XBRK,Braskem S.A.,Spain,BME,Preferred Stock,Twelve Data,XBRK
+XBRPO,Bradespar S.A.,Spain,BME,Common Stock,Twelve Data,XBRPO
+XBRPP,Bradespar S.A. Preferred Stock,Spain,BME,Preferred Stock,Twelve Data,XBRPP
+XCMIG,Companhia Energética de Minas Gerais Preferred Stock,Spain,BME,Preferred Stock,Twelve Data,XCMIG
+XCOPO,Companhia Paranaense de Energia,Spain,BME,Common Stock,Twelve Data,XCOPO
+XEKT,"Grupo Elektra, S.A.B. de C.V.",Spain,BME,Common Stock,Twelve Data,XEKT
+XGGB,Gerdau S.A. Preferred,Spain,BME,Preferred Stock,Twelve Data,XGGB
+XNEO,Neoenergia S.A.,Spain,BME,Common Stock,Twelve Data,XNEO
+XNOR,Grupo Financiero Banorte S.A.B. de C.V.,Spain,BME,Common Stock,Twelve Data,XNOR
+XPBR,Petroleo Brasileiro S.A.,Spain,BME,Common Stock,Twelve Data,XPBR
+XPBRA,Petrobras - Petroleo Brasileiro S.A.,Spain,BME,Preferred Stock,Twelve Data,XPBRA
+XSIGF,"Sigma Alimentos, S.A. de C.V.",Spain,BME,Common Stock,Twelve Data,XSIGF
+XUSI,Usinas Siderúrgicas de Minas Gerais S.A. - Preferred A,Spain,BME,Preferred Stock,Twelve Data,XUSI
+XUSIO,Usinas Siderúrgicas de Minas Gerais S.A.,Spain,BME,Common Stock,Twelve Data,XUSIO
+XVALO,Vale S.A.,Spain,BME,Common Stock,Twelve Data,XVALO
+XVOLB,Volcan Compañía Minera S.A.A.,Spain,BME,Common Stock,Twelve Data,XVOLB
+YABA,JaBa I Inversiones Inmobiliarias S.A.,Spain,BME,REIT,Twelve Data,YABA
+YADR,Adriano Care SOCIMI S.A.,Spain,BME,REIT,Twelve Data,YADR
+YADV,Advero Properties Socimi S.A.,Spain,BME,Common Stock,Twelve Data,YADV
+YAI1,All Iron RE I SOCIMI S.A.,Spain,BME,REIT,Twelve Data,YAI1
+YAML,"AM Locales Property SOCIMI, S.A.",Spain,BME,Common Stock,Twelve Data,YAML
+YARP,Arrienda Rental Properties Inc.,Spain,BME,Common Stock,Twelve Data,YARP
+YATO,Atom Hoteles SOCIMI S.A.,Spain,BME,REIT,Twelve Data,YATO
+YAZR,Azaria Rental Socimi S.A.,Spain,BME,Common Stock,Twelve Data,YAZR
+YBAR,"Barcino Property SOCIMI, S.A.",Spain,BME,REIT,Twelve Data,YBAR
+YCPS,Castellana Properties Socimi S.A.,Spain,BME,REIT,Twelve Data,YCPS
+YDOA,Inversiones Doalca Socimi S.A.,Spain,BME,REIT,Twelve Data,YDOA
+YEIS,Elaia Investment Spain SOCIMI S.A.,Spain,BME,REIT,Twelve Data,YEIS
+YENT,Entrecampos Cuatro Socimi S.A.,Spain,BME,REIT,Twelve Data,YENT
+YEPSA,Emperador Properties Socimi S.A.,Spain,BME,Common Stock,Twelve Data,YEPSA
+YEUR,Euro Cervantes SOCIMI S.A.,Spain,BME,REIT,Twelve Data,YEUR
+YFID,Fidere Patrimonio SOCIMI S.A.,Spain,BME,REIT,Twelve Data,YFID
+YGMP,GMP Property SOCIMI S.A.,Spain,BME,REIT,Twelve Data,YGMP
+YGO2,Greenoak Spain Holdings SOCIMI S.A.,Spain,BME,Common Stock,Twelve Data,YGO2
+YGOP,Gop Properties SOCIMI S.A.,Spain,BME,REIT,Twelve Data,YGOP
+YHCR,Home Capital Rentals Socimi S.A.,Spain,BME,Common Stock,Twelve Data,YHCR
+YHSP,Hispanotels Inversiones SOCIMI S.A.,Spain,BME,REIT,Twelve Data,YHSP
+YHTI,YHTI,Spain,BME,Common Stock,Twelve Data,YHTI
+YIBI,Ibi Lion Socimi S.A.,Spain,BME,Common Stock,Twelve Data,YIBI
+YINB1,"Inbest Prime I Inmuebles Socimi, S.A.",Spain,BME,Common Stock,Twelve Data,YINB1
+YINB2,Inbest Prime II Inmuebles S.A.,Spain,BME,Common Stock,Twelve Data,YINB2
+YINB3,Inbest Prime III Inmuebles S.A.P.I. de C.V.,Spain,BME,Common Stock,Twelve Data,YINB3
+YINB4,Inbest Prime IV Inmuebles S.A.P.I. de C.V.,Spain,BME,Common Stock,Twelve Data,YINB4
+YINB6,Inbest Prime VI Inmuebles S.O.C.I.M.I.,Spain,BME,REIT,Twelve Data,YINB6
+YINB7,Inbest Prime VII Inmuebles Socimi S.A.,Spain,BME,Common Stock,Twelve Data,YINB7
+YINB8,Inbest Prime VIII Inmuebles S.A.P.I. de C.V.,Spain,BME,REIT,Twelve Data,YINB8
+YIPS,Inversa Prime SOCIMI S.A.,Spain,BME,Common Stock,Twelve Data,YIPS
+YIRG,"Irg10 Socimi, S.A.",Spain,BME,REIT,Twelve Data,YIRG
+YISC,Isc Fresh Water Investment S.A.,Spain,BME,REIT,Twelve Data,YISC
+YKTS,Ktesios Real Estate SOCIMI S.A.,Spain,BME,Common Stock,Twelve Data,YKTS
+YLFG,Lafinca Global Assets SOCIMI S.A.,Spain,BME,Common Stock,Twelve Data,YLFG
+YMAT,Matritense Real Estate S.A.,Spain,BME,Common Stock,Twelve Data,YMAT
+YMCS,Miciso Real Estate SOCIMI S.A.,Spain,BME,Common Stock,Twelve Data,YMCS
+YMIB,Mistral Iberia Real Estate SOCIMI S.A.,Spain,BME,Common Stock,Twelve Data,YMIB
+YMIL,Milepro Logistica Ultima Mile S.A.,Spain,BME,Common Stock,Twelve Data,YMIL
+YMRE,Meridia Real Estate III Socimi S.A.,Spain,BME,REIT,Twelve Data,YMRE
+YNPC,NextPoint Capital Socimi S.A.,Spain,BME,Common Stock,Twelve Data,YNPC
+YNUM,Numulae Gestion de Servicios Socimi S.A.,Spain,BME,REIT,Twelve Data,YNUM
+YORE,"Olimpo Real Estate Socimi, S.A.",Spain,BME,REIT,Twelve Data,YORE
+YPARK,Inmobiliaria Park Rose Ibero S.A.,Spain,BME,REIT,Twelve Data,YPARK
+YPSN,Previsión Sanitaria Nacional Gestora de Socimis S.A.,Spain,BME,REIT,Twelve Data,YPSN
+YQUO,Quonia Socimi S.A.,Spain,BME,REIT,Twelve Data,YQUO
+YSIL,Silicius Real Estate Socimi S.A.,Spain,BME,Common Stock,Twelve Data,YSIL
+YSRR,Serrano 61 Desarrollo SOCIMI S.A.,Spain,BME,REIT,Twelve Data,YSRR
+YTAN,Tander Inversiones SOCIMI S.A.,Spain,BME,REIT,Twelve Data,YTAN
+YTCH,Techo Hogar Socimi S.A.,Spain,BME,Common Stock,Twelve Data,YTCH
+YTEM,"Témpore Properties SOCIMI, S.A.",Spain,BME,REIT,Twelve Data,YTEM
+YTRI,Trivium Real Estate SOCIMI S.A.,Spain,BME,REIT,Twelve Data,YTRI
+YTRM,Torimbia Socimi S.A.,Spain,BME,REIT,Twelve Data,YTRM
+YTST,Testa Residencial Socimi S.A.,Spain,BME,Common Stock,Twelve Data,YTST
+YVCP,"Veracruz Properties Socimi, S.A.",Spain,BME,REIT,Twelve Data,YVCP
+YVIT,Vitruvio Real Estate Socimi S.A.,Spain,BME,REIT,Twelve Data,YVIT
+YVIV,Vivenio Residencial S.A.,Spain,BME,Common Stock,Twelve Data,YVIV
+YZBL,Zambal Spain Socimi S.A.,Spain,BME,REIT,Twelve Data,YZBL
