@@ -1,0 +1,10 @@
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+.streamlit/secrets.toml
+.env
+
+data/*.csv
+!data/universes/*.csv
