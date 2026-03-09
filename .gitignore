@@ -3,8 +3,11 @@ __pycache__/
 *.pyo
 *.pyd
 
-.streamlit/secrets.toml
 .env
+.venv/
+venv/
+
+.streamlit/secrets.toml
 
 data/*.csv
 !data/universes/*.csv

@@ -40,6 +40,13 @@ def _safe_read_csv_text(text: str) -> pd.DataFrame:
 
 
 def normalize_for_stooq(symbol: str) -> str:
+    """
+    Stooq bruger typisk:
+    - aapl.us
+    - msft.us
+    - novo-b.co
+    - sie.de
+    """
     sym = (symbol or "").strip()
     if not sym:
         return ""
@@ -180,16 +187,23 @@ def load_universe_csv(filename: str) -> Tuple[pd.DataFrame, str]:
     if "country" not in df.columns:
         df["country"] = ""
 
+    df["sector"] = df["sector"].astype(str).str.strip()
+    df["country"] = df["country"].astype(str).str.strip()
+
     df = df[df["ticker"] != ""].drop_duplicates(subset=["ticker"]).reset_index(drop=True)
 
     return df, f"Universe loaded: {file_path} ({len(df)} tickers)"
 
 
+@st.cache_data(ttl=60 * 60 * 12, show_spinner=False)
 def fetch_history(ticker: str, years: int = 5) -> pd.DataFrame:
     """
-    Standard V3 wrapper:
+    Standard V3 wrapper med cache:
     1) Twelve Data som primær
     2) Stooq som fallback
+
+    Returnerer standardformat:
+    Date, Open, High, Low, Close, Volume
     """
     ticker = (ticker or "").strip()
     if not ticker:
