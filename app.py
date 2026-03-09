@@ -1,14 +1,19 @@
 import pandas as pd
 import streamlit as st
 
-from src.data_sources import fetch_history, load_universe_csv
+from src.analysis_engine import build_asset_analysis
+from src.compare_engine import build_compare_chart_df, build_compare_table
+from src.data_sources import load_universe_csv
 from src.discovery_engine import (
     build_discovery_table,
     discovery_deep_dive,
     top_discovery_candidates,
     weakening_themes,
 )
+from src.history_engine import recent_assets_df, register_recent_view
 from src.macro_engine import macro_snapshot
+from src.news_engine import build_asset_news_links
+from src.portfolio_context_engine import build_portfolio_context
 from src.portfolio_engine import (
     ACCOUNT_TYPES,
     analyze_portfolio_positions,
@@ -17,10 +22,19 @@ from src.portfolio_engine import (
     build_theme_exposure,
 )
 from src.screening_engine import run_screen_on_universe, summarize_screen, top_theme_hits
+from src.search_engine import search_assets
+from src.signal_log_engine import append_signal_log, read_signal_log, signal_summary
+from src.storage_engine import (
+    load_portfolio_positions,
+    load_watchlist,
+    save_portfolio_positions,
+    save_watchlist,
+)
 from src.strategy_engine import top_etfs, top_leaders, top_strategy_by_theme
+from src.technical_view_engine import build_technical_view
 from src.theme_definitions import THEMES
 from src.theme_engine import build_theme_rankings, theme_deep_dive
-from src.timing_engine import build_timing_snapshot
+from src.watchlist_engine import add_to_watchlist, remove_from_watchlist, watchlist_to_df
 
 st.set_page_config(
     page_title="Stock Dashboard V3",
@@ -31,41 +45,257 @@ st.set_page_config(
 st.title("📊 Stock Dashboard V3")
 
 if "portfolio_positions" not in st.session_state:
-    st.session_state["portfolio_positions"] = []
+    st.session_state["portfolio_positions"] = load_portfolio_positions()
+
+if "analysis_selected_ticker" not in st.session_state:
+    st.session_state["analysis_selected_ticker"] = "AAPL"
+
+if "watchlist" not in st.session_state:
+    st.session_state["watchlist"] = load_watchlist()
 
 tab_analysis, tab_screening, tab_macro, tab_themes, tab_discovery, tab_strategy, tab_portfolio = st.tabs(
     ["Analyse", "Screening", "Macro", "Tema", "Discovery", "Strategy", "Portefølje"]
 )
 
 with tab_analysis:
-    st.subheader("Analyse")
+    st.subheader("Analyse 2.0")
 
-    c1, c2 = st.columns([2, 1])
-    with c1:
-        ticker = st.text_input("Ticker", "AAPL")
-    with c2:
-        years = st.slider("Historik (år)", 1, 10, 5, 1)
+    q1, q2 = st.columns([3, 1])
+    with q1:
+        search_query = st.text_input(
+            "Global search (ticker, navn, ETF, tema, sektor)",
+            value=st.session_state["analysis_selected_ticker"],
+        )
+    with q2:
+        analysis_years = st.slider("Historik (år)", 1, 10, 5, 1, key="analysis_years")
 
-    df = fetch_history(ticker, years=years)
+    search_df = search_assets(search_query, limit=20)
 
-    if df.empty:
-        st.warning("Ingen data fundet for ticker.")
+    st.markdown("### Søgeresultater")
+    if search_df.empty:
+        st.info("Ingen søgeresultater.")
+        selected_ticker = search_query.strip().upper()
     else:
-        timing = build_timing_snapshot(df)
+        display_options = []
+        option_map = {}
 
-        m1, m2, m3, m4, m5, m6 = st.columns(6)
-        m1.metric("Timing score", timing["timing_score"])
-        m2.metric("Action", timing["action"])
-        m3.metric("Trend", timing["trend"])
-        m4.metric("RSI", timing["rsi"])
-        m5.metric("1M momentum %", timing["momentum_1m"])
-        m6.metric("ATR %", timing["atr_pct"])
+        for _, row in search_df.iterrows():
+            label = f"{row['ticker']} — {row.get('name', '')} | {row.get('type', '')}"
+            if str(row.get("themes", "")).strip():
+                label += f" | Themes: {row.get('themes', '')}"
+            option_map[label] = row["ticker"]
+            display_options.append(label)
 
-        st.markdown("### Kurs")
-        st.line_chart(df.set_index("Date")["Close"])
+        selected_label = st.selectbox("Vælg papir", display_options, index=0)
+        selected_ticker = option_map[selected_label]
+        st.session_state["analysis_selected_ticker"] = selected_ticker
+
+        with st.expander("Vis søgeresultater"):
+            st.dataframe(search_df, use_container_width=True, hide_index=True)
+
+    analysis = build_asset_analysis(selected_ticker, years=analysis_years)
+
+    if not analysis or not analysis.get("has_data"):
+        st.warning(analysis.get("message", "Ingen data fundet for ticker."))
+    else:
+        register_recent_view(analysis["ticker"])
+
+        record = analysis.get("record", {})
+        timing = analysis.get("timing", {})
+        macro = analysis.get("macro", {})
+        returns = analysis.get("returns", {})
+        tech_df = build_technical_view(analysis["df"])
+        news_links = build_asset_news_links(
+            analysis["ticker"],
+            name=record.get("name", ""),
+            themes=record.get("themes", ""),
+        )
+
+        st.markdown("### Asset overview")
+        a1, a2, a3, a4, a5, a6 = st.columns(6)
+        a1.metric("Ticker", analysis["ticker"])
+        a2.metric("Seneste kurs", analysis["last"])
+        a3.metric("Signal", timing.get("action"))
+        a4.metric("Trend", timing.get("trend"))
+        a5.metric("Timing score", timing.get("timing_score"))
+        a6.metric("RSI", timing.get("rsi"))
+
+        b1, b2, b3, b4 = st.columns(4)
+        b1.metric("1D %", returns.get("1D"))
+        b2.metric("1M %", returns.get("1M"))
+        b3.metric("3M %", returns.get("3M"))
+        b4.metric("6M %", returns.get("6M"))
+
+        st.markdown("### Identitet og klassifikation")
+        c1, c2, c3, c4 = st.columns(4)
+        c1.metric("Navn", record.get("name", ""))
+        c2.metric("Type", record.get("type", ""))
+        c3.metric("Land", record.get("country", ""))
+        c4.metric("Sektor", record.get("sector", ""))
+
+        st.write(f"**Themes:** {record.get('themes', '') or 'Ingen tema-match endnu'}")
+
+        add1, add2, add3, add4 = st.columns(4)
+        with add1:
+            if st.button("Tilføj til watchlist", key="add_watchlist_analysis"):
+                st.session_state["watchlist"] = add_to_watchlist(st.session_state["watchlist"], analysis["ticker"])
+                save_watchlist(st.session_state["watchlist"])
+        with add2:
+            if st.button("Fjern fra watchlist", key="remove_watchlist_analysis"):
+                st.session_state["watchlist"] = remove_from_watchlist(st.session_state["watchlist"], analysis["ticker"])
+                save_watchlist(st.session_state["watchlist"])
+        with add3:
+            if st.button("Tilføj til portefølje", key="add_portfolio_analysis"):
+                st.session_state["portfolio_positions"].append(
+                    {
+                        "Ticker": analysis["ticker"],
+                        "Antal": 1.0,
+                        "Konto": ACCOUNT_TYPES[0],
+                    }
+                )
+                save_portfolio_positions(st.session_state["portfolio_positions"])
+        with add4:
+            if st.button("Log signal", key="log_signal_analysis"):
+                append_signal_log(
+                    source="analysis",
+                    ticker=analysis["ticker"],
+                    action=timing.get("action", ""),
+                    timing_score=timing.get("timing_score"),
+                    theme=record.get("themes", ""),
+                    note="Manual analysis log",
+                )
+
+        st.markdown("### Technical cockpit")
+        tc1, tc2 = st.columns(2)
+
+        with tc1:
+            st.markdown("#### Pris og EMA")
+            if tech_df.empty:
+                st.info("Ingen technical data.")
+            else:
+                st.line_chart(
+                    tech_df.set_index("Date")[["Close", "EMA20", "EMA50", "EMA200"]].dropna(how="all")
+                )
+
+        with tc2:
+            st.markdown("#### RSI")
+            if tech_df.empty:
+                st.info("Ingen RSI data.")
+            else:
+                st.line_chart(
+                    tech_df.set_index("Date")[["RSI14"]].dropna(how="all")
+                )
+
+        ctech1, ctech2, ctech3 = st.columns(3)
+        ctech1.metric("1M Momentum %", timing.get("momentum_1m"))
+        ctech2.metric("3M Momentum %", timing.get("momentum_3m"))
+        ctech3.metric("ATR %", timing.get("atr_pct"))
+
+        ctx1, ctx2 = st.columns(2)
+
+        with ctx1:
+            st.markdown("### Theme context")
+            theme_context_df = analysis.get("theme_context_df", pd.DataFrame())
+            if theme_context_df.empty:
+                st.info("Ingen direkte theme context endnu.")
+            else:
+                st.dataframe(theme_context_df, use_container_width=True, hide_index=True)
+
+        with ctx2:
+            st.markdown("### Macro context")
+            m1, m2, m3 = st.columns(3)
+            m1.metric("Regime", macro.get("regime"))
+            m2.metric("Inflation YoY %", macro.get("inflation_yoy_pct"))
+            m3.metric("Industrial YoY %", macro.get("industrial_production_yoy_pct"))
+
+            m4, m5, m6 = st.columns(3)
+            m4.metric("US 10Y", macro.get("us_10y"))
+            m5.metric("US 2Y", macro.get("us_2y"))
+            m6.metric("Arbejdsløshed", macro.get("unemployment"))
+
+        st.markdown("### Strategy context")
+        strategy_context_df = analysis.get("strategy_context_df", pd.DataFrame())
+        if strategy_context_df.empty:
+            st.info("Ingen strategy context endnu.")
+        else:
+            st.dataframe(strategy_context_df, use_container_width=True, hide_index=True)
+
+        st.markdown("### Portfolio context")
+        pf_ctx = build_portfolio_context(analysis["ticker"], st.session_state["portfolio_positions"])
+        if not pf_ctx["owned"]:
+            st.info("Dette papir findes ikke i porteføljen endnu.")
+        else:
+            p1, p2 = st.columns(2)
+            p1.metric("Samlet antal", pf_ctx["total_shares"])
+            p2.metric("Konti", pf_ctx["accounts"])
+            st.dataframe(pf_ctx["positions_df"], use_container_width=True, hide_index=True)
+
+        st.markdown("### Nyheder og catalysts")
+        n1, n2, n3 = st.columns(3)
+        with n1:
+            st.markdown(f"[Ticker news]({news_links['ticker_news']})")
+        with n2:
+            st.markdown(f"[Company news]({news_links['company_news']})")
+        with n3:
+            if news_links["theme_news"]:
+                st.markdown(f"[Theme news]({news_links['theme_news']})")
+
+        st.markdown("### Watchlist")
+        watchlist_df = watchlist_to_df(st.session_state["watchlist"])
+        if watchlist_df.empty:
+            st.info("Watchlist er tom.")
+        else:
+            st.dataframe(watchlist_df, use_container_width=True, hide_index=True)
+
+        st.markdown("### Senest sete")
+        recent_df = recent_assets_df()
+        if recent_df.empty:
+            st.info("Ingen senest sete endnu.")
+        else:
+            st.dataframe(recent_df, use_container_width=True, hide_index=True)
+
+        st.markdown("### Compare")
+        compare_default = [analysis["ticker"]]
+        if analysis["ticker"] != "SPY":
+            compare_default.append("SPY")
+
+        compare_input = st.text_input(
+            "Sammenlign tickers (komma-separeret)",
+            value=",".join(compare_default),
+            key="compare_input_analysis",
+        )
+        compare_tickers = [x.strip().upper() for x in compare_input.split(",") if x.strip()]
+
+        compare_table_df = build_compare_table(compare_tickers, years=analysis_years)
+        compare_chart_df = build_compare_chart_df(compare_tickers, years=min(analysis_years, 3))
+
+        if compare_table_df.empty:
+            st.info("Ingen compare-data endnu.")
+        else:
+            st.dataframe(compare_table_df, use_container_width=True, hide_index=True)
+
+        if compare_chart_df.empty:
+            st.info("Ingen compare-chart data endnu.")
+        else:
+            st.line_chart(compare_chart_df.set_index("Date"))
+
+        with st.expander("Signal-log oversigt"):
+            log_df = read_signal_log(limit=100)
+            summary = signal_summary()
+
+            s1, s2, s3, s4 = st.columns(4)
+            s1.metric("Logs", summary["count"])
+            s2.metric("BUY %", summary["buy_ratio_pct"])
+            s3.metric("HOLD %", summary["hold_ratio_pct"])
+            s4.metric("SELL %", summary["sell_ratio_pct"])
+
+            if log_df.empty:
+                st.info("Ingen signal-log endnu.")
+            else:
+                st.dataframe(log_df, use_container_width=True, hide_index=True)
 
         with st.expander("Vis rå kursdata"):
-            st.dataframe(df.tail(100), use_container_width=True, hide_index=True)
+            st.dataframe(analysis["df"].tail(100), use_container_width=True, hide_index=True)
 
 with tab_screening:
     st.subheader("Screening engine")
@@ -127,6 +357,17 @@ with tab_screening:
 
                 st.markdown("### Resultater")
                 st.dataframe(screen_df, use_container_width=True, hide_index=True)
+
+                if st.button("Log top screening resultater"):
+                    for _, row in screen_df.head(10).iterrows():
+                        append_signal_log(
+                            source="screening",
+                            ticker=row.get("Ticker", ""),
+                            action=row.get("Action", ""),
+                            timing_score=row.get("Timing Score"),
+                            theme=row.get("Themes", ""),
+                            note="Top screening candidate",
+                        )
 
                 c1, c2 = st.columns(2)
                 with c1:
@@ -293,6 +534,18 @@ with tab_strategy:
         else:
             st.dataframe(etf_df, use_container_width=True, hide_index=True)
 
+            if st.button("Log top ETF-strategier"):
+                for _, row in etf_df.head(10).iterrows():
+                    append_signal_log(
+                        source="strategy_etf",
+                        ticker=row.get("Ticker", ""),
+                        action=row.get("Action", ""),
+                        timing_score=row.get("Timing Score"),
+                        theme=row.get("Theme", ""),
+                        strategy_score=row.get("Strategy Score"),
+                        note="Top ETF strategy candidate",
+                    )
+
     with s2:
         st.markdown("### Top ledende aktier")
         leader_df = top_leaders(20)
@@ -300,6 +553,18 @@ with tab_strategy:
             st.info("Ingen leader-strategy data endnu.")
         else:
             st.dataframe(leader_df, use_container_width=True, hide_index=True)
+
+            if st.button("Log top leader-strategier"):
+                for _, row in leader_df.head(10).iterrows():
+                    append_signal_log(
+                        source="strategy_leader",
+                        ticker=row.get("Ticker", ""),
+                        action=row.get("Action", ""),
+                        timing_score=row.get("Timing Score"),
+                        theme=row.get("Theme", ""),
+                        strategy_score=row.get("Strategy Score"),
+                        note="Top leader strategy candidate",
+                    )
 
     st.markdown("### Strategy pr. tema")
     selected_strategy_theme = st.selectbox(
@@ -337,10 +602,12 @@ with tab_portfolio:
                         "Konto": pf_account,
                     }
                 )
+                save_portfolio_positions(st.session_state["portfolio_positions"])
 
     with clear_col:
         if st.button("Ryd portefølje"):
             st.session_state["portfolio_positions"] = []
+            save_portfolio_positions(st.session_state["portfolio_positions"])
 
     positions_df = pd.DataFrame(st.session_state["portfolio_positions"])
 
