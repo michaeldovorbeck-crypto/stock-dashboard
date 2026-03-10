@@ -34,19 +34,26 @@ from src.portfolio_engine import (
 
 from src.portfolio_transactions_engine import (
     add_transaction,
-    build_account_overview_from_positions,
     build_positions_from_transactions,
     normalize_transactions_df,
     remove_transaction_by_index,
     transaction_display_df,
 )
+
 from src.portfolio_upload_engine import (
     load_transactions_from_upload,
     merge_transactions,
 )
+
 from src.portfolio_signal_engine import (
     enrich_positions_with_signals,
     build_portfolio_signal_summary,
+)
+
+from src.depot_positions_engine import (
+    load_positions_from_depot_uploads,
+    normalize_uploaded_positions_df,
+    portfolio_positions_display_df,
 )
 
 from src.theme_engine import build_theme_rankings, theme_deep_dive
@@ -73,7 +80,7 @@ st.set_page_config(
 
 
 # -----------------------------------------------------------------------------
-# SIMPLE LOGIN (TEMPORARY TEST VERSION)
+# SIMPLE LOGIN
 # -----------------------------------------------------------------------------
 
 APP_PASSWORD = "Mosevej3"
@@ -125,6 +132,9 @@ if "portfolio_positions" not in st.session_state:
 
 if "portfolio_transactions" not in st.session_state:
     st.session_state["portfolio_transactions"] = load_portfolio_transactions()
+
+if "portfolio_uploaded_positions" not in st.session_state:
+    st.session_state["portfolio_uploaded_positions"] = []
 
 if "analysis_selected_ticker" not in st.session_state:
     st.session_state["analysis_selected_ticker"] = "AAPL"
@@ -404,11 +414,96 @@ with tab_portfolio:
     page_intro("portfolio")
 
     st.info(
-        "Portefølje 3.0 – Portfolio Intelligence + Risk Engine er nu integreret. "
-        "Åbne positioner kobles til signaler, risiko, temaeksponering og rebalance-forslag."
+        "Portefølje 3.1 – Du kan nu uploade både handelslog og depotoversigter. "
+        "Depotoversigter kobles automatisk til dine 3 depoter: "
+        "AKT 11005683, RPP 11005956 og AOP 47994264."
     )
 
     tx_df = normalize_transactions_df(pd.DataFrame(st.session_state["portfolio_transactions"]))
+    uploaded_positions_df = normalize_uploaded_positions_df(
+        pd.DataFrame(st.session_state["portfolio_uploaded_positions"])
+    )
+
+    # -------------------------------------------------------------------------
+    # DEPOTOVERSIGT UPLOAD
+    # -------------------------------------------------------------------------
+
+    st.markdown("### Upload depotoversigter (aktuelle beholdninger)")
+    depot_files = st.file_uploader(
+        "Upload en eller flere depotoversigter fra dine 3 depoter",
+        type=["csv"],
+        accept_multiple_files=True,
+        key="portfolio_depot_upload",
+    )
+
+    if depot_files:
+        imported_positions_df, depot_msg = load_positions_from_depot_uploads(depot_files)
+        st.write(depot_msg)
+
+        if not imported_positions_df.empty:
+            st.markdown("#### Preview af depotbeholdninger")
+            st.caption(
+                "Ticker kan redigeres før import. Konto kobles automatisk ud fra kontonummer i filnavnet."
+            )
+
+            editable_cols = [
+                c for c in [
+                    "Account Code",
+                    "Account",
+                    "Ticker",
+                    "Asset Name",
+                    "Currency",
+                    "Net Shares",
+                    "Avg Cost",
+                    "Last Price",
+                    "Market Value DKK",
+                    "Return %",
+                    "Return DKK",
+                ]
+                if c in imported_positions_df.columns
+            ]
+
+            edited_positions_df = st.data_editor(
+                imported_positions_df[editable_cols],
+                use_container_width=True,
+                hide_index=True,
+                num_rows="fixed",
+                key="portfolio_depot_editor",
+                column_config={
+                    "Ticker": st.column_config.TextColumn("Ticker"),
+                    "Account Code": st.column_config.TextColumn("Depot"),
+                    "Account": st.column_config.TextColumn("Konto"),
+                    "Asset Name": st.column_config.TextColumn("Navn"),
+                },
+            )
+
+            merge_keys = ["Account", "Asset Name", "Currency", "Net Shares"]
+            editable_merge_cols = [c for c in merge_keys + ["Ticker"] if c in edited_positions_df.columns]
+
+            edited_merge = edited_positions_df[editable_merge_cols].copy()
+
+            imported_positions_df = imported_positions_df.drop(columns=["Ticker"], errors="ignore").merge(
+                edited_merge,
+                on=[c for c in merge_keys if c in imported_positions_df.columns and c in edited_merge.columns],
+                how="left",
+            )
+
+            d1, d2 = st.columns(2)
+
+            with d1:
+                if st.button("Indlæs depotoversigter som aktuelle beholdninger", key="portfolio_import_depots"):
+                    clean_positions = normalize_uploaded_positions_df(imported_positions_df)
+                    st.session_state["portfolio_uploaded_positions"] = clean_positions.to_dict(orient="records")
+                    st.success(f"{len(clean_positions)} aktuelle positioner indlæst fra depotoversigter.")
+
+            with d2:
+                if st.button("Ryd uploaded depotbeholdninger", key="portfolio_clear_uploaded_positions"):
+                    st.session_state["portfolio_uploaded_positions"] = []
+                    st.warning("Uploaded depotbeholdninger er ryddet.")
+
+    # -------------------------------------------------------------------------
+    # HANDELSLOG UPLOAD
+    # -------------------------------------------------------------------------
 
     st.markdown("### Upload handler fra CSV")
     uploaded_file = st.file_uploader(
@@ -423,11 +518,7 @@ with tab_portfolio:
 
         if not imported_df.empty:
             st.markdown("#### Import preview")
-            st.dataframe(
-                transaction_display_df(imported_df),
-                use_container_width=True,
-                hide_index=True,
-            )
+            st.dataframe(transaction_display_df(imported_df), use_container_width=True, hide_index=True)
 
             u1, u2 = st.columns(2)
 
@@ -444,6 +535,10 @@ with tab_portfolio:
                     st.session_state["portfolio_transactions"] = clean_import.to_dict(orient="records")
                     save_portfolio_transactions(st.session_state["portfolio_transactions"])
                     st.success(f"Handelslog erstattet med {len(clean_import)} importerede handler.")
+
+    # -------------------------------------------------------------------------
+    # MANUEL HANDEL
+    # -------------------------------------------------------------------------
 
     st.markdown("### Tilføj handel manuelt")
     c1, c2, c3, c4 = st.columns(4)
@@ -492,9 +587,32 @@ with tab_portfolio:
             st.warning("Hele handelsloggen er ryddet")
 
     tx_df = normalize_transactions_df(pd.DataFrame(st.session_state["portfolio_transactions"]))
+    uploaded_positions_df = normalize_uploaded_positions_df(
+        pd.DataFrame(st.session_state["portfolio_uploaded_positions"])
+    )
+
+    # -------------------------------------------------------------------------
+    # AKTIVE POSITIONER
+    # -------------------------------------------------------------------------
 
     st.markdown("### Åbne positioner")
-    positions_df = build_positions_from_transactions(tx_df)
+
+    tx_positions_df = build_positions_from_transactions(tx_df)
+
+    if not uploaded_positions_df.empty:
+        positions_df = uploaded_positions_df.copy()
+        st.success("Aktuelle beholdninger kommer fra uploaded depotoversigter.")
+        st.dataframe(
+            portfolio_positions_display_df(positions_df),
+            use_container_width=True,
+            hide_index=True,
+        )
+    else:
+        positions_df = tx_positions_df.copy()
+        if positions_df.empty:
+            st.info("Ingen åbne positioner endnu.")
+        else:
+            st.caption("Aktuelle beholdninger beregnes fra handelsloggen.")
 
     positions_signal_df = pd.DataFrame()
     signal_history_df = pd.DataFrame()
@@ -504,65 +622,65 @@ with tab_portfolio:
     discovery_df = pd.DataFrame()
     macro_df = pd.DataFrame()
 
-    if positions_df.empty:
-        st.info("Ingen åbne positioner endnu.")
-    else:
-        with st.spinner("Beriger positioner med signaler..."):
-            positions_signal_df = enrich_positions_with_signals(positions_df)
+    if not positions_df.empty:
+        positions_for_signals = positions_df.copy()
+        if "Ticker" in positions_for_signals.columns:
+            positions_for_signals = positions_for_signals[
+                positions_for_signals["Ticker"].fillna("").astype(str).str.strip() != ""
+            ].copy()
 
-        summary = build_portfolio_signal_summary(positions_signal_df)
+        if positions_for_signals.empty:
+            st.warning("Ingen positioner har ticker endnu. Udfyld ticker i depot-upload preview for at få signaler.")
+        else:
+            with st.spinner("Beriger positioner med signaler..."):
+                positions_signal_df = enrich_positions_with_signals(positions_for_signals)
 
-        s1, s2, s3, s4, s5 = st.columns(5)
-        s1.metric("Positioner", summary.get("positions", 0))
-        s2.metric("KØB", summary.get("buy_count", 0))
-        s3.metric("HOLD", summary.get("hold_count", 0))
-        s4.metric("SÆLG", summary.get("sell_count", 0))
-        s5.metric("Gns samlet score", summary.get("avg_overall_score"))
+            summary = build_portfolio_signal_summary(positions_signal_df)
 
-        st.dataframe(positions_signal_df, use_container_width=True, hide_index=True)
+            s1, s2, s3, s4, s5 = st.columns(5)
+            s1.metric("Positioner", summary.get("positions", 0))
+            s2.metric("KØB", summary.get("buy_count", 0))
+            s3.metric("HOLD", summary.get("hold_count", 0))
+            s4.metric("SÆLG", summary.get("sell_count", 0))
+            s5.metric("Gns samlet score", summary.get("avg_overall_score"))
 
-        st.markdown("### Konto-overblik")
-        account_overview_df = build_account_overview_from_positions(positions_df)
-        if not account_overview_df.empty:
-            st.dataframe(account_overview_df, use_container_width=True, hide_index=True)
+            st.dataframe(positions_signal_df, use_container_width=True, hide_index=True)
 
-        st.markdown("### Handlingsliste")
-        action_cols = [
-            c
-            for c in [
-                "Ticker",
-                "Account",
-                "Net Shares",
-                "Avg Cost",
-                "Last Price",
-                "Unrealized P/L %",
-                "Technical Signal",
-                "Overall Signal",
-                "Overall Score",
-                "News Bias",
-                "Signal Days",
-                "Action Flag",
+            st.markdown("### Handlingsliste")
+            action_cols = [
+                c for c in [
+                    "Ticker",
+                    "Account",
+                    "Net Shares",
+                    "Avg Cost",
+                    "Last Price",
+                    "Unrealized P/L %",
+                    "Technical Signal",
+                    "Overall Signal",
+                    "Overall Score",
+                    "News Bias",
+                    "Signal Days",
+                    "Action Flag",
+                ] if c in positions_signal_df.columns
             ]
-            if c in positions_signal_df.columns
-        ]
-        if action_cols:
-            action_df = positions_signal_df[action_cols].copy()
-            st.dataframe(action_df, use_container_width=True, hide_index=True)
+            if action_cols:
+                st.dataframe(
+                    positions_signal_df[action_cols].copy(),
+                    use_container_width=True,
+                    hide_index=True,
+                )
 
-        analysis_df = positions_signal_df.copy()
-        analysis_rename_map = {
-            "Ticker": "ticker",
-            "Last Price": "current_price",
-            "Technical Signal": "trend",
-            "Overall Signal": "signal",
-            "Overall Score": "timing_score",
-            "News Bias": "news_sentiment",
-        }
-        analysis_df = analysis_df.rename(
-            columns={k: v for k, v in analysis_rename_map.items() if k in analysis_df.columns}
-        )
+            analysis_df = positions_signal_df.copy().rename(
+                columns={
+                    "Ticker": "ticker",
+                    "Last Price": "current_price",
+                    "Technical Signal": "trend",
+                    "Overall Signal": "signal",
+                    "Overall Score": "timing_score",
+                    "News Bias": "news_sentiment",
+                }
+            )
 
-        if not positions_signal_df.empty:
             signal_df = positions_signal_df.copy().rename(
                 columns={
                     "Ticker": "ticker",
@@ -574,7 +692,6 @@ with tab_portfolio:
             keep_cols = [c for c in ["ticker", "signal", "signal_score", "signal_streak"] if c in signal_df.columns]
             signal_df = signal_df[keep_cols] if keep_cols else pd.DataFrame()
 
-        if not positions_signal_df.empty:
             signal_history_df = positions_signal_df.copy().rename(
                 columns={
                     "Ticker": "ticker",
@@ -585,27 +702,27 @@ with tab_portfolio:
                 signal_history_df = signal_history_df[["ticker", "signal"]].copy()
                 signal_history_df["date"] = pd.Timestamp.today().normalize()
 
-        if not positions_signal_df.empty and "News Bias" in positions_signal_df.columns:
-            news_df = positions_signal_df[["Ticker", "News Bias"]].copy().rename(
-                columns={
-                    "Ticker": "ticker",
-                    "News Bias": "news_sentiment",
-                }
+            if "News Bias" in positions_signal_df.columns:
+                news_df = positions_signal_df[["Ticker", "News Bias"]].copy().rename(
+                    columns={
+                        "Ticker": "ticker",
+                        "News Bias": "news_sentiment",
+                    }
+                )
+
+            discovery_df = build_discovery_df_from_themes(positions_signal_df, THEMES)
+            macro_df = build_macro_df_from_session()
+
+            st.markdown("---")
+            render_portfolio_view(
+                portfolio_df=positions_for_signals,
+                analysis_df=analysis_df,
+                signal_df=signal_df,
+                signal_history_df=signal_history_df,
+                news_df=news_df,
+                discovery_df=discovery_df,
+                macro_df=macro_df,
             )
-
-        discovery_df = build_discovery_df_from_themes(positions_signal_df, THEMES)
-        macro_df = build_macro_df_from_session()
-
-        st.markdown("---")
-        render_portfolio_view(
-            portfolio_df=positions_df,
-            analysis_df=analysis_df,
-            signal_df=signal_df,
-            signal_history_df=signal_history_df,
-            news_df=news_df,
-            discovery_df=discovery_df,
-            macro_df=macro_df,
-        )
 
     st.markdown("### Handelslog")
     if tx_df.empty:
@@ -631,6 +748,10 @@ with tab_portfolio:
             st.session_state["portfolio_transactions"] = updated.to_dict(orient="records")
             save_portfolio_transactions(st.session_state["portfolio_transactions"])
             st.success("Valgt handel er slettet")
+
+    # -------------------------------------------------------------------------
+    # LEGACY SECTION
+    # -------------------------------------------------------------------------
 
     st.markdown("### Legacy porteføljevisning")
     st.caption("Denne sektion bevares midlertidigt for bagudkompatibilitet med den gamle positionsmodel.")

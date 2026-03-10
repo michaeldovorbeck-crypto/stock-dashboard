@@ -1,153 +1,141 @@
 from __future__ import annotations
 
-from io import BytesIO, StringIO
+import io
 
 import pandas as pd
 
-from src.portfolio_transactions_engine import normalize_transactions_df
+
+def _find_col(df: pd.DataFrame, candidates: list[str]) -> str | None:
+    lower_map = {str(c).strip().lower(): c for c in df.columns}
+    for cand in candidates:
+        if cand.lower() in lower_map:
+            return lower_map[cand.lower()]
+    return None
 
 
-COLUMN_ALIASES = {
-    "date": "Date",
-    "dato": "Date",
-    "trade_date": "Date",
-    "booking_date": "Date",
-    "order_date": "Date",
+def _to_float(value) -> float | None:
+    if value is None or (isinstance(value, float) and pd.isna(value)):
+        return None
 
-    "ticker": "Ticker",
-    "symbol": "Ticker",
-    "isin_ticker": "Ticker",
+    text = str(value).strip()
+    if not text:
+        return None
 
-    "account": "Account",
-    "konto": "Account",
-    "depot": "Account",
+    text = text.replace("%", "")
+    text = text.replace(" ", "")
 
-    "side": "Side",
-    "type": "Side",
-    "action": "Side",
-    "transaction_type": "Side",
-    "køb/salg": "Side",
-    "koeb/salg": "Side",
-    "buy_sell": "Side",
-
-    "shares": "Shares",
-    "antal": "Shares",
-    "quantity": "Shares",
-    "qty": "Shares",
-
-    "price": "Price",
-    "kurs": "Price",
-    "trade_price": "Price",
-
-    "fee": "Fee",
-    "gebyr": "Fee",
-    "commission": "Fee",
-    "cost": "Fee",
-
-    "note": "Note",
-    "comment": "Note",
-    "tekst": "Note",
-    "description": "Note",
-}
-
-
-SIDE_MAP = {
-    "BUY": "BUY",
-    "KØB": "BUY",
-    "KOEB": "BUY",
-    "B": "BUY",
-
-    "SELL": "SELL",
-    "SÆLG": "SELL",
-    "SAELG": "SELL",
-    "S": "SELL",
-}
-
-
-def _clean_colname(name: str) -> str:
-    return str(name or "").strip().lower()
-
-
-def _read_uploaded_csv(uploaded_file) -> pd.DataFrame:
-    raw = uploaded_file.getvalue()
+    # håndter både dansk og engelsk talformat
+    if "," in text and "." in text:
+        text = text.replace(".", "").replace(",", ".")
+    elif "," in text:
+        text = text.replace(",", ".")
 
     try:
-        text = raw.decode("utf-8")
-        return pd.read_csv(StringIO(text))
-    except Exception:
-        pass
-
-    try:
-        text = raw.decode("latin-1")
-        return pd.read_csv(StringIO(text))
-    except Exception:
-        pass
-
-    try:
-        return pd.read_csv(BytesIO(raw))
-    except Exception:
-        return pd.DataFrame()
+        return float(text)
+    except ValueError:
+        return None
 
 
-def standardize_uploaded_transactions(df: pd.DataFrame) -> pd.DataFrame:
+def normalize_transactions_df(df: pd.DataFrame) -> pd.DataFrame:
     if df is None or df.empty:
-        return pd.DataFrame(columns=["Date", "Ticker", "Account", "Side", "Shares", "Price", "Fee", "Note"])
+        return pd.DataFrame(
+            columns=[
+                "Date",
+                "Ticker",
+                "Account",
+                "Side",
+                "Shares",
+                "Price",
+                "Fee",
+                "Note",
+            ]
+        )
 
     work = df.copy()
-    rename_map = {}
 
-    for col in work.columns:
-        cleaned = _clean_colname(col)
-        if cleaned in COLUMN_ALIASES:
-            rename_map[col] = COLUMN_ALIASES[cleaned]
+    rename_map = {}
+    col_map = {
+        "Date": ["date", "dato", "trade date"],
+        "Ticker": ["ticker", "symbol", "papir", "instrument"],
+        "Account": ["account", "konto", "depot"],
+        "Side": ["side", "type", "buy/sell", "action"],
+        "Shares": ["shares", "antal", "quantity", "qty"],
+        "Price": ["price", "kurs", "trade price"],
+        "Fee": ["fee", "gebyr", "commission", "omkostning"],
+        "Note": ["note", "kommentar", "tekst"],
+    }
+
+    for target, candidates in col_map.items():
+        found = _find_col(work, candidates)
+        if found is not None:
+            rename_map[found] = target
 
     work = work.rename(columns=rename_map)
 
     for col in ["Date", "Ticker", "Account", "Side", "Shares", "Price", "Fee", "Note"]:
         if col not in work.columns:
-            work[col] = ""
+            work[col] = None
+
+    work["Date"] = pd.to_datetime(work["Date"], errors="coerce")
+    work["Ticker"] = work["Ticker"].fillna("").astype(str).str.upper().str.strip()
+    work["Account"] = work["Account"].fillna("").astype(str).str.strip()
+    work["Side"] = work["Side"].fillna("").astype(str).str.upper().str.strip()
+    work["Note"] = work["Note"].fillna("").astype(str).str.strip()
+
+    for col in ["Shares", "Price", "Fee"]:
+        work[col] = work[col].apply(_to_float)
 
     work = work[["Date", "Ticker", "Account", "Side", "Shares", "Price", "Fee", "Note"]].copy()
+    work = work.dropna(subset=["Date"], how="all").reset_index(drop=True)
 
-    work["Side"] = (
-        work["Side"]
-        .astype(str)
-        .str.strip()
-        .str.upper()
-        .replace(SIDE_MAP)
-    )
-
-    return normalize_transactions_df(work)
+    return work
 
 
 def load_transactions_from_upload(uploaded_file) -> tuple[pd.DataFrame, str]:
     if uploaded_file is None:
         return pd.DataFrame(), "Ingen fil valgt."
 
-    raw_df = _read_uploaded_csv(uploaded_file)
-    if raw_df.empty:
-        return pd.DataFrame(), "Kunne ikke læse CSV eller filen var tom."
+    try:
+        content = uploaded_file.getvalue()
 
-    tx_df = standardize_uploaded_transactions(raw_df)
-    if tx_df.empty:
-        return pd.DataFrame(), "Filen blev læst, men ingen gyldige handler kunne udledes."
+        # prøv først almindelig csv
+        try:
+            raw_df = pd.read_csv(io.BytesIO(content))
+        except Exception:
+            # fallback til semikolon
+            try:
+                raw_df = pd.read_csv(io.BytesIO(content), sep=";")
+            except Exception:
+                # fallback til tab
+                raw_df = pd.read_csv(io.BytesIO(content), sep="\t")
 
-    return tx_df, f"Import preview klar: {len(tx_df)} gyldige handler."
+        clean_df = normalize_transactions_df(raw_df)
+
+        if clean_df.empty:
+            return pd.DataFrame(), f"{uploaded_file.name}: ingen gyldige handler fundet."
+
+        return clean_df, f"{uploaded_file.name}: {len(clean_df)} handler indlæst."
+
+    except Exception as exc:
+        return pd.DataFrame(), f"{getattr(uploaded_file, 'name', 'upload')}: fejl ved import ({exc})"
 
 
 def merge_transactions(existing_df: pd.DataFrame, imported_df: pd.DataFrame) -> pd.DataFrame:
-    if existing_df is None or existing_df.empty:
-        return normalize_transactions_df(imported_df)
+    existing = normalize_transactions_df(existing_df)
+    imported = normalize_transactions_df(imported_df)
 
-    if imported_df is None or imported_df.empty:
-        return normalize_transactions_df(existing_df)
+    if existing.empty:
+        return imported.reset_index(drop=True)
 
-    combined = pd.concat([existing_df, imported_df], ignore_index=True)
-    combined = normalize_transactions_df(combined)
+    if imported.empty:
+        return existing.reset_index(drop=True)
 
-    combined = combined.drop_duplicates(
+    merged = pd.concat([existing, imported], ignore_index=True)
+
+    merged = merged.drop_duplicates(
         subset=["Date", "Ticker", "Account", "Side", "Shares", "Price", "Fee", "Note"],
         keep="first",
     ).reset_index(drop=True)
 
-    return combined
+    merged = merged.sort_values(["Date", "Ticker", "Account"], ascending=[True, True, True]).reset_index(drop=True)
+    return merged

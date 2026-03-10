@@ -12,7 +12,6 @@ def build_discovery_df_from_themes(
         return pd.DataFrame(columns=["ticker", "themes", "discovery_score"])
 
     rows = []
-
     unique_tickers = positions_signal_df["Ticker"].astype(str).str.upper().dropna().unique()
 
     for ticker in unique_tickers:
