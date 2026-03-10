@@ -9,6 +9,8 @@ from src.analysis_ui_components import (
     render_hero_panel,
     render_market_now_cards,
     render_quick_stats_block,
+    render_recommendation_panel,
+    render_score_gauge_block,
     render_signal_summary_card,
     render_why_this_matters,
     safe_metric_value,
@@ -24,12 +26,14 @@ from src.diagnostics_engine import (
 from src.help_texts import HELP_TEXT
 from src.help_ui import page_intro
 from src.history_engine import recent_assets_df, register_recent_view
+from src.news_bias_engine import build_news_bias_snapshot
 from src.news_engine import build_asset_news_links
 from src.overview_engine import build_market_overview, build_quick_picks
 from src.peer_engine import build_peer_group
 from src.portfolio_context_engine import build_portfolio_context
 from src.portfolio_engine import ACCOUNT_TYPES
 from src.search_engine import search_assets
+from src.signal_duration_engine import build_signal_duration_snapshot
 from src.signal_log_engine import append_signal_log
 from src.storage_engine import (
     load_portfolio_positions,
@@ -39,6 +43,7 @@ from src.storage_engine import (
 )
 from src.technical_view_engine import build_technical_view
 from src.ui_style import apply_pro_style, render_badges, render_info_card
+from src.unified_signal_engine import build_unified_signal_snapshot
 from src.watchlist_engine import add_to_watchlist, remove_from_watchlist, watchlist_to_df
 
 
@@ -130,24 +135,14 @@ def _render_right_sidebar() -> None:
 
     st.markdown("### Watchlist")
     st.caption(HELP_TEXT["watchlist"])
-    st.dataframe(
-        watchlist_to_df(watchlist),
-        use_container_width=True,
-        hide_index=True,
-    )
+    st.dataframe(watchlist_to_df(watchlist), use_container_width=True, hide_index=True)
 
     st.markdown("### Senest sete")
     st.caption(HELP_TEXT["recent_views"])
-    st.dataframe(
-        recent_assets_df(),
-        use_container_width=True,
-        hide_index=True,
-    )
+    st.dataframe(recent_assets_df(), use_container_width=True, hide_index=True)
 
 
 def _render_actions(analysis: dict) -> None:
-    timing = analysis.get("timing", {})
-    record = analysis.get("record", {})
     watchlist = _get_watchlist_safe()
     portfolio_positions = _get_portfolio_positions_safe()
 
@@ -155,66 +150,158 @@ def _render_actions(analysis: dict) -> None:
 
     with a1:
         if st.button("Tilføj til watchlist", key=f"analysis4_add_watch_{analysis['ticker']}"):
-            st.session_state["watchlist"] = add_to_watchlist(
-                watchlist,
-                analysis["ticker"],
-            )
+            st.session_state["watchlist"] = add_to_watchlist(watchlist, analysis["ticker"])
             save_watchlist(st.session_state["watchlist"])
             st.success(f"{analysis['ticker']} tilføjet til watchlist")
 
     with a2:
         if st.button("Fjern fra watchlist", key=f"analysis4_remove_watch_{analysis['ticker']}"):
-            st.session_state["watchlist"] = remove_from_watchlist(
-                watchlist,
-                analysis["ticker"],
-            )
+            st.session_state["watchlist"] = remove_from_watchlist(watchlist, analysis["ticker"])
             save_watchlist(st.session_state["watchlist"])
             st.success(f"{analysis['ticker']} fjernet fra watchlist")
 
     with a3:
         if st.button("Tilføj til portefølje", key=f"analysis4_add_pf_{analysis['ticker']}"):
             portfolio_positions = list(portfolio_positions)
-            portfolio_positions.append(
-                {"Ticker": analysis["ticker"], "Antal": 1.0, "Konto": ACCOUNT_TYPES[0]}
-            )
+            portfolio_positions.append({"Ticker": analysis["ticker"], "Antal": 1.0, "Konto": ACCOUNT_TYPES[0]})
             st.session_state["portfolio_positions"] = portfolio_positions
             save_portfolio_positions(st.session_state["portfolio_positions"])
             st.success(f"{analysis['ticker']} tilføjet til porteføljen")
 
     with a4:
         if st.button("Log signal", key=f"analysis4_log_{analysis['ticker']}"):
+            unified = analysis.get("unified_signal", {})
             append_signal_log(
                 source="analysis_4_pro",
                 ticker=analysis["ticker"],
-                action=timing.get("action", ""),
-                timing_score=timing.get("timing_score"),
-                theme=record.get("themes", ""),
-                note="Analysis 4.0 PRO manual log",
+                action=unified.get("overall_signal", ""),
+                timing_score=unified.get("technical_score"),
+                theme=analysis.get("record", {}).get("themes", ""),
+                note="Unified signal log",
             )
             st.success("Signal logget")
 
 
+def _render_signal_duration_block(analysis: dict) -> None:
+    snapshot = build_signal_duration_snapshot(analysis["df"])
+
+    st.markdown("### Teknisk signal over tid")
+    st.caption(
+        "Denne sektion viser hvor længe aktivet historisk har stået i KØB, HOLD eller SÆLG "
+        "baseret på den samme fælles tekniske signalmotor."
+    )
+
+    left, right = st.columns([1, 1.4])
+
+    with left:
+        st.metric("Nuværende teknisk signal", snapshot.get("current_signal", "Ukendt"))
+        st.metric("I nuværende signal", snapshot.get("streak_trading_days", 0))
+        st.metric("Kalenderdage i streak", snapshot.get("streak_calendar_days", 0))
+
+        last_switch = snapshot.get("last_switch_date")
+        if last_switch is None:
+            st.metric("Sidste skifte", "—")
+        else:
+            try:
+                st.metric("Sidste skifte", pd.to_datetime(last_switch).date().isoformat())
+            except Exception:
+                st.metric("Sidste skifte", str(last_switch))
+
+        st.metric("Forrige signal", snapshot.get("previous_signal", "Ukendt"))
+
+    with right:
+        dist_df = snapshot.get("distribution_df", pd.DataFrame())
+        if dist_df is None or dist_df.empty:
+            st.info("Ingen signalhistorik endnu.")
+        else:
+            st.dataframe(dist_df, use_container_width=True, hide_index=True)
+
+    recent_df = snapshot.get("recent_df", pd.DataFrame())
+    if recent_df is not None and not recent_df.empty:
+        with st.expander("Vis seneste signalhistorik"):
+            show_cols = [c for c in ["Date", "Technical Signal", "Technical Score", "Trend State", "Close", "RSI14"] if c in recent_df.columns]
+            st.dataframe(recent_df[show_cols], use_container_width=True, hide_index=True)
+
+
+def _render_news_bias_block(analysis: dict) -> None:
+    news_bias = analysis.get("news_bias_snapshot", {})
+    score = news_bias.get("score", 0.0)
+    bucket = news_bias.get("bucket", "Neutral")
+    count = news_bias.get("headline_count", 0)
+
+    st.markdown("### Nyhedsbias")
+    st.caption("Nyhedsbias vurderer om de seneste overskrifter omkring aktivet er positive, neutrale eller negative.")
+
+    n1, n2, n3 = st.columns(3)
+    n1.metric("News bias", f"{score:+.1f}")
+    n2.metric("Retning", bucket)
+    n3.metric("Headlines", count)
+
+    top_positive = news_bias.get("top_positive", [])
+    top_negative = news_bias.get("top_negative", [])
+
+    c1, c2 = st.columns(2)
+
+    with c1:
+        st.markdown("**Mest positive headlines**")
+        if top_positive:
+            for x in top_positive:
+                st.write(f"• {x}")
+        else:
+            st.info("Ingen tydeligt positive headlines.")
+
+    with c2:
+        st.markdown("**Mest negative headlines**")
+        if top_negative:
+            for x in top_negative:
+                st.write(f"• {x}")
+        else:
+            st.info("Ingen tydeligt negative headlines.")
+
+    headlines_df = news_bias.get("headlines_df", pd.DataFrame())
+    if headlines_df is not None and not headlines_df.empty:
+        with st.expander("Vis analyserede headlines"):
+            cols = [c for c in ["title", "source", "pub_date", "headline_score"] if c in headlines_df.columns]
+            st.dataframe(headlines_df[cols], use_container_width=True, hide_index=True)
+
+
 def _render_overview_tab(analysis: dict, diag: dict, market: dict) -> None:
-    timing = analysis.get("timing", {})
     tech_df = build_technical_view(analysis["df"])
+    unified = analysis.get("unified_signal", {})
 
     st.info(HELP_TEXT["analysis_overview_box"])
     st.caption(HELP_TEXT["analysis_hero_box"])
     render_hero_panel(analysis, diag)
 
-    action_upper = str(timing.get("action", "N/A")).upper()
+    technical_signal = str(unified.get("technical_signal", "HOLD"))
+    overall_signal = str(unified.get("overall_signal", "HOLD"))
+
     badge_items = [
-        (
-            action_upper,
-            "buy" if action_upper == "BUY" else "sell" if action_upper == "SELL" else "hold" if action_upper == "HOLD" else "neutral",
-        ),
-        (f"Trend: {safe_metric_value(timing.get('trend'))}", "neutral"),
-        (f"RSI: {safe_metric_value(timing.get('rsi'))}", "neutral"),
-        (f"ATR%: {safe_metric_value(timing.get('atr_pct'))}", "neutral"),
+        (f"Teknisk: {technical_signal}", "buy" if technical_signal == "KØB" else "sell" if technical_signal == "SÆLG" else "hold"),
+        (f"Samlet: {overall_signal}", "buy" if overall_signal == "KØB" else "sell" if overall_signal == "SÆLG" else "hold"),
+        (f"Trend: {safe_metric_value(unified.get('trend_state'))}", "neutral"),
+        (f"RSI: {safe_metric_value(analysis.get('timing', {}).get('rsi'))}", "neutral"),
     ]
     render_badges(badge_items)
 
     _render_actions(analysis)
+
+    top_block_left, top_block_right = st.columns([1.5, 1])
+
+    with top_block_left:
+        render_recommendation_panel(unified)
+
+    with top_block_right:
+        st.markdown("### Niveau-overblik")
+        st.caption("Her omsættes centrale målepunkter til lavt, mellem eller højt niveau.")
+        render_score_gauge_block("Teknisk score", unified.get("technical_score"), HELP_TEXT["timing_score"])
+        render_score_gauge_block("Samlet score", unified.get("overall_score"), HELP_TEXT["quant_score"])
+        render_score_gauge_block("RSI", analysis.get("timing", {}).get("rsi"), HELP_TEXT["rsi"])
+        data_score = 85 if unified.get("data_bucket") == "Høj" else 55 if unified.get("data_bucket") == "Mellem" else 20
+        render_score_gauge_block("Datakvalitet", data_score, HELP_TEXT["data_source"])
+
+    _render_news_bias_block(analysis)
+    _render_signal_duration_block(analysis)
 
     top_left, top_right = st.columns([2, 1])
 
@@ -241,12 +328,8 @@ def _render_overview_tab(analysis: dict, diag: dict, market: dict) -> None:
     with c2:
         st.markdown("### Quick stats")
         st.caption("Quick stats opsummerer de vigtigste tekniske nøgletal i kompakt form.")
-        render_quick_stats_block(timing)
-        render_info_card(
-            "Datakvalitet",
-            str(len(diag.get("df", pd.DataFrame()))),
-            "Antal datapunkter i analysen",
-        )
+        render_quick_stats_block(analysis)
+        render_info_card("Datakvalitet", str(len(diag.get("df", pd.DataFrame()))), "Antal datapunkter i analysen")
 
     st.caption(HELP_TEXT["analysis_market_now_box"])
     render_market_now_cards(market)
@@ -289,7 +372,6 @@ def _render_technicals_tab(analysis: dict) -> None:
         cols = [c for c in ["Close", "EMA20", "EMA50", "EMA200"] if c in tech_df.columns]
         if cols:
             st.line_chart(tech_df.set_index("Date")[cols].dropna(how="all"))
-
         if "Volume" in tech_df.columns:
             st.markdown("### Volume")
             render_volume_panel(tech_df)
@@ -315,11 +397,7 @@ def _render_technicals_tab(analysis: dict) -> None:
             st.caption("Denne tabel viser de nyeste tekniske niveauer og indikatorer.")
             st.dataframe(pd.DataFrame(stats_rows), use_container_width=True, hide_index=True)
 
-    raw_cols = [
-        c
-        for c in ["Date", "Open", "High", "Low", "Close", "Volume", "EMA20", "EMA50", "EMA200", "RSI14"]
-        if c in tech_df.columns
-    ]
+    raw_cols = [c for c in ["Date", "Open", "High", "Low", "Close", "Volume", "EMA20", "EMA50", "EMA200", "RSI14"] if c in tech_df.columns]
     if raw_cols:
         with st.expander("Vis technical table"):
             st.dataframe(tech_df[raw_cols].tail(100), use_container_width=True, hide_index=True)
@@ -371,10 +449,7 @@ def _render_context_tab(analysis: dict) -> None:
 
         st.markdown("### Portfolio context")
         st.caption("Her ser du om aktivet allerede findes i porteføljen, og hvordan det er placeret på tværs af konti.")
-        pf_ctx = build_portfolio_context(
-            analysis["ticker"],
-            portfolio_positions,
-        )
+        pf_ctx = build_portfolio_context(analysis["ticker"], portfolio_positions)
         if not pf_ctx["owned"]:
             st.info("Ikke i porteføljen endnu.")
         else:
@@ -403,7 +478,6 @@ def _render_compare_tab(analysis: dict, years: int) -> None:
     compare_defaults = [analysis["ticker"]]
     if analysis["ticker"] != "SPY":
         compare_defaults.append("SPY")
-
     compare_defaults += auto_peers[:2]
 
     deduped_defaults = []
@@ -465,20 +539,17 @@ def render_analysis_4() -> None:
 
         if not diag["ok"]:
             st.warning("Ingen data fundet for valgt ticker.")
-
             render_alternative_ticker_buttons(
                 original_ticker=selected_ticker,
                 alternatives=diag.get("alternatives", []),
                 used_symbol=diag.get("used_symbol", ""),
                 state_key="analysis_selected_ticker",
             )
-
             if not search_df.empty:
                 st.markdown("### Alternative forslag fra søgning")
                 cols_to_show = [c for c in ["ticker", "name", "type", "themes"] if c in search_df.columns]
                 if cols_to_show:
                     st.dataframe(search_df[cols_to_show], use_container_width=True, hide_index=True)
-
             render_diagnostics_tab(diag)
             return
 
@@ -486,7 +557,6 @@ def render_analysis_4() -> None:
 
         if not analysis or not analysis.get("has_data"):
             st.warning(analysis.get("message", "Ingen data fundet."))
-
             render_alternative_ticker_buttons(
                 original_ticker=selected_ticker,
                 alternatives=diag.get("alternatives", []),
@@ -495,6 +565,20 @@ def render_analysis_4() -> None:
             )
             render_diagnostics_tab(diag)
             return
+
+        record = analysis.get("record", {})
+        news_bias_snapshot = build_news_bias_snapshot(
+            ticker=analysis.get("ticker", ""),
+            company_name=record.get("name", ""),
+            themes=record.get("themes", ""),
+            limit=12,
+        )
+        analysis["news_bias_snapshot"] = news_bias_snapshot
+        analysis["unified_signal"] = build_unified_signal_snapshot(
+            analysis,
+            diag,
+            news_bias=news_bias_snapshot.get("score", 0.0),
+        )
 
         register_recent_view(analysis["ticker"])
 

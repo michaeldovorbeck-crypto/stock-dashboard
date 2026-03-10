@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import pandas as pd
+import plotly.graph_objects as go
 import streamlit as st
 
 from src.help_texts import HELP_TEXT
@@ -33,6 +34,10 @@ def signal_badge(action: str) -> str:
         return "🔴 SELL"
     if act == "HOLD":
         return "🟡 HOLD"
+    if act == "KØB":
+        return "🟢 KØB"
+    if act == "SÆLG":
+        return "🔴 SÆLG"
     return "⚪ N/A"
 
 
@@ -55,7 +60,6 @@ def confidence_label(diag: dict, analysis: dict) -> str:
     rsi = _to_float(timing.get("rsi"))
 
     points = 0
-
     if rows >= 750:
         points += 2
     elif rows >= 250:
@@ -63,10 +67,8 @@ def confidence_label(diag: dict, analysis: dict) -> str:
 
     if source in {"Twelve Data", "Yahoo", "Stooq"}:
         points += 1
-
     if timing_score is not None:
         points += 1
-
     if rsi is not None:
         points += 1
 
@@ -92,9 +94,10 @@ def render_hero_panel(analysis: dict, diag: dict) -> None:
     record = analysis.get("record", {})
     timing = analysis.get("timing", {})
     returns = analysis.get("returns", {})
+    unified = analysis.get("unified_signal", {})
 
-    action = timing.get("action", "")
-    timing_score = timing.get("timing_score")
+    display_signal = unified.get("technical_signal") or timing.get("action", "")
+    display_score = unified.get("technical_score", timing.get("timing_score"))
     quant_score = analysis.get("quant_score")
     confidence = confidence_label(diag, analysis)
 
@@ -103,12 +106,12 @@ def render_hero_panel(analysis: dict, diag: dict) -> None:
     h1, h2, h3, h4 = st.columns([1.3, 2.2, 1.2, 1.2])
     h1.metric("Ticker", safe_metric_value(analysis.get("ticker")))
     h2.metric("Navn", safe_metric_value(record.get("name")))
-    h3.metric("Signal", signal_badge(action))
+    h3.metric("Signal", signal_badge(display_signal))
     h4.metric("Confidence", confidence)
 
     m1, m2, m3, m4 = st.columns(4)
     m1.metric("Pris", safe_metric_value(analysis.get("last")))
-    m2.metric("Timing", score_badge(timing_score), help=HELP_TEXT["timing_score"])
+    m2.metric("Teknisk score", score_badge(display_score), help=HELP_TEXT["timing_score"])
     m3.metric("Quant", score_badge(quant_score), help=HELP_TEXT["quant_score"])
     m4.metric("Volatilitet", safe_metric_value(timing.get("atr_pct")), help=HELP_TEXT["atr"])
 
@@ -123,28 +126,28 @@ def render_hero_panel(analysis: dict, diag: dict) -> None:
         f"Sektor: {safe_metric_value(record.get('sector'))} | "
         f"Land: {safe_metric_value(record.get('country'))}"
     )
-
     st.write(f"**Themes:** {record.get('themes', '') or 'Ingen tema-match endnu'}")
     render_source_strip(diag)
 
 
 def render_signal_summary_card(analysis: dict) -> None:
+    unified = analysis.get("unified_signal", {})
     timing = analysis.get("timing", {})
-    action = str(timing.get("action", "")).upper()
-    trend = safe_metric_value(timing.get("trend"))
+
+    action = str(unified.get("technical_signal", "HOLD")).upper()
+    trend = safe_metric_value(unified.get("trend_state", timing.get("trend")))
     rsi = _to_float(timing.get("rsi"))
     momentum_1m = _to_float(timing.get("momentum_1m"))
     momentum_3m = _to_float(timing.get("momentum_3m"))
 
     bullets = []
-
-    if action == "BUY":
-        bullets.append("Signalet er bullish")
-    elif action == "SELL":
-        bullets.append("Signalet er bearish")
-    else:
-        bullets.append("Signalet er neutralt")
-
+    bullets.append(
+        "Det tekniske signal er bullish"
+        if action == "KØB"
+        else "Det tekniske signal er bearish"
+        if action == "SÆLG"
+        else "Det tekniske signal er neutralt"
+    )
     bullets.append(f"Trend vurderes som {trend}")
 
     if rsi is not None:
@@ -157,7 +160,6 @@ def render_signal_summary_card(analysis: dict) -> None:
 
     if momentum_1m is not None:
         bullets.append("1M momentum er positivt" if momentum_1m > 0 else "1M momentum er svagt/negativt")
-
     if momentum_3m is not None:
         bullets.append("3M momentum er positivt" if momentum_3m > 0 else "3M momentum er svagt/negativt")
 
@@ -167,13 +169,16 @@ def render_signal_summary_card(analysis: dict) -> None:
 
 def render_why_this_matters(analysis: dict) -> None:
     record = analysis.get("record", {})
-    timing = analysis.get("timing", {})
+    unified = analysis.get("unified_signal", {})
     macro = analysis.get("macro", {})
+    timing = analysis.get("timing", {})
 
     why = []
 
-    if timing.get("action") == "BUY":
-        why.append("positivt timing-signal")
+    if unified.get("overall_signal") == "KØB":
+        why.append("den samlede indikation peger mod køb")
+    elif unified.get("overall_signal") == "SÆLG":
+        why.append("den samlede indikation peger mod salg")
 
     m1 = pd.to_numeric(timing.get("momentum_1m"), errors="coerce")
     if pd.notna(m1) and float(m1) > 0:
@@ -196,35 +201,39 @@ def render_why_this_matters(analysis: dict) -> None:
     st.info(" / ".join(why[:4]))
 
 
-def render_quick_stats_block(timing: dict) -> None:
-    """
-    Column-safe quick stats.
-    Denne funktion laver IKKE st.columns().
-    """
-    st.metric("Signal", safe_metric_value(timing.get("action")))
-    st.metric("Trend", safe_metric_value(timing.get("trend")))
-    st.metric("Timing score", safe_metric_value(timing.get("timing_score")), help=HELP_TEXT["timing_score"])
+def render_quick_stats_block(analysis: dict) -> None:
+    timing = analysis.get("timing", {})
+    unified = analysis.get("unified_signal", {})
+
+    st.metric("Teknisk signal", safe_metric_value(unified.get("technical_signal")))
+    st.metric("Samlet indikation", safe_metric_value(unified.get("overall_signal")))
+    st.metric("Teknisk score", safe_metric_value(unified.get("technical_score")), help=HELP_TEXT["timing_score"])
     st.metric("RSI", safe_metric_value(timing.get("rsi")), help=HELP_TEXT["rsi"])
     st.metric("ATR %", safe_metric_value(timing.get("atr_pct")), help=HELP_TEXT["atr"])
 
 
 def render_factor_view(analysis: dict) -> None:
+    unified = analysis.get("unified_signal", {})
     timing = analysis.get("timing", {})
+    news_bias_snapshot = analysis.get("news_bias_snapshot", {})
+
     factors = {
-        "Timing score": _to_float(timing.get("timing_score")),
+        "Technical score": _to_float(unified.get("technical_score")),
+        "Overall score": _to_float(unified.get("overall_score")),
+        "News bias": _to_float(unified.get("news_bias")),
         "RSI": _to_float(timing.get("rsi")),
         "1M momentum": _to_float(timing.get("momentum_1m")),
         "3M momentum": _to_float(timing.get("momentum_3m")),
         "ATR %": _to_float(timing.get("atr_pct")),
     }
 
-    rows = []
-    for k, v in factors.items():
-        rows.append({"Factor": k, "Value": v})
-
-    df = pd.DataFrame(rows)
+    rows = [{"Factor": k, "Value": v} for k, v in factors.items()]
     st.markdown("### Mini factor view")
-    st.dataframe(df, use_container_width=True, hide_index=True)
+    st.dataframe(pd.DataFrame(rows), use_container_width=True, hide_index=True)
+
+    bucket = news_bias_snapshot.get("bucket", "Neutral")
+    count = news_bias_snapshot.get("headline_count", 0)
+    st.caption(f"News bias: {bucket} | Headlines analyseret: {count}")
 
 
 def render_market_now_cards(market: dict) -> None:
@@ -267,3 +276,82 @@ def render_market_now_cards(market: dict) -> None:
             cols = [c for c in ["Ticker", "Strategy Score", "Action"] if c in leaders_df.columns]
             if cols:
                 st.dataframe(leaders_df[cols].head(5), use_container_width=True, hide_index=True)
+
+
+def _gauge_score(score: float | None) -> int:
+    if score is None:
+        return 0
+    return max(0, min(100, int(round(score))))
+
+
+def _gauge_bucket(score: float | None) -> str:
+    if score is None:
+        return "Ukendt"
+    if score >= 67:
+        return "Høj"
+    if score >= 34:
+        return "Mellem"
+    return "Lav"
+
+
+def _build_gauge_figure(value: int, title: str) -> go.Figure:
+    fig = go.Figure(
+        go.Indicator(
+            mode="gauge+number",
+            value=value,
+            number={"suffix": "/100"},
+            title={"text": title},
+            gauge={
+                "axis": {"range": [0, 100]},
+                "bar": {"color": "#60a5fa"},
+                "steps": [
+                    {"range": [0, 34], "color": "rgba(239,68,68,0.35)"},
+                    {"range": [34, 67], "color": "rgba(245,158,11,0.35)"},
+                    {"range": [67, 100], "color": "rgba(34,197,94,0.35)"},
+                ],
+                "threshold": {
+                    "line": {"color": "#ffffff", "width": 4},
+                    "thickness": 0.8,
+                    "value": value,
+                },
+            },
+            domain={"x": [0, 1], "y": [0, 1]},
+        )
+    )
+
+    fig.update_layout(
+        height=230,
+        margin=dict(l=10, r=10, t=50, b=10),
+        paper_bgcolor="rgba(0,0,0,0)",
+        font={"color": "#e5e7eb"},
+    )
+    return fig
+
+
+def render_score_gauge_block(label: str, score: float | None, help_text: str = "") -> None:
+    val = _gauge_score(score)
+    bucket = _gauge_bucket(score)
+
+    st.caption(label if not help_text else f"{label}  ⓘ")
+    fig = _build_gauge_figure(val, label)
+    st.plotly_chart(fig, use_container_width=True, config={"displayModeBar": False})
+    st.caption(f"Niveau: {bucket}")
+
+    if help_text:
+        with st.expander(f"Hvad betyder {label}?", expanded=False):
+            st.write(help_text)
+
+
+def render_recommendation_panel(unified: dict) -> None:
+    st.markdown("### Samlet anbefaling")
+    action = unified.get("overall_signal", "HOLD")
+    score = unified.get("overall_score", 50)
+    reasons = unified.get("reasons", [])
+    news_bias = unified.get("news_bias", 0)
+
+    st.metric("Samlet indikation", action)
+    st.progress(max(0, min(100, float(score))) / 100)
+    st.caption(f"Samlet score: {score}/100 | News bias: {news_bias:+.1f}")
+
+    if reasons:
+        st.info(" / ".join(reasons[:6]))
