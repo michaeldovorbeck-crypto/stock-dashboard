@@ -1,241 +1,228 @@
-# src/portfolio_engine.py
 from __future__ import annotations
 
-import numpy as np
 import pandas as pd
 
-from src.data_sources import fetch_history
-from src.theme_definitions import THEMES
-from src.timing_engine import build_timing_snapshot
+from src.analysis_engine import build_asset_analysis
 
 
-ACCOUNT_TYPES = ["Månedsopsparing", "Aldersopsparing", "Ratepension"]
+ACCOUNT_TYPES = [
+    "Månedsopsparing",
+    "Aktiedepot",
+    "Ratepension",
+    "Aldersopsparing",
+    "ASK",
+    "Frie midler",
+]
 
 
-def _theme_lookup_for_ticker(ticker: str) -> list[str]:
-    ticker = (ticker or "").strip().upper()
-    matches = []
-
-    for theme_name, cfg in THEMES.items():
-        members = [str(x).strip().upper() for x in cfg.get("members", [])]
-        leaders = [str(x).strip().upper() for x in cfg.get("leaders", [])]
-        etfs = [str(x).strip().upper() for x in cfg.get("etfs", [])]
-        proxy = str(cfg.get("proxy", "")).strip().upper()
-
-        all_refs = set(members + leaders + etfs + ([proxy] if proxy else []))
-        if ticker in all_refs:
-            matches.append(theme_name)
-
-    return matches
+def _safe_float(value):
+    try:
+        x = pd.to_numeric(value, errors="coerce")
+        if pd.isna(x):
+            return None
+        return float(x)
+    except Exception:
+        return None
 
 
-def analyze_portfolio_positions(positions_df: pd.DataFrame) -> pd.DataFrame:
+def analyze_portfolio_positions(positions_df: pd.DataFrame, years: int = 5) -> pd.DataFrame:
     if positions_df is None or positions_df.empty:
-        return pd.DataFrame()
+        return pd.DataFrame(
+            columns=[
+                "Ticker",
+                "Konto",
+                "Antal",
+                "Seneste kurs",
+                "Værdi",
+                "Timing Score",
+                "Action",
+                "Trend",
+                "RSI",
+                "1M Momentum %",
+                "ATR %",
+                "Temaer",
+                "Antal temaer",
+            ]
+        )
 
     work = positions_df.copy()
 
-    required_cols = {"Ticker", "Antal", "Konto"}
-    missing = required_cols - set(work.columns)
-    if missing:
-        raise ValueError(f"Mangler kolonner i portefølje: {sorted(missing)}")
+    if "Ticker" not in work.columns:
+        work["Ticker"] = ""
+    if "Antal" not in work.columns:
+        work["Antal"] = 0.0
+    if "Konto" not in work.columns:
+        work["Konto"] = ""
+
+    work["Ticker"] = work["Ticker"].astype(str).str.strip().str.upper()
+    work["Antal"] = pd.to_numeric(work["Antal"], errors="coerce").fillna(0.0)
+    work["Konto"] = work["Konto"].astype(str).fillna("")
 
     rows = []
 
     for _, row in work.iterrows():
-        ticker = str(row["Ticker"]).strip()
-        antal = float(row["Antal"]) if pd.notna(row["Antal"]) else 0.0
-        konto = str(row["Konto"]).strip()
+        ticker = row["Ticker"]
+        antal = float(row["Antal"])
+        konto = row["Konto"]
 
-        df = fetch_history(ticker, years=5)
-
-        if df.empty:
-            rows.append(
-                {
-                    "Ticker": ticker,
-                    "Konto": konto,
-                    "Antal": antal,
-                    "Seneste kurs": np.nan,
-                    "Værdi": np.nan,
-                    "Timing Score": np.nan,
-                    "Action": "NO DATA",
-                    "Trend": "No data",
-                    "RSI": np.nan,
-                    "1M Momentum %": np.nan,
-                    "ATR %": np.nan,
-                    "Temaer": "",
-                    "Antal temaer": 0,
-                }
-            )
+        if not ticker or antal <= 0:
             continue
 
-        timing = build_timing_snapshot(df)
-        last_price = float(pd.to_numeric(df["Close"], errors="coerce").dropna().iloc[-1])
-        value = antal * last_price
+        analysis = build_asset_analysis(ticker, years=years)
 
-        themes = _theme_lookup_for_ticker(ticker)
+        last_price = None
+        value = None
+        timing_score = None
+        action = ""
+        trend = ""
+        rsi = None
+        momentum_1m = None
+        atr_pct = None
+        themes = ""
+
+        if analysis and analysis.get("has_data"):
+            timing = analysis.get("timing", {})
+            record = analysis.get("record", {})
+
+            last_price = _safe_float(analysis.get("last"))
+            value = None if last_price is None else round(last_price * antal, 2)
+            timing_score = _safe_float(timing.get("timing_score"))
+            action = str(timing.get("action", "") or "")
+            trend = str(timing.get("trend", "") or "")
+            rsi = _safe_float(timing.get("rsi"))
+            momentum_1m = _safe_float(timing.get("momentum_1m"))
+            atr_pct = _safe_float(timing.get("atr_pct"))
+            themes = str(record.get("themes", "") or "")
+
+        theme_count = len([x for x in str(themes).split(",") if str(x).strip()])
 
         rows.append(
             {
                 "Ticker": ticker,
                 "Konto": konto,
-                "Antal": antal,
-                "Seneste kurs": round(last_price, 2),
-                "Værdi": round(value, 2),
-                "Timing Score": timing.get("timing_score", np.nan),
-                "Action": timing.get("action", "NO DATA"),
-                "Trend": timing.get("trend", "No data"),
-                "RSI": timing.get("rsi", np.nan),
-                "1M Momentum %": timing.get("momentum_1m", np.nan),
-                "ATR %": timing.get("atr_pct", np.nan),
-                "Temaer": ", ".join(themes),
-                "Antal temaer": len(themes),
+                "Antal": round(antal, 4),
+                "Seneste kurs": None if last_price is None else round(last_price, 4),
+                "Værdi": value,
+                "Timing Score": None if timing_score is None else round(timing_score, 2),
+                "Action": action,
+                "Trend": trend,
+                "RSI": None if rsi is None else round(rsi, 2),
+                "1M Momentum %": None if momentum_1m is None else round(momentum_1m, 2),
+                "ATR %": None if atr_pct is None else round(atr_pct, 2),
+                "Temaer": themes,
+                "Antal temaer": theme_count,
             }
         )
 
+    if not rows:
+        return pd.DataFrame()
+
     out = pd.DataFrame(rows)
+    if "Værdi" in out.columns:
+        out = out.sort_values("Værdi", ascending=False, na_position="last")
 
-    if not out.empty:
-        out = out.sort_values("Værdi", ascending=False, na_position="last").reset_index(drop=True)
-
-    return out
+    return out.reset_index(drop=True)
 
 
 def build_account_summary(analyzed_df: pd.DataFrame) -> pd.DataFrame:
     if analyzed_df is None or analyzed_df.empty:
-        return pd.DataFrame()
+        return pd.DataFrame(columns=["Konto", "Positioner", "Samlet værdi", "Gns timing"])
 
     work = analyzed_df.copy()
-    work["Værdi"] = pd.to_numeric(work["Værdi"], errors="coerce")
-    work["Timing Score"] = pd.to_numeric(work["Timing Score"], errors="coerce")
 
     grouped = (
         work.groupby("Konto", dropna=False)
         .agg(
             Positioner=("Ticker", "count"),
-            Samlet_værdi=("Værdi", "sum"),
-            Gns_timing=("Timing Score", "mean"),
+            **{
+                "Samlet værdi": ("Værdi", "sum"),
+                "Gns timing": ("Timing Score", "mean"),
+            },
         )
         .reset_index()
     )
 
-    grouped = grouped.rename(
-        columns={
-            "Samlet_værdi": "Samlet værdi",
-            "Gns_timing": "Gns timing",
-        }
-    )
+    grouped["Samlet værdi"] = pd.to_numeric(grouped["Samlet værdi"], errors="coerce").round(2)
+    grouped["Gns timing"] = pd.to_numeric(grouped["Gns timing"], errors="coerce").round(2)
 
-    grouped["Samlet værdi"] = grouped["Samlet værdi"].round(2)
-    grouped["Gns timing"] = grouped["Gns timing"].round(2)
-
-    return grouped.sort_values("Samlet værdi", ascending=False).reset_index(drop=True)
+    return grouped.sort_values("Samlet værdi", ascending=False, na_position="last").reset_index(drop=True)
 
 
 def build_theme_exposure(analyzed_df: pd.DataFrame) -> pd.DataFrame:
-    if analyzed_df is None or analyzed_df.empty:
-        return pd.DataFrame()
+    if analyzed_df is None or analyzed_df.empty or "Temaer" not in analyzed_df.columns:
+        return pd.DataFrame(columns=["Tema", "Eksponering", "Antal positioner"])
 
     rows = []
 
     for _, row in analyzed_df.iterrows():
-        value = pd.to_numeric(row.get("Værdi"), errors="coerce")
-        theme_text = str(row.get("Temaer", "")).strip()
-
-        if pd.isna(value) or value <= 0 or not theme_text:
-            continue
-
-        themes = [x.strip() for x in theme_text.split(",") if x.strip()]
-        if not themes:
-            continue
-
-        split_value = float(value) / len(themes)
+        ticker = row.get("Ticker", "")
+        value = _safe_float(row.get("Værdi")) or 0.0
+        themes = [x.strip() for x in str(row.get("Temaer", "")).split(",") if x.strip()]
 
         for theme in themes:
-            rows.append({"Theme": theme, "Value": split_value})
+            rows.append(
+                {
+                    "Tema": theme,
+                    "Ticker": ticker,
+                    "Eksponering": value,
+                }
+            )
 
     if not rows:
-        return pd.DataFrame()
+        return pd.DataFrame(columns=["Tema", "Eksponering", "Antal positioner"])
 
-    out = pd.DataFrame(rows).groupby("Theme", as_index=False)["Value"].sum()
-    total = out["Value"].sum()
+    work = pd.DataFrame(rows)
 
-    if total > 0:
-        out["Weight %"] = out["Value"] / total * 100.0
-    else:
-        out["Weight %"] = np.nan
+    grouped = (
+        work.groupby("Tema", dropna=False)
+        .agg(
+            Eksponering=("Eksponering", "sum"),
+            **{"Antal positioner": ("Ticker", "nunique")},
+        )
+        .reset_index()
+    )
 
-    out["Value"] = out["Value"].round(2)
-    out["Weight %"] = out["Weight %"].round(2)
-
-    return out.sort_values("Weight %", ascending=False).reset_index(drop=True)
+    grouped["Eksponering"] = pd.to_numeric(grouped["Eksponering"], errors="coerce").round(2)
+    return grouped.sort_values("Eksponering", ascending=False, na_position="last").reset_index(drop=True)
 
 
-def build_rebalance_suggestions(analyzed_df: pd.DataFrame, theme_exposure_df: pd.DataFrame) -> pd.DataFrame:
-    suggestions = []
-
+def build_rebalance_suggestions(analyzed_df: pd.DataFrame, theme_expo_df: pd.DataFrame) -> pd.DataFrame:
     if analyzed_df is None or analyzed_df.empty:
-        return pd.DataFrame()
+        return pd.DataFrame(columns=["Ticker", "Konto", "Forslag", "Begrundelse"])
 
-    work = analyzed_df.copy()
-    work["Værdi"] = pd.to_numeric(work["Værdi"], errors="coerce")
-    work["Timing Score"] = pd.to_numeric(work["Timing Score"], errors="coerce")
+    rows = []
 
-    # Position-based suggestions
-    for _, row in work.iterrows():
-        ticker = str(row.get("Ticker", "")).strip()
-        value = pd.to_numeric(row.get("Værdi"), errors="coerce")
-        action = str(row.get("Action", "")).strip()
-        timing = pd.to_numeric(row.get("Timing Score"), errors="coerce")
+    for _, row in analyzed_df.iterrows():
+        ticker = str(row.get("Ticker", "") or "")
+        konto = str(row.get("Konto", "") or "")
+        action = str(row.get("Action", "") or "").upper()
+        timing_score = _safe_float(row.get("Timing Score"))
+        value = _safe_float(row.get("Værdi")) or 0.0
 
-        if pd.notna(value) and value > 0:
-            if action == "SELL":
-                suggestions.append(
-                    {
-                        "Type": "Position",
-                        "Target": ticker,
-                        "Suggestion": "Review / trim",
-                        "Reason": "Position har SELL-signal i timing engine.",
-                    }
-                )
-            elif pd.notna(timing) and timing >= 70:
-                suggestions.append(
-                    {
-                        "Type": "Position",
-                        "Target": ticker,
-                        "Suggestion": "Keep / add on weakness",
-                        "Reason": "Position har høj timing score.",
-                    }
-                )
+        forslag = "Hold"
+        begrundelse = "Ingen tydelig ændring nødvendig."
 
-    # Theme-based suggestions
-    if theme_exposure_df is not None and not theme_exposure_df.empty:
-        for _, row in theme_exposure_df.iterrows():
-            theme = str(row.get("Theme", "")).strip()
-            weight = pd.to_numeric(row.get("Weight %"), errors="coerce")
+        if action == "SELL":
+            forslag = "Reducer"
+            begrundelse = "Aktuelt signal er SELL."
+        elif action == "BUY" and timing_score is not None and timing_score > 65:
+            forslag = "Overvej køb"
+            begrundelse = "Stærkt BUY-signal og høj timing score."
+        elif timing_score is not None and timing_score < 40:
+            forslag = "Overvåg"
+            begrundelse = "Lav timing score."
 
-            if pd.notna(weight) and weight > 35:
-                suggestions.append(
-                    {
-                        "Type": "Theme",
-                        "Target": theme,
-                        "Suggestion": "Trim concentration",
-                        "Reason": "Tema-vægt er over 35% og kan være for koncentreret.",
-                    }
-                )
-            elif pd.notna(weight) and weight < 5:
-                suggestions.append(
-                    {
-                        "Type": "Theme",
-                        "Target": theme,
-                        "Suggestion": "Low exposure",
-                        "Reason": "Tema-vægt er lav og kan være underrepræsenteret.",
-                    }
-                )
+        if value == 0:
+            forslag = "Ingen data"
+            begrundelse = "Kunne ikke beregne positionens værdi."
 
-    if not suggestions:
-        return pd.DataFrame(
-            columns=["Type", "Target", "Suggestion", "Reason"]
+        rows.append(
+            {
+                "Ticker": ticker,
+                "Konto": konto,
+                "Forslag": forslag,
+                "Begrundelse": begrundelse,
+            }
         )
 
-    return pd.DataFrame(suggestions).drop_duplicates().reset_index(drop=True)
+    return pd.DataFrame(rows)

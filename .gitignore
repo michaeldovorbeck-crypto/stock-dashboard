@@ -11,3 +11,4 @@ venv/
 
 data/*.csv
 !data/universes/*.csv
+data/*.json

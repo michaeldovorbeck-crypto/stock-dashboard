@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import hmac
+
 import pandas as pd
 import streamlit as st
 
@@ -7,13 +9,20 @@ from src.analyse_v4_view import render_analysis_4
 from src.discovery_v4_view import render_discovery_4
 from src.macro_v4_view import render_macro_4
 from src.strategy_v4_view import render_strategy_4
+from src.portfolio_view import render_portfolio_view
 
 from src.cache_engine import load_snapshot
 from src.data_sources import load_universe_csv
 from src.learning_engine import build_learning_summary
 from src.precompute_engine import build_quant_snapshot_for_universe
 from src.screening_engine import run_screen_on_universe, summarize_screen, top_theme_hits
-from src.storage_engine import load_portfolio_positions, load_watchlist, save_portfolio_positions
+from src.storage_engine import (
+    load_portfolio_positions,
+    load_portfolio_transactions,
+    load_watchlist,
+    save_portfolio_positions,
+    save_portfolio_transactions,
+)
 
 from src.portfolio_engine import (
     ACCOUNT_TYPES,
@@ -23,13 +32,38 @@ from src.portfolio_engine import (
     build_theme_exposure,
 )
 
+from src.portfolio_transactions_engine import (
+    add_transaction,
+    build_account_overview_from_positions,
+    build_positions_from_transactions,
+    normalize_transactions_df,
+    remove_transaction_by_index,
+    transaction_display_df,
+)
+from src.portfolio_upload_engine import (
+    load_transactions_from_upload,
+    merge_transactions,
+)
+from src.portfolio_signal_engine import (
+    enrich_positions_with_signals,
+    build_portfolio_signal_summary,
+)
+
 from src.theme_engine import build_theme_rankings, theme_deep_dive
 from src.theme_definitions import THEMES
 
 from src.help_ui import global_help_expander, page_intro, render_dashboard_guide_sidebar
 from src.help_texts import HELP_TEXT
 from src.onboarding_ui import render_onboarding_guide
+from src.portfolio_app_helpers import (
+    build_discovery_df_from_themes,
+    build_macro_df_from_session,
+)
 
+
+# -----------------------------------------------------------------------------
+# PAGE CONFIG
+# -----------------------------------------------------------------------------
 
 st.set_page_config(
     page_title="Stock Dashboard V4 PRO",
@@ -37,12 +71,60 @@ st.set_page_config(
     layout="wide",
 )
 
-st.title("📊 Stock Dashboard V4 PRO")
-global_help_expander()
-render_onboarding_guide()
+
+# -----------------------------------------------------------------------------
+# SIMPLE LOGIN (TEMPORARY TEST VERSION)
+# -----------------------------------------------------------------------------
+
+APP_PASSWORD = "Mosevej3"
+
+
+def check_password(password: str) -> bool:
+    return hmac.compare_digest(str(password), APP_PASSWORD)
+
+
+def require_login() -> None:
+    if "authenticated" not in st.session_state:
+        st.session_state["authenticated"] = False
+
+    if st.session_state["authenticated"]:
+        return
+
+    st.title("🔐 Stock Dashboard V4 PRO")
+    st.write("Privat adgang kræver login.")
+
+    with st.form("login_form", clear_on_submit=False):
+        password = st.text_input("Adgangskode", type="password")
+        submitted = st.form_submit_button("Log ind", type="primary")
+
+    if submitted:
+        if check_password(password):
+            st.session_state["authenticated"] = True
+            st.rerun()
+        else:
+            st.error("Forkert adgangskode")
+
+    st.stop()
+
+
+def render_logout_button() -> None:
+    if st.button("Log ud", key="logout_button"):
+        st.session_state["authenticated"] = False
+        st.rerun()
+
+
+require_login()
+
+
+# -----------------------------------------------------------------------------
+# SESSION STATE INIT
+# -----------------------------------------------------------------------------
 
 if "portfolio_positions" not in st.session_state:
     st.session_state["portfolio_positions"] = load_portfolio_positions()
+
+if "portfolio_transactions" not in st.session_state:
+    st.session_state["portfolio_transactions"] = load_portfolio_transactions()
 
 if "analysis_selected_ticker" not in st.session_state:
     st.session_state["analysis_selected_ticker"] = "AAPL"
@@ -50,8 +132,30 @@ if "analysis_selected_ticker" not in st.session_state:
 if "watchlist" not in st.session_state:
     st.session_state["watchlist"] = load_watchlist()
 
+if "macro_regime" not in st.session_state:
+    st.session_state["macro_regime"] = "NEUTRAL"
+
+if "macro_risk_modifier" not in st.session_state:
+    st.session_state["macro_risk_modifier"] = 1.0
+
+
+# -----------------------------------------------------------------------------
+# APP HEADER
+# -----------------------------------------------------------------------------
+
+st.title("📊 Stock Dashboard V4 PRO")
+global_help_expander()
+render_onboarding_guide()
+
 with st.sidebar:
     render_dashboard_guide_sidebar()
+    st.markdown("---")
+    render_logout_button()
+
+
+# -----------------------------------------------------------------------------
+# TABS
+# -----------------------------------------------------------------------------
 
 (
     tab_analysis,
@@ -75,8 +179,18 @@ with st.sidebar:
     ]
 )
 
+
+# -----------------------------------------------------------------------------
+# ANALYSIS
+# -----------------------------------------------------------------------------
+
 with tab_analysis:
     render_analysis_4()
+
+
+# -----------------------------------------------------------------------------
+# SCREENING
+# -----------------------------------------------------------------------------
 
 with tab_screening:
     st.subheader("Screening engine")
@@ -144,6 +258,11 @@ with tab_screening:
 
                 st.markdown("### Theme hits")
                 st.dataframe(theme_hits_df, use_container_width=True, hide_index=True)
+
+
+# -----------------------------------------------------------------------------
+# QUANT
+# -----------------------------------------------------------------------------
 
 with tab_quant:
     st.subheader("Quant engine")
@@ -223,8 +342,18 @@ with tab_quant:
     l2.metric("BUY logs", learn.get("buy_logs"))
     l3.metric("SELL logs", learn.get("sell_logs"))
 
+
+# -----------------------------------------------------------------------------
+# MACRO
+# -----------------------------------------------------------------------------
+
 with tab_macro:
     render_macro_4()
+
+
+# -----------------------------------------------------------------------------
+# THEMES
+# -----------------------------------------------------------------------------
 
 with tab_themes:
     st.subheader("Temaer")
@@ -249,15 +378,262 @@ with tab_themes:
         if not members_df.empty:
             st.dataframe(members_df, use_container_width=True, hide_index=True)
 
+
+# -----------------------------------------------------------------------------
+# DISCOVERY
+# -----------------------------------------------------------------------------
+
 with tab_discovery:
     render_discovery_4()
+
+
+# -----------------------------------------------------------------------------
+# STRATEGY
+# -----------------------------------------------------------------------------
 
 with tab_strategy:
     render_strategy_4()
 
+
+# -----------------------------------------------------------------------------
+# PORTFOLIO
+# -----------------------------------------------------------------------------
+
 with tab_portfolio:
     st.subheader("Portefølje")
     page_intro("portfolio")
+
+    st.info(
+        "Portefølje 3.0 – Portfolio Intelligence + Risk Engine er nu integreret. "
+        "Åbne positioner kobles til signaler, risiko, temaeksponering og rebalance-forslag."
+    )
+
+    tx_df = normalize_transactions_df(pd.DataFrame(st.session_state["portfolio_transactions"]))
+
+    st.markdown("### Upload handler fra CSV")
+    uploaded_file = st.file_uploader(
+        "Upload CSV med handler",
+        type=["csv"],
+        key="portfolio_csv_upload",
+    )
+
+    if uploaded_file is not None:
+        imported_df, import_msg = load_transactions_from_upload(uploaded_file)
+        st.write(import_msg)
+
+        if not imported_df.empty:
+            st.markdown("#### Import preview")
+            st.dataframe(
+                transaction_display_df(imported_df),
+                use_container_width=True,
+                hide_index=True,
+            )
+
+            u1, u2 = st.columns(2)
+
+            with u1:
+                if st.button("Tilføj import til eksisterende handelslog", key="portfolio_merge_upload"):
+                    merged = merge_transactions(tx_df, imported_df)
+                    st.session_state["portfolio_transactions"] = merged.to_dict(orient="records")
+                    save_portfolio_transactions(st.session_state["portfolio_transactions"])
+                    st.success(f"Import tilføjet. Handelslog har nu {len(merged)} handler.")
+
+            with u2:
+                if st.button("Erstat eksisterende handelslog med import", key="portfolio_replace_upload"):
+                    clean_import = normalize_transactions_df(imported_df)
+                    st.session_state["portfolio_transactions"] = clean_import.to_dict(orient="records")
+                    save_portfolio_transactions(st.session_state["portfolio_transactions"])
+                    st.success(f"Handelslog erstattet med {len(clean_import)} importerede handler.")
+
+    st.markdown("### Tilføj handel manuelt")
+    c1, c2, c3, c4 = st.columns(4)
+
+    with c1:
+        tx_date = st.date_input("Dato", key="pf_tx_date")
+    with c2:
+        tx_ticker = st.text_input("Ticker", "MSFT", key="pf_tx_ticker")
+    with c3:
+        tx_account = st.selectbox("Konto", ACCOUNT_TYPES, key="pf_tx_account")
+    with c4:
+        tx_side = st.selectbox("Side", ["BUY", "SELL"], key="pf_tx_side")
+
+    c5, c6, c7, c8 = st.columns(4)
+    with c5:
+        tx_shares = st.number_input("Antal", min_value=0.0, value=10.0, step=1.0, key="pf_tx_shares")
+    with c6:
+        tx_price = st.number_input("Kurs", min_value=0.0, value=100.0, step=0.01, key="pf_tx_price")
+    with c7:
+        tx_fee = st.number_input("Gebyr", min_value=0.0, value=0.0, step=0.01, key="pf_tx_fee")
+    with c8:
+        tx_note = st.text_input("Note", "", key="pf_tx_note")
+
+    a1, a2 = st.columns(2)
+    with a1:
+        if st.button("Tilføj handel", key="pf_add_transaction"):
+            new_df = add_transaction(
+                tx_df,
+                date_value=tx_date,
+                ticker=tx_ticker,
+                account=tx_account,
+                side=tx_side,
+                shares=float(tx_shares),
+                price=float(tx_price),
+                fee=float(tx_fee),
+                note=tx_note,
+            )
+            st.session_state["portfolio_transactions"] = new_df.to_dict(orient="records")
+            save_portfolio_transactions(st.session_state["portfolio_transactions"])
+            st.success(f"Handel tilføjet: {tx_side} {tx_ticker.upper()}")
+
+    with a2:
+        if st.button("Ryd hele handelslog", key="pf_clear_transactions"):
+            st.session_state["portfolio_transactions"] = []
+            save_portfolio_transactions([])
+            st.warning("Hele handelsloggen er ryddet")
+
+    tx_df = normalize_transactions_df(pd.DataFrame(st.session_state["portfolio_transactions"]))
+
+    st.markdown("### Åbne positioner")
+    positions_df = build_positions_from_transactions(tx_df)
+
+    positions_signal_df = pd.DataFrame()
+    signal_history_df = pd.DataFrame()
+    analysis_df = pd.DataFrame()
+    signal_df = pd.DataFrame()
+    news_df = pd.DataFrame()
+    discovery_df = pd.DataFrame()
+    macro_df = pd.DataFrame()
+
+    if positions_df.empty:
+        st.info("Ingen åbne positioner endnu.")
+    else:
+        with st.spinner("Beriger positioner med signaler..."):
+            positions_signal_df = enrich_positions_with_signals(positions_df)
+
+        summary = build_portfolio_signal_summary(positions_signal_df)
+
+        s1, s2, s3, s4, s5 = st.columns(5)
+        s1.metric("Positioner", summary.get("positions", 0))
+        s2.metric("KØB", summary.get("buy_count", 0))
+        s3.metric("HOLD", summary.get("hold_count", 0))
+        s4.metric("SÆLG", summary.get("sell_count", 0))
+        s5.metric("Gns samlet score", summary.get("avg_overall_score"))
+
+        st.dataframe(positions_signal_df, use_container_width=True, hide_index=True)
+
+        st.markdown("### Konto-overblik")
+        account_overview_df = build_account_overview_from_positions(positions_df)
+        if not account_overview_df.empty:
+            st.dataframe(account_overview_df, use_container_width=True, hide_index=True)
+
+        st.markdown("### Handlingsliste")
+        action_cols = [
+            c
+            for c in [
+                "Ticker",
+                "Account",
+                "Net Shares",
+                "Avg Cost",
+                "Last Price",
+                "Unrealized P/L %",
+                "Technical Signal",
+                "Overall Signal",
+                "Overall Score",
+                "News Bias",
+                "Signal Days",
+                "Action Flag",
+            ]
+            if c in positions_signal_df.columns
+        ]
+        if action_cols:
+            action_df = positions_signal_df[action_cols].copy()
+            st.dataframe(action_df, use_container_width=True, hide_index=True)
+
+        analysis_df = positions_signal_df.copy()
+        analysis_rename_map = {
+            "Ticker": "ticker",
+            "Last Price": "current_price",
+            "Technical Signal": "trend",
+            "Overall Signal": "signal",
+            "Overall Score": "timing_score",
+            "News Bias": "news_sentiment",
+        }
+        analysis_df = analysis_df.rename(
+            columns={k: v for k, v in analysis_rename_map.items() if k in analysis_df.columns}
+        )
+
+        if not positions_signal_df.empty:
+            signal_df = positions_signal_df.copy().rename(
+                columns={
+                    "Ticker": "ticker",
+                    "Overall Signal": "signal",
+                    "Overall Score": "signal_score",
+                    "Signal Days": "signal_streak",
+                }
+            )
+            keep_cols = [c for c in ["ticker", "signal", "signal_score", "signal_streak"] if c in signal_df.columns]
+            signal_df = signal_df[keep_cols] if keep_cols else pd.DataFrame()
+
+        if not positions_signal_df.empty:
+            signal_history_df = positions_signal_df.copy().rename(
+                columns={
+                    "Ticker": "ticker",
+                    "Overall Signal": "signal",
+                }
+            )
+            if "ticker" in signal_history_df.columns and "signal" in signal_history_df.columns:
+                signal_history_df = signal_history_df[["ticker", "signal"]].copy()
+                signal_history_df["date"] = pd.Timestamp.today().normalize()
+
+        if not positions_signal_df.empty and "News Bias" in positions_signal_df.columns:
+            news_df = positions_signal_df[["Ticker", "News Bias"]].copy().rename(
+                columns={
+                    "Ticker": "ticker",
+                    "News Bias": "news_sentiment",
+                }
+            )
+
+        discovery_df = build_discovery_df_from_themes(positions_signal_df, THEMES)
+        macro_df = build_macro_df_from_session()
+
+        st.markdown("---")
+        render_portfolio_view(
+            portfolio_df=positions_df,
+            analysis_df=analysis_df,
+            signal_df=signal_df,
+            signal_history_df=signal_history_df,
+            news_df=news_df,
+            discovery_df=discovery_df,
+            macro_df=macro_df,
+        )
+
+    st.markdown("### Handelslog")
+    if tx_df.empty:
+        st.info("Ingen handler registreret endnu.")
+    else:
+        tx_display = transaction_display_df(tx_df).reset_index(drop=True)
+        tx_display_show = tx_display.copy()
+        tx_display_show.insert(0, "Idx", tx_display_show.index)
+
+        st.dataframe(tx_display_show, use_container_width=True, hide_index=True)
+
+        remove_idx = st.number_input(
+            "Slet handel med indeks (se kolonnen Idx ovenfor)",
+            min_value=0,
+            max_value=max(0, len(tx_display_show) - 1),
+            value=0,
+            step=1,
+            key="pf_remove_tx_idx",
+        )
+
+        if st.button("Slet valgt handel", key="pf_remove_transaction"):
+            updated = remove_transaction_by_index(tx_df, int(remove_idx))
+            st.session_state["portfolio_transactions"] = updated.to_dict(orient="records")
+            save_portfolio_transactions(st.session_state["portfolio_transactions"])
+            st.success("Valgt handel er slettet")
+
+    st.markdown("### Legacy porteføljevisning")
+    st.caption("Denne sektion bevares midlertidigt for bagudkompatibilitet med den gamle positionsmodel.")
 
     c1, c2, c3 = st.columns(3)
 
@@ -280,12 +656,12 @@ with tab_portfolio:
 
     with c3:
         pf_account = st.selectbox(
-            "Konto",
+            "Legacy konto",
             ACCOUNT_TYPES,
             key="portfolio_account",
         )
 
-    if st.button("Tilføj position", key="portfolio_add_button"):
+    if st.button("Tilføj legacy position", key="portfolio_add_button"):
         if pf_ticker.strip():
             st.session_state["portfolio_positions"].append(
                 {
@@ -297,27 +673,27 @@ with tab_portfolio:
             save_portfolio_positions(st.session_state["portfolio_positions"])
             st.success(f"{pf_ticker.strip().upper()} tilføjet")
 
-    positions_df = pd.DataFrame(st.session_state["portfolio_positions"])
+    legacy_positions_df = pd.DataFrame(st.session_state["portfolio_positions"])
 
-    if positions_df.empty:
-        st.info("Porteføljen er tom.")
+    if legacy_positions_df.empty:
+        st.info("Legacy porteføljen er tom.")
     else:
-        analyzed_df = analyze_portfolio_positions(positions_df)
+        analyzed_df = analyze_portfolio_positions(legacy_positions_df)
 
         st.dataframe(analyzed_df, use_container_width=True, hide_index=True)
 
-        st.markdown("### Konto-overblik")
+        st.markdown("### Legacy konto-overblik")
         account_summary_df = build_account_summary(analyzed_df)
         if not account_summary_df.empty:
             st.dataframe(account_summary_df, use_container_width=True, hide_index=True)
 
         theme_expo = build_theme_exposure(analyzed_df)
 
-        st.markdown("### Theme exposure")
+        st.markdown("### Legacy theme exposure")
         if not theme_expo.empty:
             st.dataframe(theme_expo, use_container_width=True, hide_index=True)
 
-        st.markdown("### Rebalance forslag")
+        st.markdown("### Legacy rebalance forslag")
         rebalance_df = build_rebalance_suggestions(analyzed_df, theme_expo)
         if not rebalance_df.empty:
             st.dataframe(rebalance_df, use_container_width=True, hide_index=True)

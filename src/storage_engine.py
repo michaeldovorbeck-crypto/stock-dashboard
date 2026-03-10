@@ -1,76 +1,117 @@
-# src/storage_engine.py
 from __future__ import annotations
 
+import json
 from pathlib import Path
-import pandas as pd
+from typing import Any
 
 
 DATA_DIR = Path("data")
 DATA_DIR.mkdir(parents=True, exist_ok=True)
 
-WATCHLIST_FILE = DATA_DIR / "watchlist.csv"
-PORTFOLIO_FILE = DATA_DIR / "portfolio_positions.csv"
-RECENT_FILE = DATA_DIR / "recent_assets.csv"
+WATCHLIST_FILE = DATA_DIR / "watchlist.json"
+PORTFOLIO_FILE = DATA_DIR / "portfolio_positions.json"
+TRANSACTIONS_FILE = DATA_DIR / "portfolio_transactions.json"
+RECENT_ASSETS_FILE = DATA_DIR / "recent_assets.json"
 
 
-def _safe_read_csv(path: Path) -> pd.DataFrame:
+def _read_json(path: Path, default: Any):
+    if not path.exists():
+        return default
     try:
-        if not path.exists():
-            return pd.DataFrame()
-        return pd.read_csv(path)
+        with open(path, "r", encoding="utf-8") as f:
+            return json.load(f)
     except Exception:
-        return pd.DataFrame()
+        return default
+
+
+def _write_json(path: Path, payload: Any) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with open(path, "w", encoding="utf-8") as f:
+        json.dump(payload, f, ensure_ascii=False, indent=2, default=str)
+
+
+# -----------------------------------
+# Watchlist
+# -----------------------------------
+
+def load_watchlist() -> list[str]:
+    data = _read_json(WATCHLIST_FILE, [])
+    if not isinstance(data, list):
+        return []
+    return [str(x).strip().upper() for x in data if str(x).strip()]
 
 
 def save_watchlist(watchlist: list[str]) -> None:
-    rows = [{"Ticker": str(x).strip().upper()} for x in watchlist if str(x).strip()]
-    df = pd.DataFrame(rows).drop_duplicates()
-    df.to_csv(WATCHLIST_FILE, index=False)
+    cleaned = []
+    seen = set()
+    for x in watchlist:
+        t = str(x).strip().upper()
+        if t and t not in seen:
+            cleaned.append(t)
+            seen.add(t)
+    _write_json(WATCHLIST_FILE, cleaned)
 
 
-def load_watchlist() -> list[str]:
-    df = _safe_read_csv(WATCHLIST_FILE)
-    if df.empty or "Ticker" not in df.columns:
+# -----------------------------------
+# Legacy portfolio positions
+# -----------------------------------
+
+def load_portfolio_positions() -> list[dict]:
+    data = _read_json(PORTFOLIO_FILE, [])
+    if not isinstance(data, list):
         return []
-    return df["Ticker"].astype(str).str.upper().str.strip().dropna().tolist()
+    return data
 
 
 def save_portfolio_positions(positions: list[dict]) -> None:
-    df = pd.DataFrame(positions)
-    if df.empty:
-        if PORTFOLIO_FILE.exists():
-            PORTFOLIO_FILE.unlink()
-        return
-    df.to_csv(PORTFOLIO_FILE, index=False)
+    _write_json(PORTFOLIO_FILE, positions)
 
 
-def load_portfolio_positions() -> list[dict]:
-    df = _safe_read_csv(PORTFOLIO_FILE)
-    if df.empty:
+# -----------------------------------
+# Portfolio transactions
+# -----------------------------------
+
+def load_portfolio_transactions() -> list[dict]:
+    data = _read_json(TRANSACTIONS_FILE, [])
+    if not isinstance(data, list):
         return []
-    return df.to_dict(orient="records")
+    return data
 
 
-def add_recent_asset(ticker: str, max_items: int = 20) -> None:
-    t = str(ticker).strip().upper()
-    if not t:
-        return
+def save_portfolio_transactions(transactions: list[dict]) -> None:
+    _write_json(TRANSACTIONS_FILE, transactions)
 
-    df = _safe_read_csv(RECENT_FILE)
-    rows = []
 
-    if not df.empty and "Ticker" in df.columns:
-        existing = df["Ticker"].astype(str).str.upper().str.strip().tolist()
-        existing = [x for x in existing if x != t]
-        rows.extend([{"Ticker": x} for x in existing])
-
-    rows.insert(0, {"Ticker": t})
-    out = pd.DataFrame(rows).head(max_items)
-    out.to_csv(RECENT_FILE, index=False)
-
+# -----------------------------------
+# Recent assets / history
+# -----------------------------------
 
 def load_recent_assets() -> list[str]:
-    df = _safe_read_csv(RECENT_FILE)
-    if df.empty or "Ticker" not in df.columns:
+    data = _read_json(RECENT_ASSETS_FILE, [])
+    if not isinstance(data, list):
         return []
-    return df["Ticker"].astype(str).str.upper().str.strip().dropna().tolist()
+    return [str(x).strip().upper() for x in data if str(x).strip()]
+
+
+def save_recent_assets(assets: list[str]) -> None:
+    cleaned = []
+    seen = set()
+    for x in assets:
+        t = str(x).strip().upper()
+        if t and t not in seen:
+            cleaned.append(t)
+            seen.add(t)
+    _write_json(RECENT_ASSETS_FILE, cleaned[:50])
+
+
+def add_recent_asset(ticker: str, max_items: int = 20) -> list[str]:
+    t = str(ticker or "").strip().upper()
+    if not t:
+        return load_recent_assets()
+
+    recent = load_recent_assets()
+    recent = [x for x in recent if x != t]
+    recent.insert(0, t)
+    recent = recent[:max_items]
+    save_recent_assets(recent)
+    return recent
