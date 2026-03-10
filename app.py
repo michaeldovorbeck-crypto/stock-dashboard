@@ -26,8 +26,9 @@ from src.portfolio_engine import (
 from src.theme_engine import build_theme_rankings, theme_deep_dive
 from src.theme_definitions import THEMES
 
-from src.help_ui import global_help_expander, page_intro
+from src.help_ui import global_help_expander, page_intro, render_dashboard_guide_sidebar
 from src.help_texts import HELP_TEXT
+from src.onboarding_ui import render_onboarding_guide
 
 
 st.set_page_config(
@@ -38,6 +39,7 @@ st.set_page_config(
 
 st.title("📊 Stock Dashboard V4 PRO")
 global_help_expander()
+render_onboarding_guide()
 
 if "portfolio_positions" not in st.session_state:
     st.session_state["portfolio_positions"] = load_portfolio_positions()
@@ -49,18 +51,7 @@ if "watchlist" not in st.session_state:
     st.session_state["watchlist"] = load_watchlist()
 
 with st.sidebar:
-    st.markdown("## Dashboard guide")
-    st.write(
-        """
-Dette dashboard hjælper dig med:
-
-• aktieanalyse  
-• kvantitativ screening  
-• discovery af nye trends  
-• tema-investering  
-• porteføljestyring
-"""
-    )
+    render_dashboard_guide_sidebar()
 
 (
     tab_analysis,
@@ -94,7 +85,7 @@ with tab_screening:
     universe_file = st.text_input(
         "Universe-fil",
         "global_all.csv",
-        help=HELP_TEXT["universe"],
+        help=HELP_TEXT.get("universe", ""),
         key="screen_universe_file",
     )
 
@@ -108,13 +99,7 @@ with tab_screening:
         c1, c2, c3 = st.columns(3)
 
         with c1:
-            screen_years = st.slider(
-                "Historik (år)",
-                1,
-                10,
-                3,
-                key="screen_years",
-            )
+            screen_years = st.slider("Historik (år)", 1, 10, 3, key="screen_years")
 
         with c2:
             max_tickers = st.number_input(
@@ -272,6 +257,7 @@ with tab_strategy:
 
 with tab_portfolio:
     st.subheader("Portefølje")
+    page_intro("portfolio")
 
     c1, c2, c3 = st.columns(3)
 

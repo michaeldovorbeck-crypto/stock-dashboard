@@ -31,10 +31,32 @@ from src.portfolio_context_engine import build_portfolio_context
 from src.portfolio_engine import ACCOUNT_TYPES
 from src.search_engine import search_assets
 from src.signal_log_engine import append_signal_log
-from src.storage_engine import save_portfolio_positions, save_watchlist
+from src.storage_engine import (
+    load_portfolio_positions,
+    load_watchlist,
+    save_portfolio_positions,
+    save_watchlist,
+)
 from src.technical_view_engine import build_technical_view
 from src.ui_style import apply_pro_style, render_badges, render_info_card
 from src.watchlist_engine import add_to_watchlist, remove_from_watchlist, watchlist_to_df
+
+
+def _ensure_analysis_state() -> None:
+    if "watchlist" not in st.session_state:
+        st.session_state["watchlist"] = load_watchlist()
+    if "portfolio_positions" not in st.session_state:
+        st.session_state["portfolio_positions"] = load_portfolio_positions()
+    if "analysis_selected_ticker" not in st.session_state:
+        st.session_state["analysis_selected_ticker"] = "AAPL"
+
+
+def _get_watchlist_safe() -> list:
+    return st.session_state.get("watchlist", [])
+
+
+def _get_portfolio_positions_safe() -> list:
+    return st.session_state.get("portfolio_positions", [])
 
 
 def _render_market_header(market: dict) -> None:
@@ -104,10 +126,12 @@ def _render_search_block() -> tuple[str, int, pd.DataFrame]:
 
 
 def _render_right_sidebar() -> None:
+    watchlist = _get_watchlist_safe()
+
     st.markdown("### Watchlist")
     st.caption(HELP_TEXT["watchlist"])
     st.dataframe(
-        watchlist_to_df(st.session_state["watchlist"]),
+        watchlist_to_df(watchlist),
         use_container_width=True,
         hide_index=True,
     )
@@ -124,13 +148,15 @@ def _render_right_sidebar() -> None:
 def _render_actions(analysis: dict) -> None:
     timing = analysis.get("timing", {})
     record = analysis.get("record", {})
+    watchlist = _get_watchlist_safe()
+    portfolio_positions = _get_portfolio_positions_safe()
 
     a1, a2, a3, a4 = st.columns(4)
 
     with a1:
         if st.button("Tilføj til watchlist", key=f"analysis4_add_watch_{analysis['ticker']}"):
             st.session_state["watchlist"] = add_to_watchlist(
-                st.session_state["watchlist"],
+                watchlist,
                 analysis["ticker"],
             )
             save_watchlist(st.session_state["watchlist"])
@@ -139,7 +165,7 @@ def _render_actions(analysis: dict) -> None:
     with a2:
         if st.button("Fjern fra watchlist", key=f"analysis4_remove_watch_{analysis['ticker']}"):
             st.session_state["watchlist"] = remove_from_watchlist(
-                st.session_state["watchlist"],
+                watchlist,
                 analysis["ticker"],
             )
             save_watchlist(st.session_state["watchlist"])
@@ -147,9 +173,11 @@ def _render_actions(analysis: dict) -> None:
 
     with a3:
         if st.button("Tilføj til portefølje", key=f"analysis4_add_pf_{analysis['ticker']}"):
-            st.session_state["portfolio_positions"].append(
+            portfolio_positions = list(portfolio_positions)
+            portfolio_positions.append(
                 {"Ticker": analysis["ticker"], "Antal": 1.0, "Konto": ACCOUNT_TYPES[0]}
             )
+            st.session_state["portfolio_positions"] = portfolio_positions
             save_portfolio_positions(st.session_state["portfolio_positions"])
             st.success(f"{analysis['ticker']} tilføjet til porteføljen")
 
@@ -170,6 +198,8 @@ def _render_overview_tab(analysis: dict, diag: dict, market: dict) -> None:
     timing = analysis.get("timing", {})
     tech_df = build_technical_view(analysis["df"])
 
+    st.info(HELP_TEXT["analysis_overview_box"])
+    st.caption(HELP_TEXT["analysis_hero_box"])
     render_hero_panel(analysis, diag)
 
     action_upper = str(timing.get("action", "N/A")).upper()
@@ -189,7 +219,10 @@ def _render_overview_tab(analysis: dict, diag: dict, market: dict) -> None:
     top_left, top_right = st.columns([2, 1])
 
     with top_left:
+        st.caption(HELP_TEXT["analysis_signal_summary_box"])
         render_signal_summary_card(analysis)
+
+        st.caption(HELP_TEXT["analysis_why_this_matters_box"])
         render_why_this_matters(analysis)
 
     with top_right:
@@ -199,6 +232,7 @@ def _render_overview_tab(analysis: dict, diag: dict, market: dict) -> None:
 
     with c1:
         st.markdown("### Pris og glidende gennemsnit")
+        st.caption("Her ser du prisudviklingen sammen med EMA20, EMA50 og EMA200 for at vurdere trendretning og styrke.")
         if not tech_df.empty:
             cols = [c for c in ["Close", "EMA20", "EMA50", "EMA200"] if c in tech_df.columns]
             if cols and "Date" in tech_df.columns:
@@ -206,6 +240,7 @@ def _render_overview_tab(analysis: dict, diag: dict, market: dict) -> None:
 
     with c2:
         st.markdown("### Quick stats")
+        st.caption("Quick stats opsummerer de vigtigste tekniske nøgletal i kompakt form.")
         render_quick_stats_block(timing)
         render_info_card(
             "Datakvalitet",
@@ -213,6 +248,7 @@ def _render_overview_tab(analysis: dict, diag: dict, market: dict) -> None:
             "Antal datapunkter i analysen",
         )
 
+    st.caption(HELP_TEXT["analysis_market_now_box"])
     render_market_now_cards(market)
 
 
@@ -220,6 +256,7 @@ def _render_technicals_tab(analysis: dict) -> None:
     tech_df = build_technical_view(analysis["df"])
 
     st.subheader("Technicals")
+    st.info(HELP_TEXT["analysis_technicals_box"])
 
     if tech_df.empty or "Date" not in tech_df.columns:
         st.info("Ingen technical data endnu.")
@@ -262,6 +299,7 @@ def _render_technicals_tab(analysis: dict) -> None:
     with c1:
         if "Date" in tech_df.columns and "RSI14" in tech_df.columns:
             st.markdown("### RSI")
+            st.caption("RSI bruges til at vurdere om aktivet er overkøbt, oversolgt eller neutralt.")
             st.line_chart(tech_df.set_index("Date")[["RSI14"]].dropna(how="all"))
 
     with c2:
@@ -274,6 +312,7 @@ def _render_technicals_tab(analysis: dict) -> None:
 
         if stats_rows:
             st.markdown("### Seneste technicals")
+            st.caption("Denne tabel viser de nyeste tekniske niveauer og indikatorer.")
             st.dataframe(pd.DataFrame(stats_rows), use_container_width=True, hide_index=True)
 
     raw_cols = [
@@ -289,13 +328,16 @@ def _render_technicals_tab(analysis: dict) -> None:
 def _render_context_tab(analysis: dict) -> None:
     record = analysis.get("record", {})
     macro = analysis.get("macro", {})
+    portfolio_positions = _get_portfolio_positions_safe()
 
     st.subheader("Context")
+    st.info(HELP_TEXT["analysis_context_box"])
 
     left, right = st.columns(2)
 
     with left:
         st.markdown("### Theme context")
+        st.caption("Her ser du hvordan aktivet er knyttet til større investeringstemaer og strukturelle trends.")
         theme_context_df = analysis.get("theme_context_df", pd.DataFrame())
         if theme_context_df.empty:
             st.info("Ingen direkte theme context endnu.")
@@ -303,6 +345,7 @@ def _render_context_tab(analysis: dict) -> None:
             st.dataframe(theme_context_df, use_container_width=True, hide_index=True)
 
         st.markdown("### Strategy context")
+        st.caption("Her ser du hvordan aktivet relaterer sig til ETF-strategier, leaders eller bredere markedsstyrke.")
         strategy_context_df = analysis.get("strategy_context_df", pd.DataFrame())
         if strategy_context_df.empty:
             st.info("Ingen strategy context endnu.")
@@ -311,6 +354,7 @@ def _render_context_tab(analysis: dict) -> None:
 
     with right:
         st.markdown("### Macro context")
+        st.caption("Makrodata giver baggrunden for om miljøet understøtter risiko, vækst eller defensiv positionering.")
         st.metric("Regime", safe_metric_value(macro.get("regime")), help=HELP_TEXT["macro_regime"])
         st.metric("Inflation YoY %", safe_metric_value(macro.get("inflation_yoy_pct")))
         st.metric("Industrial YoY %", safe_metric_value(macro.get("industrial_production_yoy_pct")))
@@ -319,15 +363,17 @@ def _render_context_tab(analysis: dict) -> None:
         st.metric("Arbejdsløshed", safe_metric_value(macro.get("unemployment")))
 
         st.markdown("### Asset identity")
+        st.caption("Identity-sektionen viser hvad aktivet er, og hvilken rolle det kan have i en bredere analyse.")
         st.metric("Navn", safe_metric_value(record.get("name")))
         st.metric("Type", safe_metric_value(record.get("type")))
         st.metric("Land", safe_metric_value(record.get("country")))
         st.metric("Sektor", safe_metric_value(record.get("sector")))
 
         st.markdown("### Portfolio context")
+        st.caption("Her ser du om aktivet allerede findes i porteføljen, og hvordan det er placeret på tværs af konti.")
         pf_ctx = build_portfolio_context(
             analysis["ticker"],
-            st.session_state["portfolio_positions"],
+            portfolio_positions,
         )
         if not pf_ctx["owned"]:
             st.info("Ikke i porteføljen endnu.")
@@ -341,12 +387,13 @@ def _render_compare_tab(analysis: dict, years: int) -> None:
     record = analysis.get("record", {})
 
     st.subheader("Compare")
-    st.caption("Sammenlign aktivet med peers eller ETF benchmarks")
+    st.info(HELP_TEXT["analysis_compare_box"])
 
     auto_peers = build_peer_group(record)
 
     if auto_peers:
         st.markdown("### Auto peers")
+        st.caption("Auto peers er foreslåede sammenligningsaktiver baseret på tema, strategi eller beslægtet markedsrolle.")
         cols = st.columns(len(auto_peers))
         for i, peer in enumerate(auto_peers):
             if cols[i].button(peer, key=f"peer_{analysis['ticker']}_{i}_{peer}"):
@@ -386,6 +433,7 @@ def _render_news_block(analysis: dict) -> None:
     )
 
     st.markdown("### News & catalysts")
+    st.caption("Nyheder og catalysts hjælper med at forstå om der er aktuelle begivenheder, som kan forklare eller drive prisudviklingen.")
     n1, n2, n3 = st.columns(3)
 
     if news_links.get("ticker_news"):
@@ -397,6 +445,7 @@ def _render_news_block(analysis: dict) -> None:
 
 
 def render_analysis_4() -> None:
+    _ensure_analysis_state()
     apply_pro_style()
     market = build_market_overview()
 
@@ -465,4 +514,5 @@ def render_analysis_4() -> None:
             _render_compare_tab(analysis, analysis_years)
 
         with tabs[4]:
+            st.info(HELP_TEXT["analysis_diagnostics_box"])
             render_diagnostics_tab(diag)
