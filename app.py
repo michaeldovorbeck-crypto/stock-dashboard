@@ -5,6 +5,12 @@ import hmac
 import pandas as pd
 import streamlit as st
 
+st.set_page_config(
+    page_title="Stock Dashboard V4 PRO",
+    page_icon="📊",
+    layout="wide",
+)
+
 from src.analyse_v4_view import render_analysis_4
 from src.discovery_v4_view import render_discovery_4
 from src.macro_v4_view import render_macro_4
@@ -71,13 +77,6 @@ from src.portfolio_app_helpers import (
 # -----------------------------------------------------------------------------
 # PAGE CONFIG
 # -----------------------------------------------------------------------------
-
-st.set_page_config(
-    page_title="Stock Dashboard V4 PRO",
-    page_icon="📊",
-    layout="wide",
-)
-
 
 # -----------------------------------------------------------------------------
 # SIMPLE LOGIN
